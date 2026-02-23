@@ -19,9 +19,16 @@ echo "→ Installing dependencies..."
 "${VENV_DIR}/bin/pip" install --quiet --upgrade pip
 "${VENV_DIR}/bin/pip" install --quiet -r "${SCRIPT_DIR}/requirements.txt"
 
-# Pre-download model
+# Pre-download model (suppress harmless HF/transformers warnings)
 echo "→ Pre-downloading embedding model (all-MiniLM-L6-v2)..."
-"${VENV_DIR}/bin/python" -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
+"${VENV_DIR}/bin/python" -W ignore -c "
+import os, warnings
+os.environ['HF_HUB_DISABLE_TELEMETRY'] = '1'
+warnings.filterwarnings('ignore', message='.*position_ids.*')
+warnings.filterwarnings('ignore', message='.*unauthenticated.*HF Hub.*')
+from sentence_transformers import SentenceTransformer
+SentenceTransformer('all-MiniLM-L6-v2')
+"
 
 # Create wrapper script
 WRAPPER="${SCRIPT_DIR}/forge-memory"
