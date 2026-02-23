@@ -4,7 +4,15 @@ Uses a singleton pattern to load the model once and reuse it across calls.
 """
 from __future__ import annotations
 
+import os
 import threading
+import warnings
+
+# Suppress known harmless warnings from HuggingFace / transformers
+os.environ.setdefault("HF_HUB_DISABLE_TELEMETRY", "1")
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+warnings.filterwarnings("ignore", message=".*position_ids.*")
+warnings.filterwarnings("ignore", message=".*unauthenticated.*HF Hub.*")
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
