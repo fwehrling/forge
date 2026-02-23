@@ -2,6 +2,17 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
+[![version](https://img.shields.io/badge/version-1.0.0-green)](https://github.com/fwehrling/forge/releases)
+[![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
+[![Skills](https://img.shields.io/badge/skills-23-orange)](#commands)
+[![Agents](https://img.shields.io/badge/agents-12-purple)](#multi-agent-pipeline)
+[![Powered by](https://img.shields.io/badge/powered%20by-Claude%20Code-blueviolet)](https://docs.anthropic.com/en/docs/claude-code)
+[![Token Saver](https://img.shields.io/badge/token%20saver-up%20to%20--97%25-brightgreen)](#token-saver)
+[![Memory](https://img.shields.io/badge/memory-Markdown%20%2B%20Vector-yellow)](#memory-system)
+[![GitHub stars](https://img.shields.io/github/stars/fwehrling/forge?style=flat&logo=github)](https://github.com/fwehrling/forge/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/fwehrling/forge?style=flat&logo=github)](https://github.com/fwehrling/forge/issues)
+
 A multi-agent AI development framework for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). FORGE orchestrates specialized AI agents through a structured pipeline — from requirements to deployment — with persistent memory, autonomous iteration, and built-in quality gates.
 
 ```
