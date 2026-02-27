@@ -5,6 +5,17 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-02-27
+
+### Changed
+
+- `/forge-auto` now runs `/forge-verify` then `/forge-review` after each story build (was only verify)
+- `/forge-team` pipeline and build patterns now spawn a dedicated Reviewer teammate alongside QA
+- Task dependency chain per story: Dev → QA (`/forge-verify`) → Review (`/forge-review`)
+- QA teammate prompt aligned with `/forge-verify` workflow (structured audit, verdicts, memory log)
+- Review feedback loop: critical issues trigger fix → re-verify → re-review (max 2 cycles)
+- Team size updated to 4 Dev + 1 QA + 1 Reviewer
+
 ## [1.0.1] - 2026-02-23
 
 ### Fixed
@@ -42,5 +53,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/fwehrling/forge/releases/tag/v1.0.0

@@ -47,9 +47,10 @@ Each teammate owns specific directories. No two teammates write to the same file
 - Lead consolidates all updates at the end
 
 ### 4. Team Size Constraints
-- Maximum 4 Dev teammates + 1 QA teammate per team
+- Maximum 4 Dev teammates + 1 QA teammate + 1 Reviewer teammate per team
 - Each Dev teammate handles exactly 1 story
-- QA teammate reviews stories as they complete (via shared task list)
+- QA teammate verifies stories as they complete (via shared task list, following /forge-verify)
+- Reviewer teammate reviews stories after QA PASS/CONCERNS (via shared task list, following /forge-review)
 
 ---
 
@@ -125,14 +126,16 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - Never add Claude signatures
    ```
 
-4. **Lead spawns 1 QA teammate** (persistent):
+4. **Lead spawns 1 QA teammate** (persistent — runs `/forge-verify` per story):
 
    ```
    You are a FORGE QA Agent (TEA) in a parallel development team.
+   You follow the /forge-verify workflow exactly.
 
    ## Your Identity
    You are a senior QA engineer. You audit developer tests, write advanced tests,
    and certify stories with a GO/NO-GO verdict.
+   Load the QA persona from ~/.claude/skills/forge/references/agents/qa.md (if accessible).
 
    ## Context to Read (MANDATORY)
    - .forge/memory/MEMORY.md (project context)
@@ -146,34 +149,98 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - tests/e2e/ (end-to-end tests)
    DO NOT write to src/, tests/unit/, or tests/functional/.
 
-   ## Workflow
+   ## Workflow (/forge-verify per story)
    Monitor the shared task list. When a Dev teammate marks a story as complete:
-   1. Read the story file from docs/stories/
+   1. Read the story file from docs/stories/ for acceptance criteria (AC-x)
    2. Read the Dev's tests (tests/unit/ and tests/functional/ for that module)
    3. Read the implemented code in src/
-   4. Audit: does each AC-x have a test? Coverage >80%? Edge cases?
-   5. Write integration/E2E tests if needed
-   6. Run the full test suite
-   7. Issue verdict: PASS / CONCERNS / FAIL
-   8. Update your task with the verdict
+   4. Audit the Dev's tests:
+      - Does each function/component have unit tests? YES/NO
+      - Does each AC-x have a functional test? YES/NO
+      - Coverage >80%? YES/NO
+      - Edge cases covered? YES/NO
+   5. List identified gaps
+   6. Write missing tests (integration, E2E, performance, security if needed)
+   7. Run the full test suite
+   8. Issue verdict: PASS / CONCERNS / FAIL / WAIVED
+   9. Update your task with the verdict
+   10. Save memory:
+       forge-memory log "QA {VERDICT} : {summary}" --agent qa --story {STORY_ID}
 
    ## Quality Rules
    - Never approve a story without running all tests
    - FAIL verdict requires a precise list of issues
+   - CONCERNS verdict: story validated with notes
    - French accents required in all French content
    ```
 
-5. **Lead coordinates via shared task list**:
-   - Create tasks: 1 per story (Dev) + 1 QA review per story
-   - Set dependencies: QA tasks blocked by corresponding Dev tasks
+5. **Lead spawns 1 Reviewer teammate** (persistent — runs `/forge-review` per story):
+
+   ```
+   You are a FORGE Reviewer Agent (devil's advocate) in a parallel development team.
+   You follow the /forge-review workflow exactly.
+
+   ## Your Identity
+   You are a senior code reviewer. You conduct adversarial reviews: you identify
+   gaps, inconsistencies, risks, and challenge every assumption.
+   Load the Reviewer persona from ~/.claude/skills/forge/references/agents/reviewer.md (if accessible).
+
+   ## Context to Read (MANDATORY)
+   - .forge/memory/MEMORY.md (project context)
+   - docs/architecture.md (system design)
+   - Run: forge-memory search "<story under review> review" --limit 3
+     → Load relevant past decisions and review findings
+
+   ## Your File Scope
+   - READ-ONLY on all src/ and tests/ directories
+   - You do NOT write code. You produce review reports in your task updates.
+
+   ## Workflow (/forge-review per story)
+   Monitor the shared task list. When a QA teammate issues a PASS or CONCERNS verdict:
+   1. Read the story file from docs/stories/
+   2. Read the implemented code in src/{MODULE}/
+   3. Read the tests (unit, functional, integration)
+   4. Conduct adversarial review:
+      - Identify gaps, inconsistencies, and risks
+      - Challenge each assumption
+      - Check for security vulnerabilities (OWASP top 10)
+      - Check for performance anti-patterns
+      - Check code maintainability and readability
+   5. Classify issues: CRITICAL (must fix) / WARNING (should fix) / INFO (nice to have)
+   6. Update your task with the review report
+   7. Save memory:
+      forge-memory log "Review terminée : {STORY_ID}, {N} issues ({C} critical)" --agent reviewer --story {STORY_ID}
+
+   ## Verdicts
+   - CLEAN: no critical issues → story can proceed
+   - ISSUES: critical issues found → story needs fixes before completion
+
+   ## Quality Rules
+   - Be specific and actionable, not generic
+   - CRITICAL issues must include the exact file:line and a fix suggestion
+   - French accents required in all French content
+   ```
+
+6. **Lead coordinates via shared task list**:
+   - Create tasks per story: 1 Dev task + 1 QA task + 1 Review task
+   - Set dependencies:
+     - QA tasks blocked by corresponding Dev tasks
+     - Review tasks blocked by corresponding QA tasks
    - Monitor completion
 
-6. **Lead finalizes**:
-   - Collect all results from teammates
-   - Update `.forge/sprint-status.yaml` with final statuses and QA verdicts
+7. **Lead handles review feedback**:
+   - If Reviewer verdict = CLEAN → story is done
+   - If Reviewer verdict = ISSUES (critical):
+     - Send fix list to the Dev teammate responsible for that story
+     - After fixes: QA re-verifies → Reviewer re-reviews
+     - Max 2 review cycles per story (circuit breaker)
+
+8. **Lead finalizes**:
+   - Collect all results from teammates (Dev + QA + Reviewer)
+   - Update `.forge/sprint-status.yaml` with final statuses, QA verdicts, and review verdicts
    - Log each completed story:
      ```bash
-     forge-memory log "{STORY_ID} terminée (team build) : {VERDICT}" --agent lead --story {STORY_ID}
+     forge-memory log "{STORY_ID} terminée (team build) : QA={QA_VERDICT}, Review={REVIEW_VERDICT}" --agent lead --story {STORY_ID}
      ```
    - Log the team session summary:
      ```bash
@@ -274,12 +341,12 @@ Parallel story development with integrated QA. Focused version of Pipeline Team 
    - Verify no directory overlap between stories
    - If overlap detected: reduce parallelism (sequential for overlapping stories)
 
-3. **Lead spawns Dev + QA teammates**:
-   - Same spawn prompts as Pipeline Team (Pattern 1, steps 3-4)
-   - Same task list coordination
+3. **Lead spawns Dev + QA + Reviewer teammates**:
+   - Same spawn prompts as Pipeline Team (Pattern 1, steps 3-5)
+   - Same task list coordination (Dev → QA → Review dependency chain)
 
 4. **Lead monitors and finalizes**:
-   - Same as Pipeline Team (Pattern 1, steps 5-6)
+   - Same as Pipeline Team (Pattern 1, steps 6-8)
 
 ---
 
