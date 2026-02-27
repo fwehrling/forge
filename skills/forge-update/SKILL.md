@@ -53,6 +53,16 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
    rm -f ~/.claude/skills/forge/.forge-update-cache
    ```
 
+5c. **Mettre à jour ~/.claude/CLAUDE.md** :
+   - Comparer `$TMPDIR/templates/claude-md-forge-section.md` avec le bloc FORGE actuel dans `~/.claude/CLAUDE.md` (contenu entre `<!-- FORGE:BEGIN -->` et `<!-- FORGE:END -->`)
+   - Si les marqueurs n'existent pas dans `~/.claude/CLAUDE.md` : lancer `bash "$TMPDIR/scripts/inject-claude-md.sh"` (demandera confirmation à l'utilisateur)
+   - Si les marqueurs existent et le contenu est identique : afficher "CLAUDE.md FORGE section is up to date" et passer
+   - Si les marqueurs existent et le contenu diffère :
+     - Afficher le diff entre le bloc actuel et le template
+     - Demander confirmation avant remplacement
+     - Si confirmé : lancer `bash "$TMPDIR/scripts/inject-claude-md.sh"`
+     - Si refusé : passer
+
 6. **Vérifier l'installation** :
    - Confirmer que `~/.claude/skills/forge/SKILL.md` existe toujours
    - Compter le nombre de skills installés

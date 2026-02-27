@@ -22,7 +22,7 @@ step()  { echo -e "\n${BOLD}[$1/$TOTAL_STEPS] $2${NC}"; }
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CLAUDE_DIR="${HOME}/.claude"
-TOTAL_STEPS=5
+TOTAL_STEPS=6
 VECTOR_MEMORY_INSTALLED=false
 
 # ─── Banner ──────────────────────────────────────────────────────────────────
@@ -31,7 +31,7 @@ echo ""
 echo -e "${GREEN}FORGE${NC} — Framework for Orchestrated Resilient Generative Engineering"
 echo ""
 
-# ─── [1/5] Detect OS ────────────────────────────────────────────────────────
+# ─── [1/6] Detect OS ────────────────────────────────────────────────────────
 
 detect_os() {
     step 1 "Detecting OS..."
@@ -69,7 +69,7 @@ detect_os() {
     ok "Detected OS: ${OS}"
 }
 
-# ─── [2/5] Install skills ───────────────────────────────────────────────────
+# ─── [2/6] Install skills ───────────────────────────────────────────────────
 
 verify_source() {
     if [ ! -d "${SCRIPT_DIR}/skills" ]; then
@@ -143,10 +143,22 @@ install_skills() {
     fi
 }
 
-# ─── [3/5] Check Python & vector memory ─────────────────────────────────────
+# ─── [3/6] Update ~/.claude/CLAUDE.md ────────────────────────────────────────
+
+inject_claude_md() {
+    step 3 "Configuring ~/.claude/CLAUDE.md..."
+
+    if [ -f "${SCRIPT_DIR}/scripts/inject-claude-md.sh" ]; then
+        bash "${SCRIPT_DIR}/scripts/inject-claude-md.sh"
+    else
+        warn "inject-claude-md.sh not found — skipping CLAUDE.md configuration."
+    fi
+}
+
+# ─── [4/6] Check Python & vector memory ─────────────────────────────────────
 
 check_python() {
-    step 3 "Checking Python..."
+    step 4 "Checking Python..."
 
     local py_cmd=""
     local py_version=""
@@ -211,10 +223,10 @@ check_python() {
     fi
 }
 
-# ─── [4/5] Token Saver ─────────────────────────────────────────────────────
+# ─── [5/6] Token Saver ─────────────────────────────────────────────────────
 
 install_token_saver() {
-    step 4 "Installing Token Saver..."
+    step 5 "Installing Token Saver..."
 
     if bash "${CLAUDE_DIR}/skills/forge/scripts/token-saver-setup.sh"; then
         TOKEN_SAVER_INSTALLED=true
@@ -226,10 +238,10 @@ install_token_saver() {
     fi
 }
 
-# ─── [5/5] Verify installation ──────────────────────────────────────────────
+# ─── [6/6] Verify installation ──────────────────────────────────────────────
 
 verify_installation() {
-    step 5 "Verifying installation..."
+    step 6 "Verifying installation..."
 
     local errors=0
 
@@ -308,6 +320,7 @@ main() {
     detect_os
     verify_source
     install_skills
+    inject_claude_md
     check_python
     install_token_saver
     verify_installation
