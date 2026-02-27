@@ -5,6 +5,16 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2026-02-27
+
+### Added
+
+- Managed FORGE section in `~/.claude/CLAUDE.md` with `<!-- FORGE:BEGIN -->` / `<!-- FORGE:END -->` markers
+- `templates/claude-md-forge-section.md` as single source of truth for FORGE config block
+- `scripts/inject-claude-md.sh` for injection/update with automatic backup and user confirmation
+- New install step [3/6] to configure `~/.claude/CLAUDE.md` during installation
+- Step 5c in `/forge-update` to detect and propose FORGE section updates
+
 ## [1.0.2] - 2026-02-27
 
 ### Changed
@@ -53,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.0.3]: https://github.com/fwehrling/forge/releases/tag/v1.0.3
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/fwehrling/forge/releases/tag/v1.0.0
