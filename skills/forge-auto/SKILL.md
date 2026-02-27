@@ -74,7 +74,16 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
        → forge-loop iterates autonomously with sandbox guardrails until tests pass
        → On success: reset failure counter, continue with /forge-verify
 
-   IF QA verdict = PASS:
+   IF QA verdict = PASS or CONCERNS:
+     → Launch /forge-review on the story's source code (src/{MODULE}/)
+     → Review = adversarial analysis (devil's advocate): gaps, risks, assumptions
+
+   IF review raises CRITICAL issues:
+     → Fix the issues
+     → Re-run /forge-verify STORY-XXX (regression check)
+     → Re-run /forge-review to confirm fixes
+
+   IF review is clean (no critical issues):
      → Move to the next story
 
    IF all stories are "completed":
@@ -93,6 +102,8 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
 4. **Automatic quality gates**:
    - After each story: lint + typecheck + tests > 80% coverage
    - After each /forge-verify: mandatory QA verdict
+   - After QA PASS/CONCERNS: mandatory /forge-review (adversarial review)
+   - If /forge-review raises critical issues: fix → re-verify → re-review
    - **Loop escalation**: if 3 consecutive failures on the same story, autopilot
      delegates to `/forge-loop` in HITL mode with the QA failure summary as task.
      forge-loop iterates with sandbox guardrails (cost cap, circuit breaker, rollback)
@@ -174,6 +185,9 @@ Session   : .forge/memory/sessions/YYYY-MM-DD.md
 | --- | --- | --- |
 | 2+ unblocked stories ready | `/forge-team build` (parallel) | Agent Teams enabled |
 | 1 story ready | `/forge-build STORY-XXX` (sequential) | Always |
+| Story implemented (Dev tests pass) | `/forge-verify STORY-XXX` (QA audit) | Always |
+| QA verdict PASS/CONCERNS | `/forge-review src/{MODULE}/` (adversarial review) | Always |
+| Review raises critical issues | Fix → `/forge-verify` → `/forge-review` | Always |
 | 3 consecutive failures on a story | `/forge-loop` (iterative fix) | Always |
 | forge-loop also fails | Pause + report to user | Ultimate circuit breaker |
 
