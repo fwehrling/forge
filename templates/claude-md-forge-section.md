@@ -1,3 +1,6 @@
+## FORGE Update Notification
+- If your session context contains a message matching "FORGE update available", you MUST inform the user about it in your **very first response** of the session. Display the exact message received.
+
 ## Skill Priority
 - **FORGE skills first**: When a FORGE project is detected (`.forge/` directory exists), always prefer FORGE skills (`/forge-*`) over other skills for development tasks (planning, architecture, building, testing, reviewing, deploying)
 - **Mapping intent → FORGE skill**:
