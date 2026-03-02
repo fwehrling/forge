@@ -5,6 +5,19 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-03-02
+
+### Added
+
+- **`/forge-analyze`**: Structured idea intake (pre-analysis questionnaire) and concept validation & synthesis section (personas, USPs, positioning, MoSCoW, success metrics). Full market research framework: SWOT, Porter's 5 Forces, TAM/SAM/SOM, competitive landscape, go-to-market strategies
+- **`/forge-plan`**: Agent Onboarding Protocol (Section 0), Gherkin/BDD acceptance criteria, AI-Human Interaction Protocol, MCP Catalog, design philosophy section
+- **`/forge-build`**: First-story landing page suggestion (Y Combinator style) with hero, problem/solution, social proof, SEO basics
+- **`/forge-ux`**: Structured design system template (colors HEX, typography scale, spacing, components, responsive breakpoints, dark mode, animations). Reference to `ai-design-optimization.md`
+- **`/forge-verify`**: Pragmatic verification checks (link integrity, browser console audit, navigation testing, interactive elements, visual consistency, performance spot-check)
+- **`/forge-quick-spec`**: Dual-track workflow — Bug Fix Track (root cause analysis, impact assessment, regression-first TDD, rollback plan) and Small Change Track
+- `forge/references/ai-coding-optimization.md` — AI-friendly code patterns, documentation strategies, agent optimization
+- `forge/references/ai-design-optimization.md` — YC-standard design guide, Tailwind CSS patterns, accessibility
+
 ## [1.0.3] - 2026-02-27
 
 ### Added
@@ -63,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.1.0]: https://github.com/fwehrling/forge/releases/tag/v1.1.0
 [1.0.3]: https://github.com/fwehrling/forge/releases/tag/v1.0.3
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1

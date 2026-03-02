@@ -19,6 +19,19 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
    - If an argument is provided (e.g., `STORY-003`), read `docs/stories/STORY-003-*.md`
    - Otherwise, read `.forge/sprint-status.yaml` and pick the next unblocked `pending` story
 
+1.5. **First story? Check for landing page requirement**:
+   - If this is the FIRST story being built AND the project has no landing page yet:
+   - Suggest building a **Landing Page (Y Combinator style)** as the first deliverable:
+     - **Hero section**: Compelling headline (main benefit), sub-headline (context), primary CTA button, optional product visual
+     - **Problem/Solution framing**: Concise articulation of the pain point and how the product solves it
+     - **Benefits section**: 2-3 core benefits (not features), benefit-driven language, icons/visuals
+     - **Social proof**: Testimonials, logos, "trusted by" (placeholders OK initially)
+     - **Clear CTA repeat**: Prominent call-to-action at bottom
+     - **Design**: Minimalist, mobile-first, fast-loading, clean semantic HTML
+     - **SEO basics**: Title tags, meta descriptions, H1 structure, analytics ready
+     - **Reference**: `~/.claude/skills/forge/references/ai-design-optimization.md` for YC-standard design patterns
+   - This is a suggestion, not mandatory — the user decides
+
 2. **Load context**:
    - Read the full story file
    - Read `docs/architecture.md` (section 2.4 Design System)

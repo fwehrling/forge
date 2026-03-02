@@ -36,6 +36,14 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
 
 5. **Write missing tests** (integration, E2E, performance, security if needed)
 
+5.5. **Pragmatic verification checks** (in addition to test suite):
+   - **Link integrity**: Verify all internal navigation links, CTAs, footer links point to correct destinations. Check for broken links (404s)
+   - **Browser console audit**: Check for JavaScript errors, warnings, or failed resource loads during page interaction
+   - **Navigation testing**: Test all nav elements (header, footer, in-page links), mobile hamburger menu functionality, hover states, active states, dropdowns
+   - **Interactive elements**: Verify all buttons, forms, accordions, modals function as expected
+   - **Visual consistency**: Cross-check fonts, colors, spacing against `docs/ux-design.md` design system. Verify responsive behavior across breakpoints (mobile, tablet, desktop)
+   - **Performance spot-check**: Basic load time assessment, image optimization, no heavy blocking scripts
+
 6. **Run the full test suite**
 
 7. **Issue the verdict**:
