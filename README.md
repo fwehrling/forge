@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.0.2-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.1.0-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-23-orange)](#commands)
@@ -51,8 +51,8 @@ flowchart TD
     Q -->|"Parallel teams"| TEAM(["<b>/forge-team</b>"])
     Q -->|"Step by step"| MANUAL(["<b>/forge-*</b>"])
 
-    AUTO --> AD["Sequential pipeline<br/>plan → arch → ux → stories → build → verify<br/>Checkpoints: --no-pause · --pause-stories · --pause-each"]
-    TEAM --> TD2["Parallel execution with real Claude Code instances<br/>3 patterns: pipeline · party · build<br/>Up to 4 Dev + 1 QA simultaneously"]
+    AUTO --> AD["Sequential pipeline<br/>analyze → plan → arch → ux → stories → build → verify → review<br/>Checkpoints: --no-pause · --pause-stories · --pause-each"]
+    TEAM --> TD2["Parallel execution with real Claude Code instances<br/>3 patterns: pipeline · party · build<br/>Up to 4 Dev + 1 QA + 1 Reviewer simultaneously"]
     MANUAL --> MD["You run each command individually<br/>/forge-plan → /forge-architect → /forge-build → ..."]
 ```
 
@@ -691,6 +691,26 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 - **Claude Code Skills** for the native integration architecture
 - **Persistent memory patterns** for cross-session continuity
 - **n8n** for workflow automation concepts
+
+---
+
+## Changelog
+
+### v1.1.0
+
+**Enriched skills** — Integrated best practices from structured development methodology research:
+
+- **`/forge-analyze`**: Added structured idea intake (pre-analysis questionnaire) and concept validation & synthesis section (personas, USPs, positioning statement, MoSCoW matrix, success metrics). Full market research framework: SWOT, Porter's 5 Forces, TAM/SAM/SOM, competitive landscape, go-to-market strategies.
+- **`/forge-plan`**: PRD now includes Agent Onboarding Protocol (Section 0), Gherkin/BDD acceptance criteria, AI-Human Interaction Protocol, MCP Catalog, and design philosophy section.
+- **`/forge-build`**: First-story landing page suggestion (Y Combinator style) — hero section, problem/solution framing, social proof, SEO basics.
+- **`/forge-ux`**: Structured design system template with exact specifications — colors (HEX), typography (type scale), spacing (base unit + scale), components (buttons/forms/cards/modals/nav/tables/alerts), responsive breakpoints, dark mode, animations. Reference to `ai-design-optimization.md`.
+- **`/forge-verify`**: Pragmatic verification checks — link integrity, browser console audit, navigation testing, interactive elements, visual consistency, performance spot-check.
+- **`/forge-quick-spec`**: Dual-track workflow — Bug Fix Track (root cause analysis, impact assessment, regression-first TDD, rollback plan) and Small Change Track.
+
+**New reference documents:**
+
+- `forge/references/ai-coding-optimization.md` — AI-friendly code patterns, documentation strategies, agent optimization (DeLP, AOP)
+- `forge/references/ai-design-optimization.md` — YC-standard design guide, Tailwind CSS patterns, React component best practices, accessibility
 
 ---
 
