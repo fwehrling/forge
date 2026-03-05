@@ -5,6 +5,14 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-03-05
+
+### Changed
+
+- **`/forge` core skill**: Refactored SKILL.md — externalized detailed sections into modular reference files (`references/workflows.md`, `references/memory.md`, `references/security.md`, `references/loops.md`, `references/configuration.md`, `references/mcp-integration.md`), reducing main skill from ~800 to ~130 lines for faster loading
+- **`/forge-audit-skill`**, **`/forge-init`**, **`/forge-review`**: Standardized usage syntax from `<param>` to `[param]` (bracket convention for optional parameters)
+- **`/forge` SKILL.md**: Condensed Scale-Adaptive Intelligence section, simplified Agent Registry headers, streamlined pipeline diagram
+
 ## [1.1.0] - 2026-03-02
 
 ### Added
@@ -76,6 +84,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.2.0]: https://github.com/fwehrling/forge/releases/tag/v1.2.0
 [1.1.0]: https://github.com/fwehrling/forge/releases/tag/v1.1.0
 [1.0.3]: https://github.com/fwehrling/forge/releases/tag/v1.0.3
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2

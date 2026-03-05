@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.1.0-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.2.0-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-23-orange)](#commands)
@@ -695,6 +695,13 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 ---
 
 ## Changelog
+
+### v1.2.0
+
+**Modular architecture** — Refactored core skill for faster loading and maintainability:
+
+- **`/forge` core skill**: Externalized detailed sections into 6 modular reference files (`workflows.md`, `memory.md`, `security.md`, `loops.md`, `configuration.md`, `mcp-integration.md`), reducing main SKILL.md from ~800 to ~130 lines
+- **`/forge-audit-skill`**, **`/forge-init`**, **`/forge-review`**: Standardized usage syntax (`<param>` → `[param]`)
 
 ### v1.1.0
 
