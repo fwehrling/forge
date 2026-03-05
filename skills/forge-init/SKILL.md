@@ -3,7 +3,7 @@ name: forge-init
 description: >
   FORGE Initializer — Initializes FORGE in a new or existing project.
   Creates the .forge/ structure, templates, CLAUDE.md, and detects the tech stack.
-  Usage: /forge-init or /forge-init <path>
+  Usage: /forge-init or /forge-init [path]
 ---
 
 # /forge-init — FORGE Initialization

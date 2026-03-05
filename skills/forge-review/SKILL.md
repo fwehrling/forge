@@ -2,7 +2,7 @@
 name: forge-review
 description: >
   FORGE Reviewer Agent — Adversarial review of an artifact (devil's advocate).
-  Usage: /forge-review <path-to-artifact>
+  Usage: /forge-review [path-to-artifact]
 ---
 
 # /forge-review — FORGE Reviewer Agent

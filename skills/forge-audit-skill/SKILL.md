@@ -2,7 +2,7 @@
 name: forge-audit-skill
 description: >
   FORGE Skill Auditor — Security audit of third-party Claude Code skills.
-  Usage: /forge-audit-skill <path-to-skill>
+  Usage: /forge-audit-skill [path-to-skill]
 ---
 
 # /forge-audit-skill — FORGE Skill Auditor
