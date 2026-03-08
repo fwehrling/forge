@@ -1,7 +1,13 @@
 ---
 name: forge-party
 description: >
-  FORGE Orchestrator — Launches 2-3 agents in parallel on a topic for multi-agent collaboration.
+  FORGE Orchestrator — Launches 2-3 subagents in parallel on a topic for multi-perspective analysis.
+  Use when the user says "analyze this from multiple angles", "get different perspectives",
+  "multi-agent debate", "brainstorm with agents", "compare approaches", "what do different
+  experts think about", or wants quick collaborative analysis without full Agent Teams setup.
+  Uses Task tool subagents (lightweight) — no Agent Teams env var needed.
+  Do NOT use for true parallel builds (use /forge-team which uses real Agent Teams processes).
+  Do NOT use for single-perspective code review (use /forge-review).
   Usage: /forge-party "topic"
 ---
 
@@ -9,9 +15,18 @@ description: >
 
 You are the FORGE **Orchestrator**. Load the full persona from `~/.claude/skills/forge/references/agents/orchestrator.md`.
 
-## French Language Rule
+## Available Perspectives
 
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
+Select 2-3 from the following based on the topic:
+
+| Perspective | Best for | Persona ref |
+|---|---|---|
+| Architect | System design, scalability, tech stack | `agents/architect.md` |
+| PM | User value, requirements, prioritization | `agents/pm.md` |
+| Security | Threats, compliance, vulnerabilities | `agents/security.md` |
+| Dev | Implementation feasibility, effort, patterns | `agents/dev.md` |
+| QA | Testability, quality risks, coverage | `agents/qa.md` |
+| Reviewer | Devil's advocate, risks, alternatives | `agents/reviewer.md` |
 
 ## Workflow
 
@@ -19,17 +34,38 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
    - Read `.forge/memory/MEMORY.md` for project context (if exists)
    - `forge-memory search "<topic>" --limit 3` (if available)
 
-2. Analyze the topic provided as argument
-3. Identify the 2-3 most relevant agents
-4. Create a shared brief for each agent
-5. Launch agents in parallel (via Task tool)
-6. Collect independent analyses
-7. Synthesize into a unified report:
-   - Points of consensus
-   - Points of divergence with pros/cons
-   - Final recommendation
+2. **Analyze the topic** and select the 2-3 most relevant perspectives from the table above
 
-8. **Save memory** (MANDATORY if FORGE project — never skip):
+3. **Craft a brief for each agent**:
+   Each subagent receives a Task tool prompt containing:
+   - The topic to analyze
+   - Their specific perspective and what to focus on
+   - Available context files to read
+   - Expected output structure: key observations (3-5), risks, recommendations
+
+4. **Launch agents in parallel** via the Task tool (one per perspective)
+
+5. **Collect and synthesize** the independent analyses into a unified report:
+
+   ```
+   FORGE Party — <topic>
+   ─────────────────────────
+   Perspectives: Architect, Security, Dev
+
+   ## Points of Consensus
+   - <point> (supported by: Architect, Dev)
+   - <point> (supported by: all)
+
+   ## Points of Divergence
+   - <topic>:
+     - Architect: <position> — because <reasoning>
+     - Security: <position> — because <reasoning>
+
+   ## Final Recommendation
+   <synthesized recommendation based on all perspectives>
+   ```
+
+6. **Save memory** (ensures multi-perspective insights persist for future decisions):
    ```bash
    forge-memory log "Party terminée : {TOPIC}, {N} agents, recommandation: {SUMMARY}" --agent orchestrator
    forge-memory consolidate --verbose

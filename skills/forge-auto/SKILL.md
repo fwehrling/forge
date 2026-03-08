@@ -2,8 +2,13 @@
 name: forge-auto
 description: >
   FORGE Autopilot — Intelligent autonomous mode. FORGE analyzes the project state,
-  automatically decides the next action, and orchestrates all agents
-  until completion. Configurable checkpoints for human review.
+  automatically decides the next action, and orchestrates all agents until completion.
+  Configurable checkpoints for human review.
+  Use when the user says "run everything automatically", "full pipeline", "just build it",
+  "do it all", "autopilot", "build the whole project end to end", "autonomous mode",
+  or wants FORGE to handle the entire dev cycle without manual step-by-step invocation.
+  Do NOT use for parallel story builds (use /forge-team pipeline instead).
+  Do NOT use for a single story (use /forge-build). Do NOT use for just planning (use /forge-plan).
   Usage: /forge-auto or /forge-auto "specific objective"
 ---
 
@@ -11,10 +16,6 @@ description: >
 
 FORGE takes full control of the development pipeline. It analyzes, decides,
 executes, verifies, and iterates automatically until the objective is complete.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Principle
 
@@ -35,60 +36,23 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
 
 2. **Analyze state and determine the phase**:
 
-   The decision system follows this logic:
+   Inspect the project artifacts and sprint status, then execute the appropriate phase:
 
-   ```
-   IF no artifacts exist:
-     → Start with /forge-plan (generates the PRD)
-
-   IF PRD exists BUT no architecture:
-     → Launch /forge-architect
-
-   IF architecture exists BUT no UX design:
-     → Launch /forge-ux
-
-   IF UX exists BUT no stories:
-     → Launch /forge-stories
-
-   IF stories exist with "pending" status:
-     → Count unblocked pending stories
-     → IF 2+ unblocked stories AND Agent Teams available (CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1):
-       → Delegate to /forge-team build [STORY-IDs] (parallel execution)
-       → Wait for team completion, then continue with QA verdicts
-     → ELSE:
-       → Pick the next unblocked story
-       → Launch /forge-build STORY-XXX (sequential)
-
-   IF an "in_progress" story exists:
-     → Resume /forge-build STORY-XXX
-
-   IF story is implemented (Dev tests pass):
-     → Launch /forge-verify STORY-XXX
-
-   IF QA verdict = FAIL:
-     → Increment failure counter for this story
-     → IF failure counter < 3:
-       → Fix and relaunch /forge-verify
-     → IF failure counter >= 3:
-       → Escalate to /forge-loop "Fix STORY-XXX: [QA failure summary]" --mode hitl
-       → forge-loop iterates autonomously with sandbox guardrails until tests pass
-       → On success: reset failure counter, continue with /forge-verify
-
-   IF QA verdict = PASS or CONCERNS:
-     → Launch /forge-review on the story's source code (src/{MODULE}/)
-     → Review = adversarial analysis (devil's advocate): gaps, risks, assumptions
-
-   IF review raises CRITICAL issues:
-     → Fix the issues
-     → Re-run /forge-verify STORY-XXX (regression check)
-     → Re-run /forge-review to confirm fixes
-
-   IF review is clean (no critical issues):
-     → Move to the next story
-
-   IF all stories are "completed":
-     → Propose /forge-deploy or new stories
-   ```
+   - **No artifacts exist** → Start with `/forge-plan` (generates the PRD)
+   - **PRD exists, no architecture** → Launch `/forge-architect`
+   - **Architecture exists, no UX design** → Launch `/forge-ux`
+   - **UX exists, no stories** → Launch `/forge-stories`
+   - **Stories exist with "pending" status**:
+     - Count unblocked pending stories
+     - 2+ unblocked stories AND Agent Teams available → Delegate to `/forge-team build [STORY-IDs]` (parallel execution), then continue with QA
+     - Otherwise → Pick the next unblocked story, launch `/forge-build STORY-XXX` (sequential)
+   - **"in_progress" story exists** → Resume `/forge-build STORY-XXX`
+   - **Story implemented (Dev tests pass)** → Launch `/forge-verify STORY-XXX`
+   - **QA verdict = FAIL** → Increment failure counter. Under 3 failures: fix and re-verify. At 3+ failures: escalate to `/forge-loop "Fix STORY-XXX: [summary]" --mode hitl` which iterates with sandbox guardrails until tests pass
+   - **QA verdict = PASS or CONCERNS** → Launch `/forge-review` on the story's source code (adversarial analysis)
+   - **Review raises CRITICAL issues** → Fix, re-run `/forge-verify`, re-run `/forge-review`
+   - **Review is clean** → Move to the next story
+   - **All stories completed** → Propose `/forge-deploy` or new stories
 
 3. **Execute with the appropriate agents**:
    - Each phase invokes the corresponding agent (PM, Architect, UX, SM, Dev, QA)

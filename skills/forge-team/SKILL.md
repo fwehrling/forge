@@ -1,19 +1,19 @@
 ---
 name: forge-team
 description: >
-  FORGE + Agent Teams — Exploits Agent Teams for true parallel execution of FORGE agents.
+  FORGE + Agent Teams — True parallel execution of FORGE agents using real Claude Code processes.
   3 patterns: pipeline (full pipeline with parallel stories), party (multi-agent debate),
   build (parallel story development). Requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1.
+  Use when the user says "build stories in parallel", "launch multiple agents", "team pipeline",
+  "parallel build", "multi-agent debate", "run agents simultaneously", or wants real parallelism.
+  Do NOT use without Agent Teams enabled (use /forge-auto for sequential pipeline instead).
+  Do NOT use for 2-3 agent quick analysis (use /forge-party which uses subagents, not Agent Teams).
   Usage: /forge-team pipeline "objective" | /forge-team party "topic" | /forge-team build [STORY-IDs]
 ---
 
 # /forge-team — FORGE + Agent Teams Bridge
 
 You are the FORGE **Team Lead**. You orchestrate Agent Teams to parallelize FORGE workflows using real Claude Code instances (not subagents).
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Prerequisites
 

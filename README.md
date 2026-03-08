@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.2.0-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.3.0-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-23-orange)](#commands)
@@ -695,6 +695,18 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 ---
 
 ## Changelog
+
+### v1.3.0
+
+**Skill triggering & quality overhaul** — All 23 skill descriptions rewritten for reliable automatic triggering:
+
+- **Descriptions**: Every skill now includes natural language trigger phrases, negative routing cases ("Do NOT use for X, use /forge-Y"), and pipeline positioning. Disambiguation matrix resolves all confusing skill pairs
+- **French Language Rule**: Removed from 22 satellite skills — kept only in hub. Language is a user preference, not a per-skill concern
+- **Output templates**: 15 skills now include concrete ASCII report examples (previously only `/forge-resume` had one)
+- **Memory blocks**: "MANDATORY — never skip" replaced with WHY explanations across all agent skills
+- **Step numbering**: Fixed all non-standard numbering (1.5, 2.5, 5b/5c, double-2) to sequential integers
+- **Expanded skills**: `/forge-review` (35→65 lines with severity classification), `/forge-party` (perspectives table + synthesis format), `/forge-verify` (UI details moved to QA persona ref)
+- **`/forge-auto`**: IF/ELSE pseudo-code converted to imperative style
 
 ### v1.2.0
 

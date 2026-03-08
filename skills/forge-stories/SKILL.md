@@ -1,17 +1,20 @@
 ---
 name: forge-stories
 description: >
-  FORGE SM Agent — Decomposes requirements into stories with test specs.
+  FORGE SM Agent (Scrum Master) — Decomposes requirements into implementable user stories
+  with acceptance criteria and test specifications.
+  Use when the user says "break down into stories", "create user stories", "sprint planning",
+  "decompose the features", "task breakdown", "split into stories", "write the stories",
+  or wants to go from architecture to actionable development tasks.
+  Produces docs/stories/STORY-XXX-*.md files. Requires docs/prd.md and docs/architecture.md.
+  Do NOT use for writing requirements (use /forge-plan).
+  Do NOT use for implementing stories (use /forge-build).
   Usage: /forge-stories
 ---
 
 # /forge-stories — FORGE Scrum Master Agent
 
 You are the FORGE **SM Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/sm.md`.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Workflow
 
@@ -36,9 +39,28 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
 6. Update `docs/stories/INDEX.md`
 7. Update `.forge/sprint-status.yaml`
 
-8. **Save memory** (MANDATORY — never skip):
+8. **Save memory** (ensures story decomposition decisions persist for Dev and QA context):
    ```bash
    forge-memory log "Stories décomposées : {N} stories créées, {M} AC total, sprint planifié" --agent sm
    forge-memory consolidate --verbose
    forge-memory sync
+   ```
+
+9. **Report to user**:
+
+   ```
+   FORGE SM — Stories Decomposed
+   ───────────────────────────────
+   Stories   : N created
+   ACs       : M total acceptance criteria
+   Tests     : K test specifications
+
+   | Story       | Title              | Priority | Effort | Blocked By  |
+   |-------------|--------------------|----------|--------|-------------|
+   | STORY-001   | <title>            | P0       | S      | —           |
+   | STORY-002   | <title>            | P0       | M      | STORY-001   |
+   | STORY-003   | <title>            | P1       | L      | —           |
+
+   Suggested next step:
+     → /forge-build STORY-001
    ```

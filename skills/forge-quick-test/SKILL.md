@@ -2,6 +2,12 @@
 name: forge-quick-test
 description: >
   FORGE Quick QA — Zero-config testing with automatic framework detection. Lightweight alternative to /forge-verify.
+  Use when the user says "run the tests", "do the tests pass", "check if anything is broken",
+  "quick test", "test suite", "run jest/vitest/pytest", or wants to run existing tests without
+  story context or formal certification. Auto-detects test framework (jest, vitest, pytest, go test, etc.).
+  No story file required — just discovers and runs tests.
+  Do NOT use for formal story certification with verdicts (use /forge-verify which requires a story).
+  Do NOT use for writing new tests (use /forge-build which writes tests alongside implementation).
   Usage: /forge-quick-test
 ---
 
@@ -10,10 +16,6 @@ description: >
 You are the FORGE **Quick QA Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/quick-qa.md`.
 
 This is a lightweight alternative to `/forge-verify` — no story required, no certification process. Just run the tests and report.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Workflow
 
@@ -40,9 +42,27 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
    - Execution time
    - Quick recommendations for failing tests
 
-5. **Save memory** (MANDATORY — never skip):
+5. **Save memory** (ensures test results persist for trend tracking across sessions):
    ```bash
    forge-memory log "Quick test : {PASSED}/{TOTAL} passed, coverage {COV}%, {FRAMEWORK}" --agent quick-qa
    forge-memory consolidate --verbose
    forge-memory sync
+   ```
+
+6. **Report to user**:
+
+   ```
+   FORGE Quick QA — Test Results
+   ───────────────────────────────
+   Framework : <detected framework>
+   Results   : X passed / Y failed / Z skipped
+   Coverage  : XX% (if available)
+   Duration  : X.Xs
+
+   Failed Tests:
+     - <test name>: <error message>
+     - <test name>: <error message>
+
+   Recommendations:
+     - <suggestion for fixing failures>
    ```

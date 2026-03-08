@@ -1,17 +1,20 @@
 ---
 name: forge-analyze
 description: >
-  FORGE Analyst Agent — Domain research, market analysis, and requirements elicitation. Upstream of /forge-plan.
+  FORGE Analyst Agent — Domain research, market analysis, competitive analysis, and requirements elicitation.
+  Use when the user says "analyze the market", "research the competition", "domain analysis",
+  "I have a startup idea", "what does the market look like", "competitive landscape",
+  "before we plan, let's research", "validate this idea", or wants to understand the problem
+  space before writing requirements. This is the first step in the pipeline — upstream of /forge-plan.
+  Produces docs/analysis.md.
+  Do NOT use for writing requirements (use /forge-plan, which comes after analysis).
+  Do NOT use for technical architecture (use /forge-architect).
   Usage: /forge-analyze
 ---
 
 # /forge-analyze — FORGE Analyst Agent
 
 You are the FORGE **Analyst Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/analyst.md`.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Workflow
 
@@ -85,9 +88,25 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
 
 4. This artifact feeds into `/forge-plan` (PM agent) as upstream input
 
-5. **Save memory** (MANDATORY — never skip):
+5. **Save memory** (ensures market insights and competitive findings persist for PM and Architect agents):
    ```bash
    forge-memory log "Analyse complétée : {DOMAIN}, {N} exigences, {M} contraintes, {K} risques, marché {VIABILITY}" --agent analyst
    forge-memory consolidate --verbose
    forge-memory sync
+   ```
+
+6. **Report to user**:
+
+   ```
+   FORGE Analyst — Analysis Complete
+   ───────────────────────────────────
+   Artifact    : docs/analysis.md
+   Domain      : <domain>
+   Competitors : N analyzed
+   Segments    : M market segments
+   Risks       : K identified (H high, M medium, L low)
+   Viability   : HIGH | MEDIUM | LOW
+
+   Suggested next step:
+     → /forge-plan
    ```

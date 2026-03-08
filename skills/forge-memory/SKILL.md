@@ -1,19 +1,20 @@
 ---
 name: forge-memory
 description: >
-  FORGE Vector Memory — Diagnostic tool for the vector memory index.
+  FORGE Vector Memory — Diagnostic and maintenance tool for the vector memory index.
+  Use when the user says "memory status", "reindex memory", "search memory for",
+  "is the memory index working", "consolidate memory", "reset the vector index",
+  "debug memory", or needs to troubleshoot, inspect, or maintain the FORGE memory system.
+  This is a diagnostic tool only — all other FORGE skills automatically use vector memory search.
+  Do NOT use for regular context retrieval (it happens automatically in every /forge-* skill).
   Operations: sync, search, status, reset, log, consolidate.
-  Usage: /forge-memory sync | /forge-memory search "query" | /forge-memory status | /forge-memory log "message" | /forge-memory consolidate
+  Usage: /forge-memory sync | /forge-memory search "query" | /forge-memory status
 ---
 
 # /forge-memory — FORGE Vector Memory
 
 Outil de diagnostic pour l'index vectoriel de la mémoire FORGE.
 Les commandes FORGE utilisent automatiquement la recherche vectorielle ; ce skill est pour le diagnostic et la maintenance.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Prérequis
 
@@ -106,3 +107,30 @@ forge-memory reset --confirm
 - Recherche hybride : similarité vectorielle (70%) + FTS5 BM25 (30%)
 - Embeddings locaux : sentence-transformers all-MiniLM-L6-v2 (384 dimensions)
 - Chunking markdown-aware : ~400 tokens/chunk, 80 tokens overlap
+
+## Output Examples
+
+### `forge-memory status`
+
+```
+FORGE Memory — Status
+──────────────────────
+Database  : .forge/memory/index.sqlite
+Documents : 42 indexed (12 project, 18 session, 12 agent)
+Chunks    : 187 total
+Last sync : 2026-03-08 14:23:01
+Model     : all-MiniLM-L6-v2 (384 dims)
+```
+
+### `forge-memory search "auth" --pretty`
+
+```
+[0.87] .forge/memory/sessions/2026-03-07.md:12
+  "JWT auth implemented with refresh tokens, 15min expiry..."
+
+[0.72] docs/architecture.md:45
+  "Authentication uses bcrypt + JWT. Session management via..."
+
+[0.65] .forge/memory/agents/dev.md:8
+  "STORY-002 auth: learned that httpOnly cookies are required..."
+```

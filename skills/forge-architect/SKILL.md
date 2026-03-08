@@ -1,17 +1,20 @@
 ---
 name: forge-architect
 description: >
-  FORGE Architect Agent — Generates or updates the technical architecture.
+  FORGE Architect Agent — Generates or updates the technical architecture document.
+  Use when the user says "design the system", "technical architecture", "define the tech stack",
+  "choose the database", "API design", "system design", "how should we structure the code",
+  "architecture decision", or wants to make technical design choices before implementation.
+  Produces docs/architecture.md. Requires docs/prd.md to exist (run /forge-plan first).
+  Do NOT use for product requirements (use /forge-plan).
+  Do NOT use for story breakdown (use /forge-stories).
+  Do NOT use for UX/wireframes (use /forge-ux).
   Usage: /forge-architect
 ---
 
 # /forge-architect — FORGE Architect Agent
 
 You are the FORGE **Architect Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/architect.md`.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Workflow
 
@@ -37,9 +40,24 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
    - Each ADR contains: Status, Context, Decision, Consequences
    - Skip this step for Quick and Standard tracks
 
-7. **Save memory** (MANDATORY — never skip):
+7. **Save memory** (ensures architecture decisions persist for future reference by Dev and QA agents):
    ```bash
    forge-memory log "Architecture générée : {STACK}, {N} composants, {M} API contracts" --agent architect
    forge-memory consolidate --verbose
    forge-memory sync
+   ```
+
+8. **Report to user**:
+
+   ```
+   FORGE Architect — Architecture Complete
+   ─────────────────────────────────────────
+   Artifact  : docs/architecture.md
+   Stack     : <language> / <framework> / <database>
+   Components: N components, M API contracts
+   ADRs      : K decisions recorded (Enterprise only)
+
+   Suggested next step:
+     → /forge-ux (if UI project)
+     → /forge-stories (if API/backend only)
    ```
