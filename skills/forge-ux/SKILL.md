@@ -2,16 +2,18 @@
 name: forge-ux
 description: >
   FORGE UX Agent — Generates UX design, wireframes, design system, and accessibility guidelines.
+  Use when the user says "design the UI", "create wireframes", "design system", "UX design",
+  "user experience", "mockups", "accessibility guidelines", "WCAG compliance", "color palette",
+  "typography", or wants to define the visual and interaction design before implementation.
+  Produces docs/ux-design.md. Requires docs/prd.md to exist.
+  Do NOT use for technical architecture (use /forge-architect).
+  Do NOT use for frontend implementation (use /forge-build).
   Usage: /forge-ux
 ---
 
 # /forge-ux — FORGE UX Agent
 
 You are the FORGE **UX Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/ux.md`.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Workflow
 
@@ -39,9 +41,24 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
    - **Reference**: Load `~/.claude/skills/forge/references/ai-design-optimization.md` for YC-standard design patterns and Tailwind CSS best practices
    - Produce `docs/ux-design.md`
 
-6. **Save memory** (MANDATORY — never skip):
+6. **Save memory** (ensures design decisions persist for Dev agents implementing the UI):
    ```bash
    forge-memory log "UX design générée : {N} wireframes, design system, accessibilité WCAG {LEVEL}" --agent ux
    forge-memory consolidate --verbose
    forge-memory sync
+   ```
+
+7. **Report to user**:
+
+   ```
+   FORGE UX — Design Complete
+   ────────────────────────────
+   Artifact     : docs/ux-design.md
+   Wireframes   : N screens
+   Design System: colors, typography, spacing, components
+   Accessibility: WCAG 2.1 AA
+   Dark Mode    : included
+
+   Suggested next step:
+     → /forge-stories
    ```

@@ -2,16 +2,18 @@
 name: forge-loop
 description: >
   FORGE Autonomous Loop — Secured iteration runner with cost caps, circuit breakers, and sandbox isolation.
+  Use when the user says "run this in a loop", "iterate autonomously", "keep working on this overnight",
+  "AFK mode", "unattended iteration", "long-running task with guardrails", "loop until done",
+  or wants Claude to iterate on a task with safety limits (cost caps, max iterations, circuit breakers).
+  This is for individual tasks needing repeated iterations — not for full pipeline orchestration.
+  Do NOT use for full pipeline automation (use /forge-auto).
+  Do NOT use for parallel agent execution (use /forge-team).
   Usage: /forge-loop "task description" [options]
 ---
 
 # /forge-loop — FORGE Autonomous Loop
 
 This skill wraps `forge-loop.sh` to provide autonomous iteration with security guardrails.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Usage
 
@@ -66,11 +68,27 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
 5. Display the loop result (completed, blocked, cost_cap, circuit_breaker, etc.)
 6. Show the log file location and state directory for inspection
 
-7. **Save memory** (MANDATORY if FORGE project — never skip):
+7. **Save memory** (ensures iteration outcomes and blockers persist for future debugging context):
    ```bash
    forge-memory log "Loop terminée : {TASK}, résultat={RESULT}, {N} itérations" --agent loop
    forge-memory consolidate --verbose
    forge-memory sync
+   ```
+
+8. **Report to user**:
+
+   ```
+   FORGE Loop — Complete
+   ──────────────────────
+   Task       : <description>
+   Result     : completed | blocked | cost_cap | circuit_breaker
+   Iterations : N / max M
+   Cost       : $X.XX / cap $Y.YY
+   Duration   : Xm Ys
+
+   Log: .forge/loop/<task-hash>/loop.log
+   State: .forge/loop/<task-hash>/state/
+   Checkpoints: forge-ckpt-iter-1 .. forge-ckpt-iter-N
    ```
 
 ## Checkpoint Management

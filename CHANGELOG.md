@@ -5,6 +5,26 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-03-08
+
+### Changed
+
+- **All 23 skill descriptions**: Rewritten with natural language trigger phrases ("Use when the user says..."), negative routing cases ("Do NOT use for... use /forge-X instead"), and pipeline context. Descriptions grew from 2-3 lines to 6-8 lines each, dramatically improving automatic skill triggering accuracy and disambiguation between similar skills (e.g., `/forge-quick-spec` vs `/forge-build`, `/forge-verify` vs `/forge-quick-test`, `/forge-party` vs `/forge-team party`)
+- **French Language Rule**: Removed from 22 satellite skills — kept only in `/forge` (hub skill). Users configure language preferences in their `~/.claude/CLAUDE.md`, not per-skill
+- **Step numbering**: Fixed non-standard numbering (1.5, 2.5, 5b, 5c) across `/forge-build`, `/forge-plan`, `/forge-status`, `/forge-update`, `/forge-verify` — all now use sequential integer numbering
+- **Memory save blocks**: Replaced "MANDATORY — never skip" with explanations of WHY memory matters (e.g., "ensures QA verdicts persist for trend analysis and regression tracking") across all 14 agent skills
+- **`/forge-review`**: Expanded from 35 to ~65 lines — added artifact-type-specific review lenses (code vs PRD vs architecture vs stories), severity classification (CRITICAL/WARNING/INFO), and structured report template with `file:line` references
+- **`/forge-party`**: Expanded workflow — added available perspectives table, structured brief instructions for subagents, and synthesis report format template
+- **`/forge-verify`**: Moved overly specific UI checks (hamburger menus, hover states, dropdowns) to QA persona reference; kept high-level pragmatic checks inline
+- **`/forge-auto`**: Converted pseudo-code IF/ELSE block to imperative bullet-point style for better LLM consumption
+
+### Added
+
+- **Output format templates**: Added concrete ASCII report examples to 15 skills (`forge-build`, `forge-verify`, `forge-plan`, `forge-architect`, `forge-stories`, `forge-review`, `forge-deploy`, `forge-analyze`, `forge-ux`, `forge-audit`, `forge-loop`, `forge-quick-spec`, `forge-quick-test`, `forge-update`, `forge-audit-skill`). Previously only `forge-resume` had one
+- **`/forge-memory`**: Added output examples for `status` and `search --pretty` commands
+- **`/forge-party`**: Added available perspectives table (Architect, PM, Security, Dev, QA, Reviewer) with best-for guidance
+- **`/forge-status`**: Added full sprint status table template with story breakdown, metrics, blockers, and backlog section
+
 ## [1.2.0] - 2026-03-05
 
 ### Changed
@@ -84,6 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.3.0]: https://github.com/fwehrling/forge/releases/tag/v1.3.0
 [1.2.0]: https://github.com/fwehrling/forge/releases/tag/v1.2.0
 [1.1.0]: https://github.com/fwehrling/forge/releases/tag/v1.1.0
 [1.0.3]: https://github.com/fwehrling/forge/releases/tag/v1.0.3

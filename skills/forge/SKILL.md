@@ -8,6 +8,9 @@ description: >
   managing multi-agent development teams, or any structured AI-driven development task.
   Triggers: "forge", "autonomous dev", "agent loop", "agile planning", "multi-agent",
   "development pipeline", "scaffold project", "run forge", "autopilot".
+  This is the central hub skill — for specific pipeline steps, prefer the specialized skills
+  (/forge-plan, /forge-build, /forge-verify, etc.). Use this skill when the user asks about
+  FORGE itself, its configuration, memory system, or how the framework works.
 ---
 
 # FORGE — Framework for Orchestrated Resilient Generative Engineering

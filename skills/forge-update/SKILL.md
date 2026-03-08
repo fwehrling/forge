@@ -2,14 +2,15 @@
 name: forge-update
 description: >
   FORGE Updater — Updates all FORGE skills from the latest GitHub release.
+  Use when the user says "update forge", "upgrade forge skills", "is there a new version of forge",
+  "get the latest forge", "pull forge updates", or wants to update their local FORGE installation
+  to the latest version from GitHub. Downloads and replaces all skill files.
+  Do NOT use for updating project-specific configuration (edit .forge/config.yml manually).
+  Do NOT use for initializing FORGE (use /forge-init).
   Usage: /forge-update
 ---
 
 # /forge-update — FORGE Updater
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Workflow
 
@@ -36,13 +37,13 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
    - Lister les skills supprimés (présents localement mais absents du repo)
    - Si aucun changement, afficher "FORGE est déjà à jour" et terminer
 
-5. **Copier les fichiers mis à jour** :
+5. **Copy updated files** :
    ```bash
    cp -rf "$TMPDIR/skills/"* ~/.claude/skills/
    ```
    - Le `README.md` du repo reste uniquement sur GitHub (pas copié dans les skills)
 
-5b. **Mettre à jour la version et le hook** :
+6. **Update version and hook** :
    - Lire `$TMPDIR/VERSION` et écrire dans `~/.claude/skills/forge/.forge-version`
    - Copier `$TMPDIR/hooks/forge-update-check.sh` vers `~/.claude/hooks/forge-update-check.sh` (chmod +x)
    - Vider le cache `~/.claude/skills/forge/.forge-update-cache` pour forcer un check frais au prochain démarrage
@@ -53,7 +54,7 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
    rm -f ~/.claude/skills/forge/.forge-update-cache
    ```
 
-5c. **Mettre à jour ~/.claude/CLAUDE.md** :
+7. **Update ~/.claude/CLAUDE.md** :
    - Comparer `$TMPDIR/templates/claude-md-forge-section.md` avec le bloc FORGE actuel dans `~/.claude/CLAUDE.md` (contenu entre `<!-- FORGE:BEGIN -->` et `<!-- FORGE:END -->`)
    - Si les marqueurs n'existent pas dans `~/.claude/CLAUDE.md` : lancer `bash "$TMPDIR/scripts/inject-claude-md.sh"` (demandera confirmation à l'utilisateur)
    - Si les marqueurs existent et le contenu est identique : afficher "CLAUDE.md FORGE section is up to date" et passer
@@ -63,16 +64,25 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
      - Si confirmé : lancer `bash "$TMPDIR/scripts/inject-claude-md.sh"`
      - Si refusé : passer
 
-6. **Vérifier l'installation** :
+8. **Verify installation** :
    - Confirmer que `~/.claude/skills/forge/SKILL.md` existe toujours
    - Compter le nombre de skills installés
 
-7. **Nettoyer** :
+9. **Clean up** :
    ```bash
    rm -rf "$TMPDIR"
    ```
 
-8. **Afficher le résultat final** :
-   - Nombre de skills mis à jour / ajoutés / supprimés
-   - Nombre total de skills installés
-   - Rappel : les skills supprimés du repo ne sont PAS supprimés localement (action manuelle requise)
+10. **Display results** :
+
+    ```
+    FORGE Update — Complete
+    ─────────────────────────
+    Updated : X skills
+    Added   : Y new skills
+    Removed : Z skills (from repo, still present locally)
+    Total   : N skills installed
+    Version : vX.Y.Z
+
+    Note: Skills removed from the repo are NOT deleted locally (manual action required).
+    ```

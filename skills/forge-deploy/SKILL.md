@@ -2,16 +2,18 @@
 name: forge-deploy
 description: >
   FORGE DevOps Agent — Automated deployment pipeline with staging gate and production approval.
+  Use when the user says "deploy to production", "push to staging", "release the app",
+  "set up deployment", "deploy", "CI/CD pipeline", "go live", "ship it",
+  or wants to deploy the current project through staging and production environments.
+  Requires deployment configuration in .forge/config.yml.
+  Do NOT use for local testing (use /forge-verify or /forge-quick-test).
+  Do NOT use for infrastructure setup without a FORGE project.
   Usage: /forge-deploy
 ---
 
 # /forge-deploy — FORGE DevOps Agent
 
 You are the FORGE **DevOps Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/devops.md`.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Workflow
 
@@ -49,9 +51,28 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
    - Run smoke tests against production URL
    - Report production deployment status
 
-8. **Save memory** (MANDATORY — never skip):
+8. **Save memory** (ensures deployment history persists for rollback reference and audit trails):
    ```bash
    forge-memory log "Déploiement effectué : {ENV}, provider {PROVIDER}, status {STATUS}" --agent devops
    forge-memory consolidate --verbose
    forge-memory sync
+   ```
+
+9. **Report to user**:
+
+   ```
+   FORGE DevOps — Deployment Complete
+   ────────────────────────────────────
+   Environment : staging → production
+   Provider    : <provider>
+   Status      : SUCCESS | FAILED
+
+   Staging   : <url> (smoke tests: PASS)
+   Production: <url> (smoke tests: PASS)
+
+   Checks:
+     [OK] Tests passing
+     [OK] Lint/type clean
+     [OK] Git tree clean
+     [OK] Smoke tests passing
    ```

@@ -1,8 +1,12 @@
 ---
 name: forge-resume
 description: >
-  FORGE Resume — Resumes an existing FORGE project. Analyzes the current state,
-  identifies the next action, and proposes to continue development.
+  FORGE Resume — Resumes an existing FORGE project by analyzing the current state and proposing next steps.
+  Use when the user says "resume the project", "where did I leave off", "continue development",
+  "what's the project status", "pick up where I left off", "what should I do next",
+  "I'm back, what's next", or opens a FORGE project after a break and wants to know the current state.
+  Do NOT use if FORGE is not initialized (use /forge-init first).
+  Do NOT use for sprint metrics display only (use /forge-status).
   Usage: /forge-resume
 ---
 
@@ -10,10 +14,6 @@ description: >
 
 Resumes work on an existing FORGE project by analyzing the current state
 and identifying the next action to take.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Workflow
 

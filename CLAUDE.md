@@ -19,6 +19,11 @@ skills/
 ## Conventions
 
 - **SKILL.md files** use YAML frontmatter (`name`, `description`) followed by Markdown instructions
+- **Descriptions** must include: natural language trigger phrases ("Use when..."), negative cases ("Do NOT use for..."), and pipeline positioning. This is the primary mechanism for automatic skill triggering
+- **French Language Rule** lives only in the hub skill (`forge/SKILL.md`), not in satellite skills — language is a user-level preference configured in `~/.claude/CLAUDE.md`
+- **Output templates**: Every agent skill should include a concrete ASCII report template showing the expected output format
+- **Memory save blocks**: Explain WHY memory matters (e.g., "ensures QA verdicts persist for trend analysis") instead of just "MANDATORY — never skip"
+- **Step numbering**: Always use sequential integers (1, 2, 3...) — never 1.5, 2.5, 5b, 5c
 - **Agent personas** are referenced via `references/agents/*.md` (created by `/forge-init` in user projects, not stored here)
 - **Artifacts** follow the pipeline: `docs/prd.md` -> `docs/architecture.md` -> `docs/stories/*.md` -> `src/` + `tests/`
 - **Sprint tracking** via `.forge/sprint-status.yaml` in user projects
@@ -44,5 +49,5 @@ When running as a teammate in an Agent Teams session:
 2. **Memory Protocol**: Read `.forge/memory/MEMORY.md` at start (read-only). Do NOT write to session logs — the lead handles memory consolidation.
 3. **Sprint Status**: Only update `.forge/sprint-status.yaml` for your own assigned story. The lead performs final consolidation.
 4. **Task List**: Use the shared task list to communicate progress and results. Mark tasks as complete only after passing all validation gates.
-5. **Team Size**: Max 4 Dev + 1 QA teammates. Each Dev handles exactly 1 story.
+5. **Team Size**: Max 4 Dev + 1 QA + 1 Reviewer teammates. Each Dev handles exactly 1 story.
 6. **Cleanup**: The lead is responsible for cleanup of temp files and memory consolidation at the end of team execution.

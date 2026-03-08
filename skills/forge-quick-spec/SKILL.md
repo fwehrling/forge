@@ -1,7 +1,13 @@
 ---
 name: forge-quick-spec
 description: >
-  FORGE Quick Track — Spec + direct implementation for bug fixes and small changes.
+  FORGE Quick Track — Spec + direct implementation for bug fixes and small changes (< 1 day of work).
+  Use when the user says "fix this bug", "quick fix", "small change", "patch this",
+  "just fix the login issue", "minor tweak", "hotfix", or has a small, well-defined change
+  that doesn't need full planning/architecture phases. Skips PRD and architecture — goes straight
+  to spec and implementation.
+  Do NOT use for multi-story features or large changes (use /forge-build with proper planning).
+  Do NOT use for test-only tasks (use /forge-quick-test or /forge-verify).
   Usage: /forge-quick-spec "change description"
 ---
 
@@ -9,10 +15,6 @@ description: >
 
 Fast-track mode for bug fixes and small changes (<1 day).
 Skips the planning and architecture phases.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Workflow
 
@@ -62,9 +64,23 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
 
 ### Save Memory
 
-9. **Save memory** (MANDATORY if FORGE project — never skip):
+9. **Save memory** (ensures fix context persists for avoiding repeated issues):
    ```bash
    forge-memory log "Quick-spec terminé : {DESCRIPTION}, {N} tests" --agent dev
    forge-memory consolidate --verbose
    forge-memory sync
    ```
+
+10. **Report to user**:
+
+    ```
+    FORGE Quick Track — Complete
+    ──────────────────────────────
+    Type      : Bug Fix | Small Change
+    Change    : <description>
+    Tests     : X unit + Y functional (all passing)
+    Lint/Type : clean
+
+    Commit proposed:
+      fix: <description>
+    ```

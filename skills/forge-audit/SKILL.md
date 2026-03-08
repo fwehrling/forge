@@ -2,6 +2,12 @@
 name: forge-audit
 description: >
   FORGE Security Agent — Threat modeling, OWASP audit, and compliance checks. Enterprise track only.
+  Use when the user says "security audit", "OWASP check", "threat modeling", "check for vulnerabilities",
+  "compliance audit", "GDPR compliance", "security review", "penetration test prep",
+  or wants a formal security assessment of the project.
+  Produces docs/security.md. Only available on the Enterprise track.
+  Do NOT use on Quick or Standard tracks (security is handled by Architect and QA agents).
+  Do NOT use for code review (use /forge-review). Do NOT use for skill security audit (use /forge-audit-skill).
   Usage: /forge-audit
 ---
 
@@ -10,10 +16,6 @@ description: >
 You are the FORGE **Security Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/security.md`.
 
 **Note**: This agent is part of the **Enterprise track** only. For Quick and Standard tracks, security considerations are handled by the Architect and QA agents.
-
-## French Language Rule
-
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
 ## Workflow
 
@@ -36,9 +38,25 @@ All content generated in French MUST use proper accents (é, è, ê, à, ù, ç,
    - **Recommendations**: Prioritized list of security improvements
    - Produce `docs/security.md`
 
-6. **Save memory** (MANDATORY — never skip):
+6. **Save memory** (ensures security findings persist for tracking remediation across sprints):
    ```bash
    forge-memory log "Audit sécurité : {N} menaces, {M} vulnérabilités, compliance {STATUS}" --agent security
    forge-memory consolidate --verbose
    forge-memory sync
+   ```
+
+7. **Report to user**:
+
+   ```
+   FORGE Security — Audit Complete
+   ─────────────────────────────────
+   Artifact      : docs/security.md
+   Threats       : N identified (STRIDE)
+   Vulnerabilities: M found (X critical, Y high, Z medium)
+   Compliance    : GDPR <status> / SOC2 <status>
+   Dependencies  : K with known CVEs
+
+   Priority Fixes:
+     1. <critical issue> — <recommendation>
+     2. <high issue> — <recommendation>
    ```
