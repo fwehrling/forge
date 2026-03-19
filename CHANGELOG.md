@@ -5,6 +5,16 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-03-19
+
+### Fixed
+
+- **French accents restored**: 7 occurrences of stripped accents in `/forge` SKILL.md (e->e, a->a, c->c encoding regression from v1.4.0)
+- **Memory Protocol section restored**: Routing decision logging to forge-memory was accidentally removed
+- **On Invocation Failure section restored**: Error handling for failed skill/agent invocations was accidentally removed
+- **Router workflow restored to 6 steps**: Steps 2 (`.forge/` context check) and 5 (memory logging) were accidentally dropped, reducing workflow from 6 to 4 steps
+- **README examples improved**: Router examples updated with more representative use cases (full pipeline, single story, quick fix)
+
 ## [1.4.0] - 2026-03-19
 
 ### Changed
@@ -125,6 +135,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.4.1]: https://github.com/fwehrling/forge/releases/tag/v1.4.1
 [1.4.0]: https://github.com/fwehrling/forge/releases/tag/v1.4.0
 [1.3.0]: https://github.com/fwehrling/forge/releases/tag/v1.3.0
 [1.2.0]: https://github.com/fwehrling/forge/releases/tag/v1.2.0
