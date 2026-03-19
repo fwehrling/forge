@@ -73,7 +73,14 @@ description: >
    rm -rf "$TMPDIR"
    ```
 
-10. **Display results** :
+10. **Save memory** (if `.forge/` exists — ensures update history persists for version tracking and rollback reference):
+    ```bash
+    forge-memory log "FORGE mis à jour : v{OLD} → v{NEW}, {X} skills modifiés, {Y} nouveaux" --agent update
+    forge-memory consolidate --verbose
+    forge-memory sync
+    ```
+
+11. **Display results** :
 
     ```
     FORGE Update — Complete

@@ -33,14 +33,20 @@ This skill wraps `audit-skill.py` to validate third-party skills for security th
 
 ## Workflow
 
-1. Validate that a skill path argument is provided
-2. Verify the path exists and contains a `SKILL.md` file
-3. Locate the `audit-skill.py` script at `~/.claude/skills/forge/audit-skill.py`
-4. Execute the audit:
+1. **Load context** (if `.forge/` exists):
+   - Read `.forge/memory/MEMORY.md` for project context
+   - `forge-memory search "<skill-name> audit security" --limit 3`
+     → Load relevant past audit findings
+
+2. Validate that a skill path argument is provided
+3. Verify the path exists and contains a `SKILL.md` file
+4. Locate the `audit-skill.py` script at `~/.claude/skills/forge/audit-skill.py`
+5. Execute the audit:
    ```bash
    python3 ~/.claude/skills/forge/audit-skill.py "<path-to-skill>"
    ```
-5. **Display the audit report**:
+
+6. **Display the audit report**:
 
    ```
    FORGE Skill Audit — <skill-name>
@@ -68,4 +74,11 @@ This skill wraps `audit-skill.py` to validate third-party skills for security th
    <install / install with caution / do NOT install>
    ```
 
-6. If HIGH or CRITICAL findings: warn the user explicitly before installation
+7. If HIGH or CRITICAL findings: warn the user explicitly before installation
+
+8. **Save memory** (if `.forge/` exists — ensures audit findings persist for security tracking and re-audit comparison):
+   ```bash
+   forge-memory log "Audit skill : {SKILL_NAME}, risque {LEVEL}, {N} findings, recommandation: {RECOMMENDATION}" --agent security
+   forge-memory consolidate --verbose
+   forge-memory sync
+   ```

@@ -74,3 +74,12 @@ You are the FORGE **Reviewer Agent**. Load the full persona from `~/.claude/skil
    forge-memory consolidate --verbose
    forge-memory sync
    ```
+
+8. **Auto-chain** (when invoked after /forge-verify in the build→verify→review pipeline):
+   - **If CLEAN** (no CRITICAL findings): Mark the story pipeline as complete. Display:
+     ```
+     → Pipeline complete: STORY-XXX built ✓ verified ✓ reviewed ✓
+     → Next: /forge-build STORY-YYY (next unblocked story)
+       or /forge-deploy (if all stories completed)
+     ```
+   - **If CRITICAL findings**: Immediately invoke `/forge-build {STORY_ID}` with the critical findings as fix context. Display: `→ CRITICAL issues found — relaunching /forge-build {STORY_ID} with fix list...`
