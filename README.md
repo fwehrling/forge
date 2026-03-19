@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.4.1-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.4.2-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-23-orange)](#commands)
@@ -738,7 +738,7 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 
 ## Changelog
 
-### v1.4.1
+### v1.4.2
 
 **Patch** — Fix regressions from v1.4.0: restore French accents, Memory Protocol, On Invocation Failure, full 6-step router workflow, improved README examples.
 
