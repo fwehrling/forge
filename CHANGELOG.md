@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Intent Classification system**: 4-dimension analysis (Domain, Action, Specificity, Scale) with 9 domain categories, 15 action verbs, 4 specificity levels, and 4 scale levels
 - **Routing Table**: Complete dispatch table covering 6 target categories — Dev Pipeline (18 FORGE skills), Dev Tooling (4 skills), Business (Clara, Business Panel), Marketing (Maya, Theo, Leo, GEO Expert), Security (forge-audit vs Victor disambiguation), Legal (E-commerce Legal Expert), Framework (Angular Expert, Next.js Expert)
 - **Invocation Protocol**: 3 mechanisms — Skill tool for FORGE skills, Task tool for custom agents, sequential chaining for 2-target requests (3+ delegates to forge-auto)
-- **Dynamic Creation**: Generates new agent files on-the-fly in `~/.claude/agents/` when no existing target matches, with immediate invocation
+- **Dynamic Creation (professional-grade)**: Generates new agent files on-the-fly in `~/.claude/agents/` when no existing target matches. Created agents follow skill-creator best practices — full persona (name, expertise, frameworks), structured output templates, limits/boundaries, pushy description with trigger phrases, domain-appropriate color, and French language rules. Agents are invoked immediately and persist for future routing
 - **Disambiguation Rules**: Decision table for ambiguous requests (security audit context detection, named agent routing, scope overflow to forge-auto)
 - **Condensed Reference section**: Pipeline overview, tracks, and memory summary with links to detailed reference files
 
