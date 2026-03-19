@@ -5,6 +5,27 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-03-19
+
+### Changed
+
+- **`/forge` core skill**: Transformed from a documentary hub (230 lines listing commands) into an **intelligent router** (282 lines) that classifies user intent and automatically delegates to the right FORGE skill or custom agent. The user now types `/forge "anything"` and the router handles dispatch
+- **Frontmatter description**: Rewritten with universal triggers covering dev, business, marketing, SEO, security, legal, and framework domains
+- **Philosophy/Quick Start sections**: Replaced with a Router section defining core behavior — classify, select, invoke, never execute
+
+### Added
+
+- **Intent Classification system**: 4-dimension analysis (Domain, Action, Specificity, Scale) with 9 domain categories, 15 action verbs, 4 specificity levels, and 4 scale levels
+- **Routing Table**: Complete dispatch table covering 6 target categories — Dev Pipeline (18 FORGE skills), Dev Tooling (4 skills), Business (Clara, Business Panel), Marketing (Maya, Theo, Leo, GEO Expert), Security (forge-audit vs Victor disambiguation), Legal (E-commerce Legal Expert), Framework (Angular Expert, Next.js Expert)
+- **Invocation Protocol**: 3 mechanisms — Skill tool for FORGE skills, Task tool for custom agents, sequential chaining for 2-target requests (3+ delegates to forge-auto)
+- **Dynamic Creation**: Generates new agent files on-the-fly in `~/.claude/agents/` when no existing target matches, with immediate invocation
+- **Disambiguation Rules**: Decision table for ambiguous requests (security audit context detection, named agent routing, scope overflow to forge-auto)
+- **Condensed Reference section**: Pipeline overview, tracks, and memory summary with links to detailed reference files
+
+### Removed
+
+- **Documentary content**: Agent Registry table, Agent Invocation Pattern, Scale-Adaptive Intelligence details, Workflows section, Autonomous Loops section, Persistent Memory section, Security Model section, MCP Integration section, Configuration section, full Reference Files listing — all moved to or already covered by `references/*.md`
+
 ## [1.3.0] - 2026-03-08
 
 ### Changed
@@ -104,6 +125,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.4.0]: https://github.com/fwehrling/forge/releases/tag/v1.4.0
 [1.3.0]: https://github.com/fwehrling/forge/releases/tag/v1.3.0
 [1.2.0]: https://github.com/fwehrling/forge/releases/tag/v1.2.0
 [1.1.0]: https://github.com/fwehrling/forge/releases/tag/v1.1.0

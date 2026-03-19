@@ -81,6 +81,7 @@ You are the FORGE **Dev Agent**. Load the full persona from `~/.claude/skills/fo
     Coverage  : XX%
     Lint/Type : clean
 
-    Suggested next step:
-      → /forge-verify STORY-XXX
+    → Launching /forge-verify STORY-XXX automatically...
     ```
+
+11. **Auto-chain**: Immediately invoke `/forge-verify {STORY_ID}` — do NOT ask the user, launch it automatically. This ensures the build→verify→review pipeline flows without interruption.

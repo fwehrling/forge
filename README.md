@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.3.0-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.4.0-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-23-orange)](#commands)
@@ -13,19 +13,29 @@
 [![GitHub stars](https://img.shields.io/github/stars/fwehrling/forge?style=flat&logo=github)](https://github.com/fwehrling/forge/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/fwehrling/forge?style=flat&logo=github)](https://github.com/fwehrling/forge/issues)
 
-A multi-agent AI development framework for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). FORGE orchestrates specialized AI agents through a structured pipeline — from requirements to deployment — with persistent memory, autonomous iteration, and built-in quality gates.
+A multi-agent AI framework for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). One command — `/forge "anything"` — and the intelligent router classifies your intent and delegates to the right agent: dev pipeline, business strategy, marketing, SEO, security, legal, or framework expertise. Persistent memory, autonomous iteration, and built-in quality gates included.
 
 ```
-/forge-auto "Build a REST API with authentication"
+/forge "Build a REST API with authentication"
 ```
 
-That's it. FORGE handles the rest.
+That's it. FORGE classifies your intent, picks the right agent, and handles the rest.
 
 ---
 
 ## How It Works
 
-FORGE assigns specialized AI agents to each phase of software development. Each agent produces versioned artifacts that downstream agents consume, eliminating context loss between phases.
+`/forge` is the **single entry point**. Describe what you need in natural language, and the intelligent router classifies your intent, selects the best target (FORGE skill, custom agent, or dynamically created agent), and invokes it automatically.
+
+```bash
+/forge "implement user authentication"     # → routes to /forge-build
+/forge "write a LinkedIn post"              # → routes to Maya (social media agent)
+/forge "OWASP audit of the project"         # → routes to /forge-audit
+/forge "analyze SaaS competition"           # → routes to Clara (business strategy agent)
+/forge "plan and design payment system"     # → chains /forge-plan → /forge-architect
+```
+
+Under the hood, FORGE assigns specialized AI agents to each phase of software development. Each agent produces versioned artifacts that downstream agents consume, eliminating context loss between phases.
 
 ```mermaid
 flowchart LR
@@ -41,19 +51,36 @@ Each agent is a lightweight Markdown persona loaded on demand from `~/.claude/sk
 
 ### Execution Modes
 
-FORGE offers three ways to drive development:
+The `/forge` router covers **6 domains** beyond development:
+
+| Domain | Targets |
+|--------|---------|
+| **Dev pipeline** | 18 FORGE skills (init, analyze, plan, architect, ux, stories, build, verify, deploy...) |
+| **Dev tooling** | status, resume, memory, update |
+| **Business** | Clara (strategy), Business Panel (multi-expert) |
+| **Marketing** | Maya (social media), Theo (copywriting), Leo (SEO), GEO Expert (AI search) |
+| **Security** | Victor (general) or /forge-audit (FORGE pipeline) |
+| **Legal** | E-commerce Legal Expert |
+| **Framework** | Angular Expert, Next.js Expert |
+
+If no existing target matches, the router **creates a new agent on-the-fly** and invokes it immediately.
+
+### Execution Modes
+
+FORGE offers three ways to drive development (the router picks automatically, or you can be explicit):
 
 ```mermaid
 flowchart TD
-    Q{{"How do you want to build?"}}
+    F(["/forge 'your request'"])
+    F -->|"Router classifies intent"| Q{{"Scale?"}}
 
-    Q -->|"Full autopilot"| AUTO(["<b>/forge-auto</b>"])
-    Q -->|"Parallel teams"| TEAM(["<b>/forge-team</b>"])
-    Q -->|"Step by step"| MANUAL(["<b>/forge-*</b>"])
+    Q -->|"Full pipeline"| AUTO(["<b>/forge-auto</b>"])
+    Q -->|"Parallel tasks"| TEAM(["<b>/forge-team</b>"])
+    Q -->|"Single step"| SKILL(["<b>/forge-*</b>"])
 
     AUTO --> AD["Sequential pipeline<br/>analyze → plan → arch → ux → stories → build → verify → review<br/>Checkpoints: --no-pause · --pause-stories · --pause-each"]
     TEAM --> TD2["Parallel execution with real Claude Code instances<br/>3 patterns: pipeline · party · build<br/>Up to 4 Dev + 1 QA + 1 Reviewer simultaneously"]
-    MANUAL --> MD["You run each command individually<br/>/forge-plan → /forge-architect → /forge-build → ..."]
+    SKILL --> SD["Single skill or agent invoked directly"]
 ```
 
 **Autopilot checkpoints** (`/forge-auto`):
@@ -61,12 +88,12 @@ flowchart TD
 - `--pause-stories` — pause for approval after story decomposition (default)
 - `--pause-each` — pause after every pipeline phase
 
-**When to use which:**
-- `/forge-auto` — "Build this project from A to Z" (multi-phase, multi-agent, sequential)
-- `/forge-team pipeline` — "Build this project in parallel" (multi-phase, multi-agent, parallel stories)
-- `/forge-team build` — "Build these stories in parallel" (parallel Dev + QA)
-- `/forge-team party` — "Analyze this topic from multiple perspectives" (parallel debate)
-- Manual — "I want full control over each step"
+**The router decides, or you can override:**
+- `/forge "build this project from A to Z"` — routes to `/forge-auto`
+- `/forge "build these stories in parallel"` — routes to `/forge-team`
+- `/forge "implement STORY-001"` — routes to `/forge-build`
+- `/forge "write a landing page copy"` — routes to Theo (copywriter agent)
+- Direct command — `/forge-auto`, `/forge-build`, etc. still work for explicit control
 
 ---
 
@@ -265,25 +292,19 @@ FORGE auto-detects your stack (language, framework, package manager) and generat
 ### Build Something
 
 ```bash
-# Autopilot — FORGE drives everything
-/forge-auto "Implement user authentication with JWT"
+# Just tell FORGE what you need — the router handles the rest
+/forge "Implement user authentication with JWT"
+/forge "Fix the login bug"
+/forge "Write a LinkedIn post about our launch"
+/forge "Security audit of the API"
+/forge "Analyze the competitive landscape"
 
-# Or step by step
-/forge-analyze                 # Domain research + requirements elicitation
-/forge-plan                    # Generate requirements (PRD)
-/forge-architect               # Generate architecture
-/forge-ux                      # UX design, wireframes, accessibility
-/forge-stories                 # Decompose into stories
-/forge-build STORY-001         # Implement story
-/forge-verify STORY-001        # QA audit + certification
-/forge-deploy                  # Deploy to staging → production
-
-# Quick commands
-/forge-quick-spec              # Quick track: spec + implement directly
-/forge-quick-test              # Zero-config testing
-/forge-audit                   # Security audit (Enterprise track)
-/forge-loop "Fix all tests"    # Autonomous iteration loop
-/forge-resume                  # Resume work on an existing FORGE project
+# Or use direct commands when you want explicit control
+/forge-auto "Build the whole project"   # Full pipeline, autopilot
+/forge-build STORY-001                  # Implement a specific story
+/forge-verify STORY-001                 # QA audit + certification
+/forge-quick-spec                       # Quick track: spec + implement
+/forge-resume                           # Resume where you left off
 ```
 
 ---
@@ -397,7 +418,13 @@ The sync scope includes both `.forge/memory/` and `docs/` (stories, architecture
 
 ## Commands
 
-### Pipeline
+### Entry Point
+
+| Command | Description |
+|---------|-------------|
+| **`/forge "request"`** | **Intelligent router** — classifies intent and delegates to the right skill or agent. This is the recommended way to use FORGE. |
+
+### Pipeline (also accessible via `/forge`)
 
 | Command            | Agent     | Output                     | Description                          |
 | ------------------ | --------- | -------------------------- | ------------------------------------ |
@@ -412,7 +439,7 @@ The sync scope includes both `.forge/memory/` and `docs/` (stories, architecture
 | `/forge-verify`    | QA        | Test report + verdict       | Quality audit and certification      |
 | `/forge-deploy`    | DevOps    | Deployed application        | Staging + production deployment      |
 
-### Orchestration & Tools
+### Orchestration & Tools (also accessible via `/forge`)
 
 | Command                       | Description                                       |
 | ----------------------------- | ------------------------------------------------- |
@@ -428,6 +455,16 @@ The sync scope includes both `.forge/memory/` and `docs/` (stories, architecture
 | `/forge-resume`               | Resume work on an existing FORGE project          |
 | `/forge-status`               | Sprint status, stories, metrics                   |
 | `/forge-update`               | Update FORGE skills from latest release           |
+
+### External Agents (routed via `/forge`)
+
+| Domain | Agent | Trigger examples |
+|--------|-------|------------------|
+| Business | Clara, Business Panel | "analyze competition", "pricing strategy", "market research" |
+| Marketing | Maya, Theo, Leo, GEO Expert | "LinkedIn post", "landing page copy", "SEO audit", "AI search" |
+| Security | Victor | "OWASP review", "hardening" (outside FORGE pipeline) |
+| Legal | E-commerce Legal Expert | "CGV", "RGPD", "mentions legales" |
+| Framework | Angular Expert, Next.js Expert | "Angular signals", "App Router" |
 
 ---
 
@@ -655,7 +692,10 @@ deploy:
 
 What FORGE adds on top of using Claude Code directly:
 
+- **Single entry point** — `/forge "anything"` classifies intent and routes to the right skill or agent automatically
 - **Multi-agent pipeline** — Specialized agents per phase (PM, Architect, Dev, QA...) with artifact handoff
+- **Beyond code** — Routes to business, marketing, SEO, security, legal, and framework agents
+- **Dynamic agents** — Creates new agents on-the-fly when no existing target matches
 - **Persistent memory** — Two-layer system (Markdown + optional vector search) that survives across sessions
 - **Autonomous iteration** — Long-running loops with cost caps, circuit breakers, and sandbox isolation
 - **Scale-adaptive intelligence** — Auto-detects project complexity and adjusts the pipeline depth
@@ -676,7 +716,7 @@ FORGE is built on these principles:
 
 3. **Security by default** — Autonomous execution requires guardrails. Cost caps, sandboxing, circuit breakers, and human gates are built in, not bolted on.
 
-4. **Manual and autonomous coexist** — Use `/forge-auto` when you want FORGE to drive, or individual `/forge-*` commands when you want control. Same memory, same artifacts, same pipeline.
+4. **One command to rule them all** — `/forge "anything"` is the universal entry point. The router classifies, selects, and delegates. Direct `/forge-*` commands remain available for explicit control.
 
 5. **Tests are first-class** — Every story includes test specifications. The Dev writes tests before code (TDD). The QA audits and extends. No story is done without passing tests.
 
@@ -695,6 +735,17 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 ---
 
 ## Changelog
+
+### v1.4.0
+
+**Intelligent Router** — `/forge` transformed from a documentary hub into a universal entry point:
+
+- **Router behavior**: `/forge` now classifies user intent (domain, action, specificity, scale) and automatically delegates to the right FORGE skill or custom agent — never executes tasks itself
+- **Intent Classification**: 4-dimension analysis with 9 domain categories (dev-pipeline, dev-tooling, business, marketing, seo, security, legal, framework, unknown)
+- **Complete Routing Table**: Covers all 22 FORGE skills + 10 custom agents (Clara, Maya, Theo, Leo, Victor, GEO Expert, Legal Expert, Angular Expert, Next.js Expert, Business Panel)
+- **Invocation Protocol**: 3 mechanisms — Skill tool for FORGE, Task tool for agents, sequential chaining (max 2 targets, then forge-auto)
+- **Dynamic Agent Creation**: Generates new agents on-the-fly in `~/.claude/agents/` when no existing target matches
+- **Disambiguation Rules**: Context-aware routing (e.g., "security audit" routes to forge-audit in FORGE projects, Victor otherwise)
 
 ### v1.3.0
 

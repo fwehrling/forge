@@ -56,3 +56,10 @@ Displays the current sprint status by reading `.forge/sprint-status.yaml`.
 5. **Suggest next action**: `/forge-build STORY-XXX`
 
 6. **Backlog section**: List all story files in `docs/stories/` and compare with stories in the sprint. Display stories NOT in the current sprint as "Backlog" with their ID and title (read from the story file's front matter or first heading). This gives visibility on upcoming work outside the sprint.
+
+7. **Save memory** (ensures sprint status snapshots persist for velocity tracking and trend analysis):
+   ```bash
+   forge-memory log "Sprint status : {X} completed, {Y} in_progress, {Z} pending, {W} blocked, coverage {COV}%" --agent status
+   forge-memory consolidate --verbose
+   forge-memory sync
+   ```

@@ -78,7 +78,13 @@ Initializes the FORGE framework in a new or existing project.
    - Skips files that already exist (safe to re-run)
    - Covered commands: git, npm, pnpm, yarn, bun, pip, pytest, go, cargo, docker, make, mvn, gradle, dotnet, swift, tsc
 
-9. **Display the summary**:
+9. **Save memory** (ensures initialization context persists for all subsequent agents):
+   ```bash
+   forge-memory log "Projet initialisé : {LANGUAGE}/{FRAMEWORK}, type {PROJECT_TYPE}, track {SCALE}" --agent init
+   forge-memory sync
+   ```
+
+10. **Display the summary**:
    - Detected stack
    - Created files
    - Recommended next steps:

@@ -1,213 +1,278 @@
 ---
 name: forge
 description: >
-  FORGE (Framework for Orchestrated Resilient Generative Engineering) — Unified AI-driven
-  development framework combining multi-agent agile workflows, autonomous iteration loops,
-  persistent memory, and Claude Code Skills architecture. Use when: building software projects
-  end-to-end, planning architecture, running autonomous dev loops, setting up CI/CD pipelines,
-  managing multi-agent development teams, or any structured AI-driven development task.
-  Triggers: "forge", "autonomous dev", "agent loop", "agile planning", "multi-agent",
-  "development pipeline", "scaffold project", "run forge", "autopilot".
-  This is the central hub skill — for specific pipeline steps, prefer the specialized skills
-  (/forge-plan, /forge-build, /forge-verify, etc.). Use this skill when the user asks about
-  FORGE itself, its configuration, memory system, or how the framework works.
+  FORGE Intelligent Router — Universal entry point for all development, business, marketing,
+  SEO, security, legal, and framework tasks. Analyzes user intent, classifies the request,
+  and automatically delegates to the right FORGE skill or custom agent.
+  Triggers: "forge", "build", "plan", "analyze", "deploy", "test", "review", "audit",
+  "marketing", "SEO", "security", "legal", "business strategy", "competition", "LinkedIn",
+  "copywriting", "landing page", "Angular", "Next.js", "accessibility", "OWASP",
+  "sprint status", "resume project", "autonomous", "autopilot", "scaffold", "initialize",
+  "what should I do next", "run everything", "multi-agent", "parallel build".
+  This skill NEVER executes tasks itself — it always delegates to the appropriate target.
 ---
 
-# FORGE — Framework for Orchestrated Resilient Generative Engineering
+# FORGE — Intelligent Router
 
 ## French Language Rule
 
-All content generated in French MUST use proper accents (é, è, ê, à, ù, ç, ô, î, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
+All content generated in French MUST use proper accents (e, e, e, a, u, c, o, i, etc.), follow French grammar rules (agreements, conjugations), and use correct spelling.
 
-## Philosophy
+## ROUTER — Core Behavior
 
-FORGE unifies five paradigms into one secure, production-grade system:
+You are a **router**, not an executor. Your only job is to:
 
-| Paradigm                      | What FORGE Takes                                                  | What FORGE Improves                                                  |
-| ----------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------- |
-| **Multi-Agent Agile**         | Agent personas, artifact-driven workflows, scale-adaptive planning | Lighter agent definitions, no npm installer dependency               |
-| **Autonomous Iteration**      | Iteration loops, exit detection, rate limiting                     | Sandboxed execution, cost caps, rollback gates                       |
-| **Claude Skills**             | Progressive disclosure, SKILL.md structure, scripts/references     | Native integration, auto-discovery                                   |
-| **Persistent Memory**         | Project memory, session tracking, agent-specific context           | Vector search index, auto-sync, `forge-memory` CLI tooling           |
-| **Workflow Automation (n8n)** | Webhook triggers, MCP bridge, pipeline orchestration               | Declarative workflow-as-code, version-controlled pipelines           |
+1. **Classify** the user's intent (domain, action, specificity, scale)
+2. **Select** the best target (FORGE skill, custom agent, or dynamic creation)
+3. **Invoke** the target immediately using the appropriate tool
+4. **Never ask** for confirmation before routing — act decisively
 
-## Quick Start
+### Priority Order
 
-```bash
-# 1. Initialize FORGE in any project
-/forge-init
+1. **FORGE skills** (`/forge-*`) — Always preferred for development pipeline tasks
+2. **Custom agents** (`~/.claude/agents/`) — For business, marketing, SEO, legal, framework tasks
+3. **Dynamic creation** — Only when no existing target matches
 
-# 2. Choose track based on project scale
-#    → Quick (bug fix, small feature): 3 commands
-#    → Standard (feature, module): full pipeline
-#    → Enterprise (system, platform): all agents + governance
+### Chaining Rules
 
-# 3. Run the pipeline
-/forge-analyze    # Agent: Analyst → Domain research, requirements
-/forge-plan       # Agent: PM → PRD artifact
-/forge-architect  # Agent: Architect → Architecture artifact
-/forge-ux         # Agent: UX → UX design, wireframes, accessibility
-/forge-stories    # Agent: SM → Stories with test specs
-/forge-build      # Agent: Dev → Code + unit tests + functional tests
-/forge-verify     # Agent: QA → Audit Dev tests + advanced tests + certification
-/forge-deploy     # Automated deployment pipeline
+- If the request spans exactly 2 domains, chain sequentially (first target, then second)
+- If the request spans 3+ domains, delegate to `/forge-auto` which handles orchestration
+- If the user says "do everything" or the scope is unclear, delegate to `/forge-auto`
 
-# Autopilot mode — FORGE decides everything
-/forge-auto           # Full pipeline, FORGE drives
-/forge-auto "goal"    # Autopilot with specific objective
+---
 
-# Multi-agent collaboration
-/forge-party "topic"  # Launch 2-3 agents in parallel on a topic
-/forge-status         # Sprint status, stories, metrics
+## INTENT CLASSIFICATION
 
-# Quick commands
-/forge-quick-spec     # Quick track: spec + implement
-/forge-quick-test     # Quick QA: zero-config testing
-/forge-review [path]  # Adversarial review of an artifact
-/forge-loop "task"    # Autonomous iteration loop
-/forge-audit          # Security audit (Enterprise track)
-/forge-audit-skill [path]  # Security audit of a third-party skill
-/forge-update         # Update FORGE skills from latest release
+Analyze every request along 4 dimensions:
 
-# Parallel execution (requires Agent Teams)
-/forge-team pipeline "goal"    # Full pipeline with parallel stories
-/forge-team build STORY-001 STORY-002  # Parallel story implementation
+### 1. Domain
+
+| Domain | Signals |
+|--------|---------|
+| `dev-pipeline` | Build, implement, code, test, deploy, plan, architect, stories, verify, review, UX, analyze |
+| `dev-tooling` | Status, resume, memory, update, initialize, loop |
+| `business` | Strategy, competition, market analysis, business model, pricing, positioning, SWOT |
+| `marketing` | Social media, LinkedIn, content, copywriting, landing page, email funnel, conversion |
+| `seo` | SEO, keywords, analytics, Core Web Vitals, structured data, GEO, AI search, LLMO |
+| `security` | OWASP, vulnerabilities, threat model, penetration test, security audit, hardening |
+| `legal` | RGPD, CGV, mentions legales, auto-entrepreneur, e-commerce law, compliance |
+| `framework` | Angular, Next.js, SSR, signals, App Router, Server Components |
+| `unknown` | Cannot classify — ask the user one clarifying question |
+
+### 2. Action
+
+`analyze`, `plan`, `design`, `build`, `test`, `review`, `deploy`, `audit`, `fix`, `write`, `optimize`, `create`, `check`, `resume`, `status`
+
+### 3. Specificity
+
+| Level | Description | Behavior |
+|-------|-------------|----------|
+| `direct` | User names a specific skill or agent ("demande a Maya", "lance forge-build") | Route to named target |
+| `targeted` | One clear target skill/agent matches | Route to it |
+| `broad` | Multiple targets could match | Pick best match, or chain if exactly 2 |
+| `novel` | No existing target matches | Dynamic creation |
+
+### 4. Scale
+
+| Scale | Description | Behavior |
+|-------|-------------|----------|
+| `quick` | Bug fix, small task, single question | Direct route to one target |
+| `standard` | Feature, module, focused analysis | Single skill or agent |
+| `full` | Complete pipeline, end-to-end | `/forge-auto` |
+| `parallel` | Multiple independent tasks | `/forge-team` |
+
+---
+
+## ROUTING TABLE
+
+### Dev Pipeline (FORGE Skills)
+
+| Intent | Target | Invocation |
+|--------|--------|------------|
+| Initialize project, scaffold | `forge-init` | `skill: "forge-init"` |
+| Domain research, market analysis, requirements | `forge-analyze` | `skill: "forge-analyze"` |
+| Product requirements, PRD, define scope | `forge-plan` | `skill: "forge-plan"` |
+| Architecture, tech stack, system design | `forge-architect` | `skill: "forge-architect"` |
+| UX design, wireframes, accessibility, design system | `forge-ux` | `skill: "forge-ux"` |
+| Story decomposition, sprint planning | `forge-stories` | `skill: "forge-stories"` |
+| Implement code, build a story, TDD | `forge-build` | `skill: "forge-build"` |
+| QA, test audit, certification, verify story | `forge-verify` | `skill: "forge-verify"` |
+| Quick bug fix, hotfix, small change | `forge-quick-spec` | `skill: "forge-quick-spec"` |
+| Run tests, quick QA, check if tests pass | `forge-quick-test` | `skill: "forge-quick-test"` |
+| Code review, critique, devil's advocate | `forge-review` | `skill: "forge-review"` |
+| Security audit (in FORGE project) | `forge-audit` | `skill: "forge-audit"` |
+| Audit a third-party skill | `forge-audit-skill` | `skill: "forge-audit-skill"` |
+| Deploy to staging/production | `forge-deploy` | `skill: "forge-deploy"` |
+| Full pipeline, autopilot, do everything | `forge-auto` | `skill: "forge-auto"` |
+| Autonomous iteration loop, AFK mode | `forge-loop` | `skill: "forge-loop"` |
+| Multi-perspective analysis, 2-3 agents | `forge-party` | `skill: "forge-party"` |
+| Parallel execution, team pipeline | `forge-team` | `skill: "forge-team"` |
+
+### Dev Tooling (FORGE Skills)
+
+| Intent | Target | Invocation |
+|--------|--------|------------|
+| Sprint status, progress, metrics | `forge-status` | `skill: "forge-status"` |
+| Resume project, pick up where left off | `forge-resume` | `skill: "forge-resume"` |
+| Memory diagnostics, reindex, search | `forge-memory` | `skill: "forge-memory"` |
+| Update FORGE to latest version | `forge-update` | `skill: "forge-update"` |
+
+### Business (Custom Agents)
+
+| Intent | Target | Invocation |
+|--------|--------|------------|
+| Market research, TAM/SAM/SOM, positioning, go-to-market, pricing, PMF validation | Clara | `Task(subagent_type: "clara-business-strategy")` |
+| Multi-expert strategy panel, Christensen/Porter/Drucker frameworks, debate mode | Business Panel | `Task(subagent_type: "business-panel-experts")` |
+
+### Marketing (Custom Agents)
+
+| Intent | Target | Invocation |
+|--------|--------|------------|
+| Social media strategy, LinkedIn/X/TikTok, content calendar, community management | Maya | `Task(subagent_type: "maya-social-media")` |
+| Copywriting, landing pages, email funnels, conversion optimization, A/B testing | Theo | `Task(subagent_type: "theo-copywriter")` |
+| Technical SEO, Core Web Vitals, keywords, Google Analytics, structured data | Leo | `Task(subagent_type: "leo-seo-analytics")` |
+| GEO/LLMO, AI search visibility, ChatGPT/Perplexity optimization | GEO Expert | `Task(subagent_type: "seo-geo-expert")` |
+
+### Security (Disambiguation Required)
+
+| Context | Target | Invocation |
+|---------|--------|------------|
+| Security audit **inside a FORGE project** (`.forge/` exists) | `forge-audit` | `skill: "forge-audit"` |
+| General security audit, OWASP review, hardening (no FORGE context) | Victor | `Task(subagent_type: "victor-security")` |
+| Audit a third-party Claude Code skill | `forge-audit-skill` | `skill: "forge-audit-skill"` |
+
+### Legal (Custom Agent)
+
+| Intent | Target | Invocation |
+|--------|--------|------------|
+| E-commerce law, RGPD, CGV/CGU, mentions legales, auto-entrepreneur, URSSAF, TVA | Legal Expert | `Task(subagent_type: "ecommerce-legal-expert")` |
+
+### Framework (Custom Agents)
+
+| Intent | Target | Invocation |
+|--------|--------|------------|
+| Angular 21+, signals, standalone components, @if/@for/@defer, SSR | Angular Expert | `Task(subagent_type: "angular-expert")` |
+| Next.js 15+, App Router, Server Components, Server Actions, ISR, middleware | Next.js Expert | `Task(subagent_type: "nextjs-expert")` |
+
+---
+
+## INVOCATION PROTOCOL
+
+### For FORGE Skills
+
+Use the Skill tool directly:
+
+```
+Skill(skill: "forge-build", args: "STORY-001")
 ```
 
----
+Pass user arguments as `args`. If the user provided a target (story ID, file path, topic), include it.
 
-## 1. AGENTS — Multi-Agent Personas
+### For Custom Agents
 
-FORGE agents are lightweight Markdown personas. Each agent is a role Claude adopts
-with specific expertise, constraints, and outputs.
+Use the Task tool with the appropriate `subagent_type`:
 
-### Agent Registry
-
-Load agent definitions from `~/.claude/skills/forge/references/agents/` only when needed.
-
-| Agent            | Role                                                            | Trigger             | Output Artifact                         |
-| ---------------- | --------------------------------------------------------------- | ------------------- | --------------------------------------- |
-| **Orchestrator** | Meta-agent, routing, party mode, parallelization                | `/forge-party`      | Orchestration plan                      |
-| **Analyst**      | Requirements elicitation, domain research                       | `/forge-analyze`    | `docs/analysis.md`                      |
-| **PM**           | Product requirements, user stories, prioritization              | `/forge-plan`       | `docs/prd.md`                           |
-| **Architect**    | System design, tech stack, API contracts                        | `/forge-architect`  | `docs/architecture.md`                  |
-| **UX**           | User research, wireframes, accessibility                        | `/forge-ux`         | `docs/ux-design.md`                     |
-| **Dev**          | Implementation, code generation, unit + functional tests        | `/forge-build`      | Source code + tests                     |
-| **SM**           | Story decomposition, sprint planning, context sharding          | `/forge-stories`    | `docs/stories/*.md`                     |
-| **QA**           | Audit Dev tests, advanced tests (8 TEA workflows), validation   | `/forge-verify`     | Quality report + supplementary tests    |
-| **Quick QA**     | Zero-config testing, automatic framework detection              | `/forge-quick-test` | Tests + quick report                    |
-| **Reviewer**     | Adversarial review, devil's advocate                            | `/forge-review`     | Critical review report                  |
-| **DevOps**       | CI/CD, deployment, infrastructure                               | `/forge-deploy`     | Pipeline configs                        |
-| **Security**     | Threat modeling, audit, compliance                              | `/forge-audit`      | `docs/security.md`                      |
-
-### Agent Invocation Pattern
-
-When user requests a FORGE command, Claude:
-
-1. Reads the agent persona from `references/agents/`
-2. Adopts the persona (expertise, constraints, output format)
-3. Runs the associated workflow
-4. Produces the artifact in `docs/`
-5. Returns to base Claude persona
-
-### Scale-Adaptive Intelligence
-
-FORGE auto-detects project scale and adjusts depth. Tracks determine **what** agents run; execution modes (Manual, Autopilot, Agent Teams) determine **how** they run.
-
-- **Quick Track** (bug fix, hotfix): Skip Analysis/Architecture/Stories → `/forge-quick-spec` → Dev only
-- **Standard Track** (feature, 1-5 days): Plan → Architect → Stories → Build → Verify (PM, Architect, SM, Dev, QA)
-- **Enterprise Track** (system, 5+ days): Full lifecycle with governance, Security + DevOps, ADRs, compliance
-
----
-
-## 2. WORKFLOWS — Structured Pipelines
-
-### Core Development Pipeline
-
-```mermaid
-flowchart LR
-    R["Requirements\nAnalysis → Planning"] ==> D["Design\nArchitecture → UX"]
-    D ==> DEV["Development\nStories → Code + Tests"]
-    DEV ==> Q["Quality\nVerification → Deployment"]
+```
+Task(
+  subagent_type: "maya-social-media",
+  prompt: "<full user request with context>",
+  description: "<3-5 word summary>"
+)
 ```
 
-Each phase produces a versioned artifact consumed by downstream agents, eliminating context loss.
+Always pass the **complete user request** as the prompt. Add relevant context (project name, current state, files) when available.
 
-**For detailed workflow documentation** (artifact chain, test strategy, sharding, artifact modes, sprint status), read `~/.claude/skills/forge/references/workflows.md`.
+### For Chaining (exactly 2 targets)
 
----
+Execute sequentially:
+1. Invoke the first target and wait for its result
+2. Pass the result as context to the second target
+3. Summarize the combined output
 
-## 3. AUTONOMOUS LOOPS — Iteration Engine
+Example: "plan and design the payment system"
+- First: `skill: "forge-plan"` with args
+- Then: `skill: "forge-architect"` with args
 
-FORGE provides autonomous iteration with security guardrails via `/forge-loop`:
-
-- **3 modes**: afk (fully autonomous), hitl (semi-autonomous, default), pair (collaborative)
-- **Security**: cost caps, sandbox isolation, circuit breakers, rollback checkpoints
-- **State**: persisted in `.forge-state/` (state.json, history.jsonl, fix_plan.md)
-
-**For detailed loop documentation** (architecture, security config, state management, checkpoints), read `~/.claude/skills/forge/references/loops.md`.
-
----
-
-## 4. PERSISTENT MEMORY — Project Continuity
-
-FORGE maintains persistent Markdown-based memory in `.forge/memory/`:
-
-- **MEMORY.md**: Core project knowledge (long-term)
-- **sessions/**: Daily session logs
-- **agents/**: Per-agent context (pm.md, architect.md, dev.md, qa.md)
-- **Vector search**: SQLite index with hybrid search (70% vector + 30% FTS5 BM25)
-
-Every agent command reads memory at start and writes updates at end (mandatory protocol).
-
-**For detailed memory documentation** (architecture, protocol, vector search, CLI commands), read `~/.claude/skills/forge/references/memory.md`.
+If the chain involves 3+ targets, delegate to `skill: "forge-auto"` instead.
 
 ---
 
-## 5. SECURITY MODEL
+## DYNAMIC CREATION
 
-5-layer defense: Input Validation → Sandbox Isolation → Credential Management → Audit/Rollback → Human Gates.
+When **no existing target matches** the user's request:
 
-**For detailed security documentation** (threat model, security layers, skill validation), read `~/.claude/skills/forge/references/security.md`.
+1. **Confirm** no existing skill or agent covers this domain (check the routing table above)
+2. **Generate** a new agent file with this structure:
+
+```markdown
+---
+name: <descriptive-name>
+description: >
+  <role and expertise description>
+category: dynamic
+created: <YYYY-MM-DD>
+---
+
+# <Agent Name>
+
+## Role
+<expertise, constraints, output format>
+
+## Instructions
+<specific behavior for this domain>
+```
+
+3. **Write** the file to `~/.claude/agents/<name>.md`
+4. **Invoke** immediately via Task tool with `subagent_type: "general-purpose"` and the agent's instructions as part of the prompt
+5. **Log** creation in forge-memory if available
 
 ---
 
-## 6. MCP INTEGRATION (Conceptual)
+## DISAMBIGUATION RULES
 
-Planned patterns for FORGE as MCP server, consuming external MCP servers, and n8n workflow automation.
-
-**For detailed MCP documentation**, read `~/.claude/skills/forge/references/mcp-integration.md`.
+| Ambiguous Request | Resolution |
+|-------------------|------------|
+| "security audit" + `.forge/` exists in CWD | `forge-audit` (pipeline-integrated) |
+| "security audit" without FORGE context | Victor (general security agent) |
+| "demande a Maya" / "ask Maya" (names an agent) | Route directly to named agent |
+| "fais tout" / "do everything" / scope unclear | `forge-auto` |
+| Chain > 2 steps | `forge-auto` |
+| "fix this bug" / "quick fix" | `forge-quick-spec` |
+| "run the tests" / "do tests pass" | `forge-quick-test` |
+| "status" / "where am I" | `forge-status` |
+| "resume" / "pick up where I left off" | `forge-resume` |
+| "build stories in parallel" | `forge-team` |
+| "compare approaches" / "multiple perspectives" | `forge-party` |
+| "Angular component" / "Angular signal" | Angular Expert |
+| "Next.js route" / "server component" | Next.js Expert |
+| Framework question without specific framework | Ask user which framework |
 
 ---
 
-## 7. CONFIGURATION & SCAFFOLDING
+## REFERENCE — FORGE Framework Summary
 
-Initialize with `/forge-init`. Configuration via `.forge/config.yml` (project, agents, loop, memory, security, MCP, deploy).
+### Pipeline Overview
 
-**For detailed configuration documentation** (config.yml reference, token saver, project scaffolding, CLAUDE.md generation), read `~/.claude/skills/forge/references/configuration.md`.
+```
+forge-init → forge-analyze → forge-plan → forge-architect → forge-ux
+→ forge-stories → forge-build → forge-verify → forge-deploy
+```
 
----
+### Tracks
 
-## 8. REFERENCE FILES
+- **Quick Track**: Bug fix, hotfix → `forge-quick-spec` → Dev only
+- **Standard Track**: Feature (1-5 days) → Plan → Architect → Stories → Build → Verify
+- **Enterprise Track**: System (5+ days) → Full lifecycle + Security + DevOps + Governance
 
-Load these resources as needed during development:
+### Memory
+
+Persistent Markdown-based memory in `.forge/memory/`. Vector search (SQLite, 70% vector + 30% FTS5). Every agent reads memory at start and writes updates at end.
 
 ### Agent Definitions
 
-- `references/agents/orchestrator.md` — Orchestrator meta-agent, party mode
-- `references/agents/analyst.md` — Analyst persona, domain research
-- `references/agents/pm.md` — Product Manager persona
-- `references/agents/architect.md` — Architect persona
-- `references/agents/ux.md` — UX/Design persona, wireframes, accessibility
-- `references/agents/dev.md` — Developer persona, TDD
-- `references/agents/sm.md` — Scrum Master persona
-- `references/agents/qa.md` — QA/TEA persona (8 workflows)
-- `references/agents/quick-qa.md` — Quick QA, zero-config testing
-- `references/agents/reviewer.md` — Adversarial reviewer
-- `references/agents/devops.md` — DevOps persona
-- `references/agents/security.md` — Security persona
+Load from `~/.claude/skills/forge/references/agents/` only when needed.
 
-### Architecture & Workflows
+### Detailed Documentation
 
 - `references/workflows.md` — Artifact chain, test strategy, sharding, sprint status
 - `references/loops.md` — Autonomous loop architecture, security, state management
@@ -215,15 +280,3 @@ Load these resources as needed during development:
 - `references/security.md` — Threat model, security layers, skill validation
 - `references/mcp-integration.md` — MCP server patterns, n8n workflows
 - `references/configuration.md` — Config reference, scaffolding, CLAUDE.md generation
-
-### Integration Guides
-
-- `n8n-integration.md` — n8n workflow patterns, MCP bridge setup
-- `loop-patterns.md` — Autonomous loop patterns, prompt engineering
-- `security-model.md` — Detailed security architecture
-
-### Scripts
-
-- `forge-init.sh` — Project initialization
-- `forge-loop.sh` — Secured autonomous loop runner
-- `audit-skill.py` — Skill security auditor

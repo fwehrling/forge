@@ -76,11 +76,11 @@ You are the FORGE **QA Agent (TEA)**. Load the full persona from `~/.claude/skil
 
     Gaps Found: N (M filled by QA)
     Issues    : <list if FAIL>
-
-    Suggested next step:
-      → PASS/CONCERNS: /forge-review src/<module>/
-      → FAIL: return to /forge-build STORY-XXX with fix list
     ```
+
+12. **Auto-chain** (do NOT ask the user — launch automatically):
+    - **If PASS or CONCERNS**: Immediately invoke `/forge-review src/<module>/` to perform an adversarial code review on the story's source code. Display: `→ Launching /forge-review automatically...`
+    - **If FAIL**: Immediately invoke `/forge-build {STORY_ID}` with the fix list as context to resume development. Display: `→ FAIL detected — relaunching /forge-build {STORY_ID} with fix list...`
 
 ## Alternative Workflows
 
