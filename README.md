@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.4.0-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.4.1-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-23-orange)](#commands)
@@ -28,11 +28,13 @@ That's it. FORGE classifies your intent, picks the right agent, and handles the 
 `/forge` is the **single entry point**. Describe what you need in natural language, and the intelligent router classifies your intent, selects the best target (FORGE skill, custom agent, or dynamically created agent), and invokes it automatically.
 
 ```bash
-/forge "implement user authentication"     # → routes to /forge-build
-/forge "write a LinkedIn post"              # → routes to Maya (social media agent)
-/forge "OWASP audit of the project"         # → routes to /forge-audit
-/forge "analyze SaaS competition"           # → routes to Clara (business strategy agent)
-/forge "plan and design payment system"     # → chains /forge-plan → /forge-architect
+/forge "build a REST API with auth"          # → routes to /forge-auto (full pipeline)
+/forge "implement STORY-001"                 # → routes to /forge-build (single story)
+/forge "fix the login bug"                   # → routes to /forge-quick-spec (quick track)
+/forge "write a LinkedIn post"               # → routes to Maya (social media agent)
+/forge "OWASP audit of the project"          # → routes to /forge-audit
+/forge "analyze SaaS competition"            # → routes to Clara (business strategy agent)
+/forge "plan and design payment system"      # → chains /forge-plan → /forge-architect
 ```
 
 Under the hood, FORGE assigns specialized AI agents to each phase of software development. Each agent produces versioned artifacts that downstream agents consume, eliminating context loss between phases.
@@ -49,7 +51,7 @@ flowchart LR
 
 Each agent is a lightweight Markdown persona loaded on demand from `~/.claude/skills/forge/references/agents/`.
 
-### Execution Modes
+### Routing Domains
 
 The `/forge` router covers **6 domains** beyond development:
 
@@ -463,7 +465,7 @@ The sync scope includes both `.forge/memory/` and `docs/` (stories, architecture
 | Business | Clara, Business Panel | "analyze competition", "pricing strategy", "market research" |
 | Marketing | Maya, Theo, Leo, GEO Expert | "LinkedIn post", "landing page copy", "SEO audit", "AI search" |
 | Security | Victor | "OWASP review", "hardening" (outside FORGE pipeline) |
-| Legal | E-commerce Legal Expert | "CGV", "RGPD", "mentions legales" |
+| Legal | E-commerce Legal Expert | "CGV", "RGPD", "mentions légales" |
 | Framework | Angular Expert, Next.js Expert | "Angular signals", "App Router" |
 
 ---
@@ -735,6 +737,10 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 ---
 
 ## Changelog
+
+### v1.4.1
+
+**Patch** — Fix regressions from v1.4.0: restore French accents, Memory Protocol, On Invocation Failure, full 6-step router workflow, improved README examples.
 
 ### v1.4.0
 
