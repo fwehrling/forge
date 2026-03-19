@@ -199,32 +199,113 @@ If the chain involves 3+ targets, delegate to `skill: "forge-auto"` instead.
 
 ## DYNAMIC CREATION
 
-When **no existing target matches** the user's request:
+When **no existing target matches** the user's request, create a professional agent on-the-fly. The generated agent must match the quality of hand-crafted agents (Maya, Clara, Victor, etc.) and follow skill-creator best practices.
 
-1. **Confirm** no existing skill or agent covers this domain (check the routing table above)
-2. **Generate** a new agent file with this structure:
+### Step 1 — Confirm no match exists
+
+Check the full routing table above. Also scan `~/.claude/agents/` for any agent with `category: dynamic` that might already cover this domain from a previous creation. If a match exists, route to it instead of creating a new one.
+
+### Step 2 — Research the domain
+
+Before writing the agent, understand what expertise is needed:
+- What specific knowledge domain does the request cover?
+- What frameworks, methodologies, or standards apply?
+- What output format would be most useful?
+- What are the common pitfalls or anti-patterns in this domain?
+
+### Step 3 — Generate the agent file
+
+The agent file MUST follow this complete structure. Every section matters — a skeleton agent with just "Role" and "Instructions" is not acceptable.
 
 ```markdown
 ---
-name: <descriptive-name>
+name: <kebab-case-name>
 description: >
-  <role and expertise description>
+  <Role title> — <2-3 lines describing expertise, specialties, and use cases>.
+  Use this agent whenever the user mentions <trigger phrase 1>, <trigger phrase 2>,
+  <trigger phrase 3>, or wants to <broader intent description>.
 category: dynamic
 created: <YYYY-MM-DD>
+color: "<hex color matching the domain>"
 ---
 
-# <Agent Name>
+# <Agent Display Name> — <Role Title>
 
-## Role
-<expertise, constraints, output format>
+Tu es <Name>, <one-sentence persona with years of experience and core identity>.
 
-## Instructions
-<specific behavior for this domain>
+## Expertise
+
+<Domain expert title> avec <N>+ ans d'experience en :
+
+- <Core competency 1 with specifics>
+- <Core competency 2 with specifics>
+- <Core competency 3 with specifics>
+- <Core competency 4 with specifics>
+- <Core competency 5 with specifics>
+
+## Frameworks
+
+- **<Framework 1>** : <What it does and when to use it>
+- **<Framework 2>** : <What it does and when to use it>
+- **<Framework 3>** : <What it does and when to use it>
+
+## Processus de Travail
+
+1. **<Phase 1>** : <What to do, why it matters>
+2. **<Phase 2>** : <What to do, why it matters>
+3. **<Phase 3>** : <What to do, why it matters>
+4. **<Phase 4>** : <What to do, why it matters>
+
+## Format de Livrable
+
+Structured output template the agent MUST follow:
+
+## <Deliverable title>
+### <Section 1>
+<What goes here>
+### <Section 2>
+<What goes here>
+### <Section 3>
+<What goes here>
+
+## Limites
+
+- <What this agent does NOT do>
+- <Anti-patterns to avoid>
+- <Boundaries of expertise>
+
+## French Language Requirements
+
+- **Accents obligatoires** : Toujours utiliser les accents corrects
+- **Reponse en francais** : Sauf si le contexte l'exige autrement
 ```
 
-3. **Write** the file to `~/.claude/agents/<name>.md`
-4. **Invoke** immediately via Task tool with `subagent_type: "general-purpose"` and the agent's instructions as part of the prompt
-5. **Log** creation in forge-memory if available
+### Writing principles (from skill-creator)
+
+- **Explain the WHY** behind every instruction — "do X because Y" is more effective than "MUST do X"
+- **Use imperative form** in instructions
+- **Be "pushy" in the description** — include trigger phrases and broad contexts so the agent gets matched reliably in future routing
+- **Include a concrete output template** — every agent produces a structured deliverable, not free-form text
+- **Define limits** — what the agent refuses to do prevents scope creep and hallucination
+- **Give the agent a persona** — a name, a voice, a point of view. Agents with personality produce better output than generic instructions
+- **Keep it lean** — aim for 50-80 lines. If the domain needs more, create a `references/` file and point to it
+
+### Step 4 — Write and invoke
+
+1. Write the file to `~/.claude/agents/<name>.md`
+2. Invoke immediately via Task tool: `Task(subagent_type: "general-purpose", prompt: "<full agent instructions from the file> + <user's original request>", description: "<3-5 word summary>")`
+3. If forge-memory is available, log the creation: agent name, domain, creation reason
+
+### Color palette for dynamic agents
+
+Pick a color that signals the domain:
+- Dev/Engineering: `#4CAF50` (green)
+- Business/Strategy: `#FF9800` (orange)
+- Creative/Content: `#E91E63` (pink)
+- Analytics/Data: `#2196F3` (blue)
+- Security/Compliance: `#F44336` (red)
+- Legal: `#9C27B0` (purple)
+- Other: `#607D8B` (grey)
 
 ---
 
