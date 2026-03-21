@@ -5,6 +5,21 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1] - 2026-03-21
+
+### Fixed
+
+- **Memory fallback**: Skills no longer crash if `forge-memory` CLI is not installed. They fall back to direct Markdown reads of MEMORY.md and session files. Vector search is now optional, not a hard dependency
+- **Stop hook**: Added `forge-memory-stop.sh` hook that runs `consolidate` + `sync` when sessions end, catching memory updates from skills that crashed before their END block
+
+### Changed
+
+- **Config via env vars**: `config.py` now reads `FORGE_VECTOR_WEIGHT`, `FORGE_FTS_WEIGHT`, `FORGE_SEARCH_THRESHOLD`, `FORGE_SEARCH_LIMIT`, `FORGE_CHUNK_SIZE`, `FORGE_CHUNK_OVERLAP` from environment variables with hardcoded defaults as fallback
+
+### Removed
+
+- **Agent-specific memory**: Removed `.forge/memory/agents/` directory and all references. Session logs already tag entries with `[agent_name]` and `(STORY-ID)`, making per-agent files redundant. Removed from: `memory.md`, `configuration.md`, `forge-init.sh`, `forge-memory/SKILL.md`, `sync.py`, `README.md`
+
 ## [1.5.0] - 2026-03-21
 
 ### Added
@@ -166,6 +181,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.5.1]: https://github.com/fwehrling/forge/releases/tag/v1.5.1
 [1.5.0]: https://github.com/fwehrling/forge/releases/tag/v1.5.0
 [1.4.2]: https://github.com/fwehrling/forge/releases/tag/v1.4.2
 [1.4.0]: https://github.com/fwehrling/forge/releases/tag/v1.4.0

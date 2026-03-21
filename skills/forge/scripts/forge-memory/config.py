@@ -6,14 +6,14 @@ EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 EMBEDDING_DIM = 384
 
 # Chunking
-CHUNK_SIZE_TOKENS = 400
-CHUNK_OVERLAP_TOKENS = 80
+CHUNK_SIZE_TOKENS = int(os.environ.get("FORGE_CHUNK_SIZE", "400"))
+CHUNK_OVERLAP_TOKENS = int(os.environ.get("FORGE_CHUNK_OVERLAP", "80"))
 
 # Search
-VECTOR_WEIGHT = 0.7
-FTS_WEIGHT = 0.3
-DEFAULT_LIMIT = 5
-DEFAULT_THRESHOLD = 0.3
+VECTOR_WEIGHT = float(os.environ.get("FORGE_VECTOR_WEIGHT", "0.7"))
+FTS_WEIGHT = float(os.environ.get("FORGE_FTS_WEIGHT", "0.3"))
+DEFAULT_LIMIT = int(os.environ.get("FORGE_SEARCH_LIMIT", "5"))
+DEFAULT_THRESHOLD = float(os.environ.get("FORGE_SEARCH_THRESHOLD", "0.3"))
 
 # Paths (relative to project root)
 MEMORY_DIR = ".forge/memory"

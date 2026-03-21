@@ -54,7 +54,6 @@ def _detect_namespace(rel_path: str) -> tuple[str, str | None]:
     Rules:
       - MEMORY.md (at root of memory dir) → 'project'
       - sessions/*.md → 'session'
-      - agents/*.md → 'agent' with name extracted from filename
       - anything else → 'project'
     """
     # Normalise separators
@@ -69,9 +68,6 @@ def _detect_namespace(rel_path: str) -> tuple[str, str | None]:
         folder = parts[0].lower()
         if folder == "sessions":
             return "session", None
-        if folder == "agents":
-            agent_name = os.path.splitext(basename)[0]
-            return "agent", agent_name
 
     return "project", None
 

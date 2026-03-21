@@ -24,7 +24,6 @@ memory:
   enabled: true
   auto_save: true
   session_logs: true
-  agent_memory: true
   vector_search:
     enabled: false     # requires Python 3.9+ setup
     model: "all-MiniLM-L6-v2"
