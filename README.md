@@ -102,7 +102,7 @@ flowchart TD
 ## Features
 
 ### Multi-Agent Pipeline
-12 specialized pipeline agents (Analyst, PM, Architect, UX, Scrum Master, Dev, Debug, QA, Quick QA, Reviewer, Orchestrator, DevOps, Security) that collaborate through artifacts. Plus 8 optional Business Pack agents for marketing, SEO, legal, security, and strategy.
+12 specialized pipeline agents (Analyst, PM, Architect, UX, Scrum Master, Dev, QA, Quick QA, Reviewer, Orchestrator, DevOps, Security) that collaborate through artifacts. Plus a dedicated Debug skill for root cause investigation, and 8 optional Business Pack skills for marketing, SEO, legal, security, and strategy.
 
 ### Persistent Memory
 Two-layer memory system (Markdown + optional vector search) that survives across sessions. FORGE always knows where it left off. Works without vector search (direct Markdown reads), enhanced with it. See [Memory System](#memory-system) for details.
@@ -762,6 +762,17 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 
 ## Changelog
 
+### v1.5.1
+
+**Security & Reliability** — Prompt injection defense, memory improvements, and Token Saver fixes:
+
+- **Prompt injection defense**: 3-level protection across all skills (router detection, per-skill external content warnings, memory security)
+- **Memory fallback**: Skills no longer crash if `forge-memory` CLI is not installed (direct Markdown reads as fallback)
+- **Stop hook**: `forge-memory-stop.sh` catches memory updates from crashed sessions
+- **Token Saver fixes**: HOME fallback, error logging, regex fix, path escaping, chmod validation
+- **Config via env vars**: Memory search config tunable via `FORGE_VECTOR_WEIGHT`, `FORGE_SEARCH_THRESHOLD`, etc.
+- **Cleanup**: Removed unused agent-specific memory (`.forge/memory/agents/`)
+
 ### v1.5.0
 
 **Business Pack & Debug Agent** — Modular architecture with optional skill packs:
@@ -786,7 +797,7 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 - **Complete Routing Table**: Covers all core FORGE skills + Business Pack skills + dynamic agent creation
 - **Invocation Protocol**: Skill tool for all FORGE skills, Agent tool for dynamic creation, sequential chaining (max 2 targets, then forge-auto)
 - **Dynamic Agent Creation**: Generates new agents on-the-fly in `~/.claude/agents/` when no existing target matches
-- **Disambiguation Rules**: Context-aware routing (e.g., "security audit" routes to forge-audit in FORGE projects, Victor otherwise)
+- **Disambiguation Rules**: Context-aware routing (e.g., "security audit" routes to forge-audit in FORGE projects, forge-security-pro otherwise)
 
 ### v1.3.0
 
