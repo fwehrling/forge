@@ -2,11 +2,11 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.4.2-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.5.0-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
-[![Skills](https://img.shields.io/badge/skills-23-orange)](#commands)
-[![Agents](https://img.shields.io/badge/agents-12-purple)](#multi-agent-pipeline)
+[![Skills](https://img.shields.io/badge/skills-24%20core%20%2B%208%20business-orange)](#commands)
+[![Agents](https://img.shields.io/badge/agents-12%20pipeline%20%2B%20dynamic-purple)](#multi-agent-pipeline)
 [![n8n](https://img.shields.io/badge/n8n-workflows-ff6d5a?logo=n8n)](https://n8n.io)
 [![Token Saver](https://img.shields.io/badge/token%20saver-up%20to%20--97%25-brightgreen)](#token-saver)
 [![Memory](https://img.shields.io/badge/memory-Markdown%20%2B%20Vector-yellow)](#memory-system)
@@ -31,9 +31,10 @@ That's it. FORGE classifies your intent, picks the right agent, and handles the 
 /forge "build a REST API with auth"          # → routes to /forge-auto (full pipeline)
 /forge "implement STORY-001"                 # → routes to /forge-build (single story)
 /forge "fix the login bug"                   # → routes to /forge-quick-spec (quick track)
-/forge "write a LinkedIn post"               # → routes to Maya (social media agent)
+/forge "why is this crashing"                # → routes to /forge-debug (root cause investigation)
+/forge "write a LinkedIn post"               # → routes to /forge-marketing (Business Pack)
 /forge "OWASP audit of the project"          # → routes to /forge-audit
-/forge "analyze SaaS competition"            # → routes to Clara (business strategy agent)
+/forge "analyze SaaS competition"            # → routes to /forge-business-strategy (Business Pack)
 /forge "plan and design payment system"      # → chains /forge-plan → /forge-architect
 ```
 
@@ -57,15 +58,14 @@ The `/forge` router covers **6 domains** beyond development:
 
 | Domain | Targets |
 |--------|---------|
-| **Dev pipeline** | 18 FORGE skills (init, analyze, plan, architect, ux, stories, build, verify, deploy...) |
+| **Dev pipeline** | 19 core skills (init, analyze, plan, architect, ux, stories, build, debug, verify, deploy...) |
 | **Dev tooling** | status, resume, memory, update |
-| **Business** | Clara (strategy), Business Panel (multi-expert) |
-| **Marketing** | Maya (social media), Theo (copywriting), Leo (SEO), GEO Expert (AI search) |
-| **Security** | Victor (general) or /forge-audit (FORGE pipeline) |
-| **Legal** | E-commerce Legal Expert |
-| **Framework** | Angular Expert, Next.js Expert |
+| **Business** | forge-business-strategy, forge-strategy-panel (Business Pack) |
+| **Marketing** | forge-marketing, forge-copywriting, forge-seo, forge-geo (Business Pack) |
+| **Security** | forge-security-pro (Business Pack) or /forge-audit (core pipeline) |
+| **Legal** | forge-legal (Business Pack) |
 
-If no existing target matches, the router **creates a new agent on-the-fly** and invokes it immediately.
+If no existing target matches, the router follows a **Resolution Cascade**: check installed skills, suggest the Business Pack if relevant, or **create a new agent on-the-fly** and invoke it immediately. FORGE always delivers.
 
 ### Execution Modes
 
@@ -94,7 +94,7 @@ flowchart TD
 - `/forge "build this project from A to Z"` — routes to `/forge-auto`
 - `/forge "build these stories in parallel"` — routes to `/forge-team`
 - `/forge "implement STORY-001"` — routes to `/forge-build`
-- `/forge "write a landing page copy"` — routes to Theo (copywriter agent)
+- `/forge "write a landing page copy"` — routes to `/forge-copywriting` (Business Pack)
 - Direct command — `/forge-auto`, `/forge-build`, etc. still work for explicit control
 
 ---
@@ -102,7 +102,7 @@ flowchart TD
 ## Features
 
 ### Multi-Agent Pipeline
-12 specialized agents (Analyst, PM, Architect, UX, Scrum Master, Dev, QA, Quick QA, Reviewer, Orchestrator, DevOps, Security) that collaborate through artifacts.
+12 specialized pipeline agents (Analyst, PM, Architect, UX, Scrum Master, Dev, Debug, QA, Quick QA, Reviewer, Orchestrator, DevOps, Security) that collaborate through artifacts. Plus 8 optional Business Pack agents for marketing, SEO, legal, security, and strategy.
 
 ### Persistent Memory
 Two-layer memory system (Markdown + vector search) that survives across sessions. FORGE always knows where it left off. See [Memory System](#memory-system) for details.
@@ -326,8 +326,17 @@ This will:
 1. Clone the latest version from GitHub
 2. Compare installed skills with the new ones
 3. Show a summary of changes (modified, new, removed)
-4. Copy updated skills to `~/.claude/skills/`
-5. Clean up temporary files
+4. Copy updated core skills to `~/.claude/skills/`
+5. Auto-update previously installed Business Pack skills (if any)
+6. Clean up temporary files
+
+### Install the Business Pack (optional)
+
+```bash
+/forge-update --pack business
+```
+
+Installs 8 additional skills for marketing, SEO, legal, security, and business strategy. Once installed, they are auto-updated by `/forge-update`.
 
 ### Manual update
 
@@ -438,6 +447,7 @@ The sync scope includes both `.forge/memory/` and `docs/` (stories, architecture
 | `/forge-ux`        | UX        | `docs/ux-design.md`        | Wireframes, design system, a11y      |
 | `/forge-stories`   | SM        | `docs/stories/*.md`        | Story decomposition with test specs  |
 | `/forge-build`     | Dev       | Source code + tests         | Implementation (TDD)                 |
+| `/forge-debug`     | Debug     | Root cause + handoff        | Systematic investigation (4 phases)  |
 | `/forge-verify`    | QA        | Test report + verdict       | Quality audit and certification      |
 | `/forge-deploy`    | DevOps    | Deployed application        | Staging + production deployment      |
 
@@ -458,15 +468,18 @@ The sync scope includes both `.forge/memory/` and `docs/` (stories, architecture
 | `/forge-status`               | Sprint status, stories, metrics                   |
 | `/forge-update`               | Update FORGE skills from latest release           |
 
-### External Agents (routed via `/forge`)
+### Business Pack (optional — install with `/forge-update --pack business`)
 
-| Domain | Agent | Trigger examples |
-|--------|-------|------------------|
-| Business | Clara, Business Panel | "analyze competition", "pricing strategy", "market research" |
-| Marketing | Maya, Theo, Leo, GEO Expert | "LinkedIn post", "landing page copy", "SEO audit", "AI search" |
-| Security | Victor | "OWASP review", "hardening" (outside FORGE pipeline) |
-| Legal | E-commerce Legal Expert | "CGV", "RGPD", "mentions légales" |
-| Framework | Angular Expert, Next.js Expert | "Angular signals", "App Router" |
+| Skill | Domain | Trigger examples |
+|-------|--------|------------------|
+| `/forge-business-strategy` | Business | "analyze competition", "pricing strategy", "market research" |
+| `/forge-strategy-panel` | Business | "multi-expert debate", "strategic analysis", "should we pivot" |
+| `/forge-marketing` | Marketing | "LinkedIn post", "content calendar", "social media strategy" |
+| `/forge-copywriting` | Marketing | "landing page copy", "email funnel", "conversion optimization" |
+| `/forge-seo` | SEO | "SEO audit", "keyword research", "Core Web Vitals" |
+| `/forge-geo` | SEO | "AI search visibility", "GEO optimization", "Perplexity" |
+| `/forge-security-pro` | Security | "OWASP review", "hardening" (outside FORGE pipeline) |
+| `/forge-legal` | Legal | "CGV", "RGPD", "mentions légales", "auto-entrepreneur" |
 
 ---
 
@@ -498,21 +511,23 @@ your-project/
 
 # Skills installation location (global):
 ~/.claude/skills/
-  forge/                    # Core framework + scripts + references
-  forge-auto/               # Autopilot skill
+  # Core skills (24 — installed by default)
+  forge/                    # Intelligent Router + scripts + references
+  forge-auto/               # Autopilot mode
   forge-analyze/            # Analyst agent
   forge-plan/               # PM agent
   forge-architect/          # Architect agent
   forge-ux/                 # UX agent
   forge-stories/            # SM agent
   forge-build/              # Dev agent
+  forge-debug/              # Systematic root cause investigation
   forge-verify/             # QA agent
   forge-deploy/             # DevOps agent
-  forge-audit/              # Security agent
+  forge-audit/              # Security agent (Enterprise)
   forge-loop/               # Autonomous loop
   forge-team/               # Agent Teams parallel execution
   forge-party/              # Multi-agent orchestration
-  forge-quick-spec/         # Quick track
+  forge-quick-spec/         # Quick track (cause known)
   forge-quick-test/         # Quick QA
   forge-review/             # Adversarial reviewer
   forge-audit-skill/        # Skill security auditor
@@ -521,6 +536,16 @@ your-project/
   forge-resume/             # Resume skill
   forge-status/             # Sprint status skill
   forge-update/             # Update skill
+
+  # Business Pack (8 — optional, install with /forge-update --pack business)
+  forge-marketing/          # Social media & content strategy
+  forge-copywriting/        # Copywriting & conversion
+  forge-seo/                # SEO & analytics
+  forge-geo/                # GEO/LLMO & AI search
+  forge-legal/              # E-commerce & auto-entrepreneur law
+  forge-security-pro/       # Deep security audit & OWASP hardening
+  forge-business-strategy/  # Market research & business strategy
+  forge-strategy-panel/     # Multi-expert strategy panel
 ```
 
 ---
@@ -695,9 +720,9 @@ deploy:
 What FORGE adds on top of using Claude Code directly:
 
 - **Single entry point** — `/forge "anything"` classifies intent and routes to the right skill or agent automatically
-- **Multi-agent pipeline** — Specialized agents per phase (PM, Architect, Dev, QA...) with artifact handoff
-- **Beyond code** — Routes to business, marketing, SEO, security, legal, and framework agents
-- **Dynamic agents** — Creates new agents on-the-fly when no existing target matches
+- **Multi-agent pipeline** — Specialized agents per phase (PM, Architect, Dev, Debug, QA...) with artifact handoff
+- **Beyond code** — Optional Business Pack adds marketing, SEO, security, legal, and strategy skills
+- **Resolution Cascade** — Core skill -> Business Pack -> standalone -> dynamic agent creation. FORGE always delivers, never says "I can't"
 - **Persistent memory** — Two-layer system (Markdown + optional vector search) that survives across sessions
 - **Autonomous iteration** — Long-running loops with cost caps, circuit breakers, and sandbox isolation
 - **Scale-adaptive intelligence** — Auto-detects project complexity and adjusts the pipeline depth
@@ -738,6 +763,17 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 
 ## Changelog
 
+### v1.5.0
+
+**Business Pack & Debug Agent** — Modular architecture with optional skill packs:
+
+- **Business Pack**: 8 new optional skills (forge-marketing, forge-copywriting, forge-seo, forge-geo, forge-legal, forge-security-pro, forge-business-strategy, forge-strategy-panel) installable via `/forge-update --pack business`
+- **`/forge-debug`**: New core skill for systematic root cause investigation (4-phase scientific method), chains to `/forge-quick-spec` for implementation
+- **Resolution Cascade**: Router now follows a 5-step cascade (core -> Business Pack -> standalone -> suggest install -> dynamic creation) ensuring FORGE always delivers
+- **`/forge-update --pack`**: Updater now supports optional pack installation and auto-updates previously installed packs
+- **`packs.yaml`**: New manifest file categorizing skills into core and business packs
+- **Cleanup**: Removed redundant skills (business-analysis, debug, oneshot, sqlite-database-expert, stripe-integration), migrated 8 custom agents into Business Pack skills
+
 ### v1.4.2
 
 **Patch** — Fix regressions from v1.4.0: restore French accents, Memory Protocol, On Invocation Failure, full 6-step router workflow, improved README examples.
@@ -747,9 +783,9 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 **Intelligent Router** — `/forge` transformed from a documentary hub into a universal entry point:
 
 - **Router behavior**: `/forge` now classifies user intent (domain, action, specificity, scale) and automatically delegates to the right FORGE skill or custom agent — never executes tasks itself
-- **Intent Classification**: 4-dimension analysis with 9 domain categories (dev-pipeline, dev-tooling, business, marketing, seo, security, legal, framework, unknown)
-- **Complete Routing Table**: Covers all 22 FORGE skills + 10 custom agents (Clara, Maya, Theo, Leo, Victor, GEO Expert, Legal Expert, Angular Expert, Next.js Expert, Business Panel)
-- **Invocation Protocol**: 3 mechanisms — Skill tool for FORGE, Task tool for agents, sequential chaining (max 2 targets, then forge-auto)
+- **Intent Classification**: 4-dimension analysis with domain categories (dev-pipeline, dev-tooling, business, marketing, seo, security, legal, specialist, unknown)
+- **Complete Routing Table**: Covers all core FORGE skills + Business Pack skills + dynamic agent creation
+- **Invocation Protocol**: Skill tool for all FORGE skills, Agent tool for dynamic creation, sequential chaining (max 2 targets, then forge-auto)
 - **Dynamic Agent Creation**: Generates new agents on-the-fly in `~/.claude/agents/` when no existing target matches
 - **Disambiguation Rules**: Context-aware routing (e.g., "security audit" routes to forge-audit in FORGE projects, Victor otherwise)
 

@@ -2,11 +2,11 @@
 name: forge
 description: >
   FORGE Intelligent Router — Universal entry point for all development, business, marketing,
-  SEO, security, legal, and framework tasks. Analyzes user intent, classifies the request,
-  and automatically delegates to the right FORGE skill or custom agent.
+  SEO, security, legal, and debugging tasks. Analyzes user intent, classifies the request,
+  and automatically delegates to the right FORGE skill or dynamically created agent.
   Triggers: "forge", "build", "plan", "analyze", "deploy", "test", "review", "audit",
   "marketing", "SEO", "security", "legal", "business strategy", "competition", "LinkedIn",
-  "copywriting", "landing page", "Angular", "Next.js", "accessibility", "OWASP",
+  "copywriting", "landing page", "debug", "why is this failing", "accessibility", "OWASP",
   "sprint status", "resume project", "autonomous", "autopilot", "scaffold", "initialize",
   "what should I do next", "run everything", "multi-agent", "parallel build".
   This skill NEVER executes tasks itself — it always delegates to the appropriate target.
@@ -24,16 +24,43 @@ You are a **router**, not an executor. Your only job is to:
 
 1. **Classify** the user's intent (domain, action, specificity, scale)
 2. **Check context** — if routing to a dev-pipeline skill, verify `.forge/` exists in CWD. If missing and the skill requires it (build, verify, stories, deploy, audit), suggest `/forge-init` first
-3. **Select** the best target (FORGE skill, custom agent, or dynamic creation)
+3. **Resolve** the best target using the Resolution Cascade below
 4. **Invoke** the target immediately using the appropriate tool
 5. **Log** the routing decision to forge-memory (see Memory Protocol below)
 6. **Never ask** for confirmation before routing — act decisively
 
-### Priority Order
+### Resolution Cascade
 
-1. **FORGE skills** (`/forge-*`) — Always preferred for development pipeline tasks
-2. **Custom agents** (`~/.claude/agents/`) — For business, marketing, SEO, legal, framework tasks
-3. **Dynamic creation** — Only when no existing target matches
+For every request, follow this cascade in order. Stop at the first match:
+
+```
+Step 1 — FORGE core skill exists for this intent?
+  YES → Invoke it
+  NO  → Step 2
+
+Step 2 — Business Pack skill exists and is installed?
+  YES → Invoke it
+  NO  → Step 3
+
+Step 3 — Standalone skill exists (user-installed)?
+  YES → Invoke it
+  NO  → Step 4
+
+Step 4 — Business Pack skill WOULD match but is NOT installed?
+  YES → Suggest: "This request would benefit from the FORGE Business Pack.
+        Install with: /forge-update --pack business"
+    User accepts → Install pack, then invoke the skill
+    User refuses → Step 5
+  NO  → Step 5
+
+Step 5 — Dynamic creation
+  → Create an agent on the fly (see DYNAMIC CREATION section)
+  → Write it to ~/.claude/agents/<name>.md
+  → Invoke it immediately
+  → The agent persists for future use
+```
+
+**Key principle**: FORGE always delivers. If no skill exists, it creates one. The user never gets "I can't do that."
 
 ### Chaining Rules
 
@@ -58,7 +85,7 @@ Analyze every request along 4 dimensions:
 | `seo` | SEO, keywords, analytics, Core Web Vitals, structured data, GEO, AI search, LLMO |
 | `security` | OWASP, vulnerabilities, threat model, penetration test, security audit, hardening |
 | `legal` | RGPD, CGV, mentions légales, auto-entrepreneur, e-commerce law, compliance |
-| `framework` | Angular, Next.js, SSR, signals, App Router, Server Components |
+| `specialist` | Framework-specific questions (Angular, Next.js, etc.), niche domain expertise — handled via dynamic agent creation |
 | `unknown` | Cannot classify — ask the user one clarifying question |
 
 ### 2. Action
@@ -99,7 +126,8 @@ Analyze every request along 4 dimensions:
 | Story decomposition, sprint planning | `forge-stories` | `skill: "forge-stories"` |
 | Implement code, build a story, TDD | `forge-build` | `skill: "forge-build"` |
 | QA, test audit, certification, verify story | `forge-verify` | `skill: "forge-verify"` |
-| Quick bug fix, hotfix, small change | `forge-quick-spec` | `skill: "forge-quick-spec"` |
+| Bug investigation, unknown root cause, "why is this failing" | `forge-debug` | `skill: "forge-debug"` |
+| Quick bug fix, hotfix, small change (cause known) | `forge-quick-spec` | `skill: "forge-quick-spec"` |
 | Run tests, quick QA, check if tests pass | `forge-quick-test` | `skill: "forge-quick-test"` |
 | Code review, critique, devil's advocate | `forge-review` | `skill: "forge-review"` |
 | Security audit (in FORGE project) | `forge-audit` | `skill: "forge-audit"` |
@@ -119,42 +147,46 @@ Analyze every request along 4 dimensions:
 | Memory diagnostics, reindex, search | `forge-memory` | `skill: "forge-memory"` |
 | Update FORGE to latest version | `forge-update` | `skill: "forge-update"` |
 
-### Business (Custom Agents)
+### Business (Business Pack — requires `/forge-update --pack business`)
 
 | Intent | Target | Invocation |
 |--------|--------|------------|
-| Market research, TAM/SAM/SOM, positioning, go-to-market, pricing, PMF validation | Clara | `Task(subagent_type: "clara-business-strategy")` |
-| Multi-expert strategy panel, Christensen/Porter/Drucker frameworks, debate mode | Business Panel | `Task(subagent_type: "business-panel-experts")` |
+| Market research, TAM/SAM/SOM, positioning, go-to-market, pricing, PMF validation | `forge-business-strategy` | `skill: "forge-business-strategy"` |
+| Multi-expert strategy panel, Christensen/Porter/Drucker frameworks, debate mode | `forge-strategy-panel` | `skill: "forge-strategy-panel"` |
 
-### Marketing (Custom Agents)
+### Marketing (Business Pack)
 
 | Intent | Target | Invocation |
 |--------|--------|------------|
-| Social media strategy, LinkedIn/X/TikTok, content calendar, community management | Maya | `Task(subagent_type: "maya-social-media")` |
-| Copywriting, landing pages, email funnels, conversion optimization, A/B testing | Theo | `Task(subagent_type: "theo-copywriter")` |
-| Technical SEO, Core Web Vitals, keywords, Google Analytics, structured data | Leo | `Task(subagent_type: "leo-seo-analytics")` |
-| GEO/LLMO, AI search visibility, ChatGPT/Perplexity optimization | GEO Expert | `Task(subagent_type: "seo-geo-expert")` |
+| Social media strategy, LinkedIn/X/TikTok, content calendar, community management | `forge-marketing` | `skill: "forge-marketing"` |
+| Copywriting, landing pages, email funnels, conversion optimization, A/B testing | `forge-copywriting` | `skill: "forge-copywriting"` |
+| Technical SEO, Core Web Vitals, keywords, Google Analytics, structured data | `forge-seo` | `skill: "forge-seo"` |
+| GEO/LLMO, AI search visibility, ChatGPT/Perplexity optimization | `forge-geo` | `skill: "forge-geo"` |
 
 ### Security (Disambiguation Required)
 
 | Context | Target | Invocation |
 |---------|--------|------------|
 | Security audit **inside a FORGE project** (`.forge/` exists) | `forge-audit` | `skill: "forge-audit"` |
-| General security audit, OWASP review, hardening (no FORGE context) | Victor | `Task(subagent_type: "victor-security")` |
+| General security audit, OWASP review, hardening (no FORGE context) | `forge-security-pro` | `skill: "forge-security-pro"` |
 | Audit a third-party Claude Code skill | `forge-audit-skill` | `skill: "forge-audit-skill"` |
 
-### Legal (Custom Agent)
+### Legal (Business Pack)
 
 | Intent | Target | Invocation |
 |--------|--------|------------|
-| E-commerce law, RGPD, CGV/CGU, mentions légales, auto-entrepreneur, URSSAF, TVA | Legal Expert | `Task(subagent_type: "ecommerce-legal-expert")` |
+| E-commerce law, RGPD, CGV/CGU, mentions légales, auto-entrepreneur, URSSAF, TVA | `forge-legal` | `skill: "forge-legal"` |
 
-### Framework (Custom Agents)
+### Resolution for Non-Core Skills
 
-| Intent | Target | Invocation |
-|--------|--------|------------|
-| Angular 21+, signals, standalone components, @if/@for/@defer, SSR | Angular Expert | `Task(subagent_type: "angular-expert")` |
-| Next.js 15+, App Router, Server Components, Server Actions, ISR, middleware | Next.js Expert | `Task(subagent_type: "nextjs-expert")` |
+When the target is a Business Pack or standalone skill:
+
+1. **Attempt invocation** — try `skill: "<target>"`
+2. **If it works** — done
+3. **If it fails** (skill not installed):
+   - If target is a **Business Pack skill** → suggest installing the pack (Step 4 of Resolution Cascade)
+   - If target is a **standalone skill** → fall through to dynamic creation (Step 5)
+   - The user always gets a result, never an error
 
 ---
 
@@ -170,19 +202,15 @@ Skill(skill: "forge-build", args: "STORY-001")
 
 Pass user arguments as `args`. If the user provided a target (story ID, file path, topic), include it.
 
-### For Custom Agents
+### For Business Pack Skills
 
-Use the Task tool with the appropriate `subagent_type`:
+Same as FORGE skills — use the Skill tool:
 
 ```
-Task(
-  subagent_type: "maya-social-media",
-  prompt: "<full user request with context>",
-  description: "<3-5 word summary>"
-)
+Skill(skill: "forge-marketing", args: "<user request>")
 ```
 
-Always pass the **complete user request** as the prompt. Add relevant context (project name, current state, files) when available.
+If the skill is not installed, follow the Resolution Cascade: suggest installing the Business Pack, and if refused, create a dynamic agent on the fly.
 
 ### For Chaining (exactly 2 targets)
 
@@ -199,11 +227,14 @@ If the chain involves 3+ targets, delegate to `skill: "forge-auto"` instead.
 
 ### On Invocation Failure
 
-If a skill or agent invocation fails:
+If a skill invocation fails:
 1. Do NOT retry the same target blindly
-2. Check if the failure is due to missing context (no `.forge/`, no story file, no config)
-3. If recoverable, fix the prerequisite (e.g., suggest `/forge-init`) then retry once
-4. If not recoverable, explain the failure to the user and suggest alternatives
+2. Identify the cause:
+   - **Missing FORGE context** (no `.forge/`, no story file) → suggest `/forge-init`
+   - **Business Pack skill not installed** → suggest `/forge-update --pack business`, if user refuses → dynamic creation (Step 5)
+   - **Standalone skill not installed** → skip to dynamic creation (Step 5)
+   - **Real error** (skill exists but crashed) → explain and suggest alternatives
+3. FORGE always delivers -- follow the Resolution Cascade until the user gets a result
 
 ---
 
@@ -241,7 +272,7 @@ When **no existing target matches** the user's request, create a professional ag
 
 ### Step 1 — Confirm no match exists
 
-Check the full routing table above. Also scan `~/.claude/agents/` for any agent with `category: dynamic` that might already cover this domain from a previous creation. If a match exists, route to it instead of creating a new one.
+Check the full routing table above (core skills + Business Pack skills). Also scan `~/.claude/agents/` for any agent with `category: dynamic` that might already cover this domain from a previous creation. If a match exists, route to it instead of creating a new one.
 
 ### Step 2 — Research the domain
 
@@ -362,7 +393,15 @@ This section is what turns a good agent into a great one — it provides ready-t
 ### Step 4 — Write and invoke
 
 1. Write the file to `~/.claude/agents/<name>.md`
-2. Invoke immediately via Task tool: `Task(subagent_type: "general-purpose", prompt: "<full agent instructions from the file> + <user's original request>", description: "<3-5 word summary>")`
+2. Invoke immediately via Agent tool:
+   ```
+   Agent(
+     subagent_type: "<name>",
+     prompt: "<user's original request with context>",
+     description: "<3-5 word summary>"
+   )
+   ```
+   The agent file you just wrote will be picked up automatically by Claude Code's agent system.
 3. If forge-memory is available, log the creation: agent name, domain, creation reason
 
 ### Color palette for dynamic agents
@@ -383,19 +422,18 @@ Pick a color that signals the domain:
 | Ambiguous Request | Resolution |
 |-------------------|------------|
 | "security audit" + `.forge/` exists in CWD | `forge-audit` (pipeline-integrated) |
-| "security audit" without FORGE context | Victor (general security agent) |
-| "demande à Maya" / "ask Maya" (names an agent) | Route directly to named agent |
+| "security audit" without FORGE context | `forge-security-pro` (Business Pack) |
+| "demande à Maya" / "ask Maya" (names a persona) | Route to corresponding skill (`forge-marketing`) |
 | "fais tout" / "do everything" / scope unclear | `forge-auto` |
 | Chain > 2 steps | `forge-auto` |
-| "fix this bug" / "quick fix" | `forge-quick-spec` |
+| "fix this bug" / "quick fix" (cause known) | `forge-quick-spec` |
+| "why is this failing" / "debug this" (cause unknown) | `forge-debug` |
 | "run the tests" / "do tests pass" | `forge-quick-test` |
 | "status" / "where am I" | `forge-status` |
 | "resume" / "pick up where I left off" | `forge-resume` |
 | "build stories in parallel" | `forge-team` |
 | "compare approaches" / "multiple perspectives" | `forge-party` |
-| "Angular component" / "Angular signal" | Angular Expert |
-| "Next.js route" / "server component" | Next.js Expert |
-| Framework question without specific framework | Ask user which framework |
+| Specialist/framework question (Angular, Next.js, etc.) | Dynamic agent creation (Step 5 of Resolution Cascade) |
 
 ---
 

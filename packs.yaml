@@ -1,0 +1,41 @@
+# FORGE Packs Manifest
+# Defines which skills belong to each pack for selective installation
+
+core:
+  - forge
+  - forge-init
+  - forge-analyze
+  - forge-plan
+  - forge-architect
+  - forge-ux
+  - forge-stories
+  - forge-build
+  - forge-debug
+  - forge-verify
+  - forge-quick-spec
+  - forge-quick-test
+  - forge-review
+  - forge-audit
+  - forge-audit-skill
+  - forge-deploy
+  - forge-auto
+  - forge-loop
+  - forge-party
+  - forge-team
+  - forge-status
+  - forge-resume
+  - forge-memory
+  - forge-update
+
+business:
+  description: "Business, marketing, SEO, legal, and security expertise agents"
+  source: packs/business
+  skills:
+    - forge-marketing        # Social media & content strategy (ex Maya)
+    - forge-copywriting      # Copywriting & conversion optimization (ex Theo)
+    - forge-seo              # SEO & analytics (ex Leo)
+    - forge-geo              # GEO/LLMO & AI search visibility
+    - forge-legal            # E-commerce & auto-entrepreneur law
+    - forge-security-pro     # Deep security audit & OWASP hardening (ex Victor)
+    - forge-business-strategy # Market research & business strategy (ex Clara)
+    - forge-strategy-panel   # Multi-expert business strategy panel
