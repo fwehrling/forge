@@ -8,12 +8,24 @@ This is the FORGE framework source repository. Skills are in `skills/` and get i
 
 ```
 skills/
-  forge/              # Core framework (SKILL.md + scripts + docs)
+  forge/              # Core framework — Intelligent Router (SKILL.md + scripts + docs)
   forge-auto/         # Autopilot mode
-  forge-team/         # Agent Teams integration (parallel execution)
   forge-build/        # Dev agent
+  forge-debug/        # Systematic root cause investigation
+  forge-team/         # Agent Teams integration (parallel execution)
   forge-verify/       # QA agent
-  forge-*/            # Other agent skills
+  forge-*/            # Other core skills
+packs/
+  business/           # Optional Business Pack (installed via /forge-update --pack business)
+    forge-marketing/  # Social media & content strategy
+    forge-copywriting/# Copywriting & conversion
+    forge-seo/        # SEO & analytics
+    forge-geo/        # GEO/LLMO & AI search
+    forge-legal/      # E-commerce & auto-entrepreneur law
+    forge-security-pro/# Deep security audit & OWASP
+    forge-business-strategy/ # Market research & business strategy
+    forge-strategy-panel/    # Multi-expert strategy panel
+packs.yaml            # Pack manifest (core vs business skill lists)
 ```
 
 ## Conventions

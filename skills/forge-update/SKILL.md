@@ -5,12 +5,20 @@ description: >
   Use when the user says "update forge", "upgrade forge skills", "is there a new version of forge",
   "get the latest forge", "pull forge updates", or wants to update their local FORGE installation
   to the latest version from GitHub. Downloads and replaces all skill files.
+  Supports optional packs: use "--pack business" to install the Business Pack
+  (marketing, copywriting, SEO, GEO, legal, security-pro, business-strategy, strategy-panel).
   Do NOT use for updating project-specific configuration (edit .forge/config.yml manually).
   Do NOT use for initializing FORGE (use /forge-init).
-  Usage: /forge-update
+  Usage: /forge-update or /forge-update --pack business
 ---
 
 # /forge-update — FORGE Updater
+
+## Arguments
+
+- No arguments: update core FORGE skills only
+- `--pack business`: also install/update the Business Pack (marketing, SEO, legal, security, strategy agents)
+- `--pack business --only`: install/update only the Business Pack without updating core skills
 
 ## Workflow
 
@@ -39,22 +47,68 @@ description: >
 
 5. **Copy updated files** :
    ```bash
-   cp -rf "$TMPDIR/skills/"* ~/.claude/skills/
+   # CRITICAL: Only copy forge-* skills. NEVER use rsync --delete or any command
+   # that removes files not present in the source — this would destroy non-FORGE
+   # skills (user-installed via skills.sh, custom skills, etc.)
+   # Use \cp to bypass macOS cp -i alias that blocks non-interactive overwrites.
+   for dir in "$TMPDIR/skills/"forge*/; do
+     skill=$(basename "$dir")
+     \cp -rf "$dir" ~/.claude/skills/"$skill"
+   done
+   # Also copy the main forge router skill
+   \cp -rf "$TMPDIR/skills/forge/" ~/.claude/skills/forge/
    ```
+   - **NEVER** use `rsync --delete`, `rsync -a --delete`, or any destructive sync
+   - Only FORGE skills (`forge` and `forge-*`) are managed by this updater
+   - Non-FORGE skills in `~/.claude/skills/` MUST be preserved (they belong to the user)
    - Le `README.md` du repo reste uniquement sur GitHub (pas copié dans les skills)
 
-6. **Update version and hook** :
+6. **Install packs** (if `--pack` argument provided) :
+   - Read `$TMPDIR/packs.yaml` to get the list of skills in the requested pack
+   - For each skill in the pack:
+     - Compare `$TMPDIR/packs/<pack>/<skill>/` with `~/.claude/skills/<skill>/`
+     - Copy if new or modified
+   ```bash
+   # Example for --pack business:
+   for dir in "$TMPDIR/packs/business/"forge-*/; do
+     skill=$(basename "$dir")
+     \cp -rf "$dir" ~/.claude/skills/"$skill"
+   done
+   ```
+   - If `--only` flag is set, skip core skills update (step 5) and jump directly here
+   - Display which pack skills were installed/updated
+   - If no `--pack` argument and business pack skills already exist locally, still update them
+     (because they were previously installed and should stay in sync)
+   ```bash
+   # Auto-detect previously installed pack skills
+   for dir in "$TMPDIR/packs/business/"forge-*/; do
+     skill=$(basename "$dir")
+     if [ -d ~/.claude/skills/"$skill" ]; then
+       \cp -rf "$dir" ~/.claude/skills/"$skill"
+     fi
+   done
+   ```
+
+7. **Update version and hook** :
    - Lire `$TMPDIR/VERSION` et écrire dans `~/.claude/skills/forge/.forge-version`
    - Copier `$TMPDIR/hooks/forge-update-check.sh` vers `~/.claude/hooks/forge-update-check.sh` (chmod +x)
    - Vider le cache `~/.claude/skills/forge/.forge-update-cache` pour forcer un check frais au prochain démarrage
    ```bash
-   cp "$TMPDIR/VERSION" ~/.claude/skills/forge/.forge-version
-   cp "$TMPDIR/hooks/forge-update-check.sh" ~/.claude/hooks/forge-update-check.sh
+   \cp -f "$TMPDIR/VERSION" ~/.claude/skills/forge/.forge-version
+   \cp -f "$TMPDIR/hooks/forge-update-check.sh" ~/.claude/hooks/forge-update-check.sh
    chmod +x ~/.claude/hooks/forge-update-check.sh
    rm -f ~/.claude/skills/forge/.forge-update-cache
    ```
 
-7. **Update ~/.claude/CLAUDE.md** :
+8. **Suggest Business Pack** (if not installed and no `--pack` argument) :
+   - Check if any skill from `$TMPDIR/packs/business/` exists in `~/.claude/skills/`
+   - If none installed, display a one-time suggestion:
+     ```
+     Tip: FORGE Business Pack available (marketing, SEO, legal, security, strategy).
+     Install with: /forge-update --pack business
+     ```
+
+9. **Update ~/.claude/CLAUDE.md** :
    - Comparer `$TMPDIR/templates/claude-md-forge-section.md` avec le bloc FORGE actuel dans `~/.claude/CLAUDE.md` (contenu entre `<!-- FORGE:BEGIN -->` et `<!-- FORGE:END -->`)
    - Si les marqueurs n'existent pas dans `~/.claude/CLAUDE.md` : lancer `bash "$TMPDIR/scripts/inject-claude-md.sh"` (demandera confirmation à l'utilisateur)
    - Si les marqueurs existent et le contenu est identique : afficher "CLAUDE.md FORGE section is up to date" et passer
@@ -64,32 +118,33 @@ description: >
      - Si confirmé : lancer `bash "$TMPDIR/scripts/inject-claude-md.sh"`
      - Si refusé : passer
 
-8. **Verify installation** :
-   - Confirmer que `~/.claude/skills/forge/SKILL.md` existe toujours
-   - Compter le nombre de skills installés
+10. **Verify installation** :
+    - Confirmer que `~/.claude/skills/forge/SKILL.md` existe toujours
+    - Compter le nombre de skills installés (core + pack si installé)
 
-9. **Clean up** :
-   ```bash
-   rm -rf "$TMPDIR"
-   ```
-
-10. **Save memory** (if `.forge/` exists — ensures update history persists for version tracking and rollback reference):
+11. **Clean up** :
     ```bash
-    forge-memory log "FORGE mis à jour : v{OLD} → v{NEW}, {X} skills modifiés, {Y} nouveaux" --agent update
+    rm -rf "$TMPDIR"
+    ```
+
+12. **Save memory** (if `.forge/` exists — ensures update history persists for version tracking and rollback reference):
+    ```bash
+    forge-memory log "FORGE mis à jour : v{OLD} → v{NEW}, {X} skills modifiés, {Y} nouveaux, pack business: {installed/not installed}" --agent update
     forge-memory consolidate --verbose
     forge-memory sync
     ```
 
-11. **Display results** :
+13. **Display results** :
 
     ```
     FORGE Update — Complete
     ─────────────────────────
-    Updated : X skills
-    Added   : Y new skills
-    Removed : Z skills (from repo, still present locally)
+    Core    : X skills updated, Y new
+    Pack    : Business Pack [installed / not installed]
+              (Z skills updated)
     Total   : N skills installed
     Version : vX.Y.Z
 
     Note: Skills removed from the repo are NOT deleted locally (manual action required).
+    Tip: Install Business Pack with /forge-update --pack business
     ```

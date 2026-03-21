@@ -5,6 +5,37 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-03-21
+
+### Added
+
+- **Business Pack**: 8 optional skills installable via `/forge-update --pack business`:
+  - `forge-marketing` — Social media & content strategy (ex agent Maya)
+  - `forge-copywriting` — Copywriting & conversion optimization (ex agent Theo)
+  - `forge-seo` — SEO & analytics (ex agent Leo)
+  - `forge-geo` — GEO/LLMO & AI search visibility (ex agent SEO-GEO)
+  - `forge-legal` — E-commerce & auto-entrepreneur law (ex agent E-commerce Legal)
+  - `forge-security-pro` — Deep security audit & OWASP hardening (ex agent Victor)
+  - `forge-business-strategy` — Market research & business strategy (ex agent Clara)
+  - `forge-strategy-panel` — Multi-expert strategy panel (ex agent Business Panel)
+- **`/forge-debug`**: New core skill for systematic root cause investigation. 4-phase scientific method (investigate, analyze patterns, form hypothesis, implement). Includes defense-in-depth and condition-based waiting techniques. Chains to `/forge-quick-spec` once root cause is identified
+- **`packs.yaml`**: Manifest file categorizing skills into `core` (24 skills) and `business` (8 skills) packs
+- **`/forge-update --pack business`**: Updater now supports optional pack installation and auto-updates previously installed pack skills on regular updates
+
+### Changed
+
+- **`/forge` router**: Resolution Cascade replaces simple priority order — 5-step cascade (core skill -> Business Pack -> standalone -> suggest pack install -> dynamic agent creation) ensures FORGE always delivers
+- **`/forge` router**: Business/marketing/SEO/legal/security routes now use Skill tool invocations instead of Task tool with subagent_type. Old custom agent references removed
+- **`/forge` router**: `framework` domain renamed to `specialist` (handled via dynamic agent creation)
+- **`/forge` router**: Adaptive routing — if a Business Pack skill is not installed, FORGE suggests installing the pack; if refused, creates a dynamic agent on the fly
+- **`/forge-update`**: Step numbering updated (1-13), added pack installation step, auto-detection of previously installed pack skills, Business Pack suggestion for new users
+
+### Removed
+
+- **5 redundant skills**: `business-analysis`, `debug`, `oneshot`, `sqlite-database-expert`, `stripe-integration` — functionality covered by existing FORGE core skills
+- **8 custom agents from `~/.claude/agents/`**: Migrated into Business Pack skills (maya-social-media, victor-security, theo-copywriter, clara-business-strategy, leo-seo-analytics, business-panel-experts, ecommerce-legal-expert, seo-geo-expert)
+- **`angular-expert` and `nextjs-expert` agents**: Removed — Claude handles these frameworks natively, no dedicated agent needed
+
 ## [1.4.2] - 2026-03-19
 
 ### Fixed
@@ -135,6 +166,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.5.0]: https://github.com/fwehrling/forge/releases/tag/v1.5.0
 [1.4.2]: https://github.com/fwehrling/forge/releases/tag/v1.4.2
 [1.4.0]: https://github.com/fwehrling/forge/releases/tag/v1.4.0
 [1.3.0]: https://github.com/fwehrling/forge/releases/tag/v1.3.0
