@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.5.0-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.5.1-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-24%20core%20%2B%208%20business-orange)](#commands)
@@ -105,14 +105,13 @@ flowchart TD
 12 specialized pipeline agents (Analyst, PM, Architect, UX, Scrum Master, Dev, Debug, QA, Quick QA, Reviewer, Orchestrator, DevOps, Security) that collaborate through artifacts. Plus 8 optional Business Pack agents for marketing, SEO, legal, security, and strategy.
 
 ### Persistent Memory
-Two-layer memory system (Markdown + vector search) that survives across sessions. FORGE always knows where it left off. See [Memory System](#memory-system) for details.
+Two-layer memory system (Markdown + optional vector search) that survives across sessions. FORGE always knows where it left off. Works without vector search (direct Markdown reads), enhanced with it. See [Memory System](#memory-system) for details.
 
 ```
 .forge/memory/
   MEMORY.md              # Long-term project knowledge
-  sessions/YYYY-MM-DD.md # Daily session logs (auto-generated)
-  agents/dev.md          # Agent-specific context
-  index.sqlite           # Vector search index (auto-generated)
+  sessions/YYYY-MM-DD.md # Daily session logs (auto-generated, tagged by agent)
+  index.sqlite           # Vector search index (auto-generated, optional)
 ```
 
 ### Autopilot Mode (`/forge-auto`)
@@ -349,18 +348,16 @@ bash /tmp/forge/install.sh
 
 ## Memory System
 
-FORGE uses a Markdown-based memory system for cross-session continuity. Every FORGE **agent command** reads memory at start and writes updates at end. Utility commands (`/forge-status`, `/forge-resume`, `/forge-init`, `/forge-memory`, `/forge-update`) read memory but do not write back.
+FORGE uses a two-layer Markdown-based memory system for cross-session continuity. Every FORGE **agent command** reads memory at start and writes updates at end. Vector search is optional -- FORGE works without it via direct Markdown reads, and is enhanced with it for large projects.
 
 ### How It Works
 
 ```mermaid
 flowchart TD
     subgraph START ["START — Load context"]
-        S1["Read MEMORY.md"]
-        S2["Read latest session"]
-        S3["Read agent memory"]
-        S4["forge-memory search"]
-        S1 --> S2 --> S3 --> S4
+        S1["forge-memory search (if installed)"]
+        S2["OR read MEMORY.md + latest session (fallback)"]
+        S1 --> S2
     end
 
     subgraph EXECUTE ["EXECUTE"]
@@ -369,8 +366,8 @@ flowchart TD
         E1 --> E2
     end
 
-    subgraph END ["END — Save (mandatory)"]
-        N1["forge-memory log"]
+    subgraph END ["END — Save"]
+        N1["forge-memory log (or manual append)"]
         N2["forge-memory consolidate"]
         N3["forge-memory sync"]
         N1 --> N2 --> N3
@@ -379,7 +376,7 @@ flowchart TD
     START --> EXECUTE --> END
 ```
 
-Every agent skill enforces the END protocol. Utility commands (`/forge-status`, `/forge-resume`, `/forge-init`, `/forge-memory`, `/forge-update`) read memory but do not write back via `forge-memory log`. A Claude Code Stop hook provides an additional safety net — when a session ends, it automatically runs `consolidate` + `sync` for any FORGE project detected in the working directory.
+Every agent skill enforces the END protocol. A Claude Code **Stop hook** (`forge-memory-stop.sh`) provides a safety net -- when a session ends, it automatically runs `consolidate` + `sync` for any FORGE project detected in the working directory. This catches memory updates from skills that crashed before completing their END block.
 
 ### Vector Search (optional)
 
@@ -496,9 +493,8 @@ your-project/
     sprint-status.yaml      # Sprint tracking
     memory/                 # Persistent memory
       MEMORY.md             #   Project knowledge base
-      sessions/             #   Daily session logs (auto-generated)
-      agents/               #   Agent-specific context
-      index.sqlite          #   Vector search index (auto-generated)
+      sessions/             #   Daily session logs (tagged by agent + story)
+      index.sqlite          #   Vector search index (auto-generated, optional)
   docs/                     # Generated artifacts (indexed by vector search)
     analysis.md             # Analyst output
     prd.md                  # PM output
@@ -691,11 +687,12 @@ memory:
   enabled: true
   auto_save: true
   session_logs: true
-  agent_memory: true
   vector_search:
     enabled: false     # requires Python 3.9+ setup
     model: "all-MiniLM-L6-v2"
     auto_sync: true
+  # Tunable via env vars: FORGE_VECTOR_WEIGHT, FORGE_FTS_WEIGHT,
+  # FORGE_SEARCH_THRESHOLD, FORGE_SEARCH_LIMIT, FORGE_CHUNK_SIZE
 
 security:
   audit_skills: true

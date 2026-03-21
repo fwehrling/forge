@@ -131,6 +131,6 @@ Model     : all-MiniLM-L6-v2 (384 dims)
 [0.72] docs/architecture.md:45
   "Authentication uses bcrypt + JWT. Session management via..."
 
-[0.65] .forge/memory/agents/dev.md:8
+[0.65] .forge/memory/MEMORY.md:23
   "STORY-002 auth: learned that httpOnly cookies are required..."
 ```

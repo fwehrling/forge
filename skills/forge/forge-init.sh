@@ -49,7 +49,6 @@ mkdir -p "${PROJECT_PATH}/docs/stories"
 mkdir -p "${PROJECT_PATH}/docs/adrs"
 mkdir -p "${PROJECT_PATH}/.forge/memory"
 mkdir -p "${PROJECT_PATH}/.forge/memory/sessions"
-mkdir -p "${PROJECT_PATH}/.forge/memory/agents"
 
 # Auto-detect project type
 detect_project_type() {
@@ -168,7 +167,6 @@ memory:
   enabled: true
   auto_save: true
   session_logs: true
-  agent_memory: true
   vector_search:
     enabled: false
     model: "all-MiniLM-L6-v2"

@@ -11,40 +11,36 @@ Every FORGE **agent command** reads memory at start and writes updates at end.
 ├── sessions/
 │   ├── YYYY-MM-DD.md            # Daily session log
 │   └── ...
-└── agents/
-    ├── pm.md                    # PM agent-specific memory
-    ├── architect.md             # Architect decisions log
-    ├── dev.md                   # Dev patterns, gotchas
-    └── qa.md                    # QA coverage state, known issues
+└── index.sqlite                 # Vector search index (auto-generated, optional)
 ```
 
 ## Two-Layer Memory
 
-| Layer              | File                              | Purpose                              | Updated By          |
-| ------------------ | --------------------------------- | ------------------------------------ | ------------------- |
-| **Long-term**      | `.forge/memory/MEMORY.md`         | Project state, decisions, milestones | All agents          |
-| **Session**        | `.forge/memory/sessions/DATE.md`  | Daily log of what was done           | Auto per session    |
-| **Agent-specific** | `.forge/memory/agents/AGENT.md`   | Context specific to each agent role  | Respective agent    |
+| Layer         | File                             | Purpose                              | Updated By       |
+| ------------- | -------------------------------- | ------------------------------------ | ---------------- |
+| **Long-term** | `.forge/memory/MEMORY.md`        | Project state, decisions, milestones | All agents       |
+| **Session**   | `.forge/memory/sessions/DATE.md` | Daily log of what was done           | Auto per session |
+
+Session entries are tagged with `[agent_name]` and `(STORY-ID)` for filtering and traceability.
 
 ## Memory Protocol
 
-Every FORGE **agent command** follows this protocol (utility commands like `/forge-status`, `/forge-resume`, and `/forge-init` read memory but do not write back via `forge-memory log`):
+Every FORGE **agent command** follows this protocol (utility commands like `/forge-status`, `/forge-resume`, and `/forge-init` read memory but do not write back via `forge-memory log`).
+
+### With vector search installed (recommended)
 
 ```mermaid
 flowchart TD
     subgraph START ["START — Load context"]
-        S1["Read MEMORY.md"]
-        S2["Read latest session log"]
-        S3["Read agent-specific memory"]
-        S4["forge-memory search"]
-        S1 --> S2 --> S3 --> S4
+        S1["forge-memory search '<context>'"]
+        S2["Read MEMORY.md (if search returns nothing)"]
+        S1 --> S2
     end
 
     subgraph EXECUTE ["EXECUTE"]
         E1["Perform work"]
         E2["Track decisions"]
-        E3["forge-memory search"]
-        E1 --> E2 --> E3
+        E1 --> E2
     end
 
     subgraph END ["END — Save (mandatory)"]
@@ -58,14 +54,45 @@ flowchart TD
     START --> EXECUTE --> END
 ```
 
+### Without vector search (fallback)
+
+If `forge-memory` CLI is not installed, skills MUST NOT fail. They fall back to direct Markdown reads:
+
+```mermaid
+flowchart TD
+    subgraph START ["START — Load context (fallback)"]
+        S1["Read .forge/memory/MEMORY.md directly"]
+        S2["Read latest session file in .forge/memory/sessions/"]
+        S1 --> S2
+    end
+
+    subgraph EXECUTE ["EXECUTE"]
+        E1["Perform work"]
+        E1
+    end
+
+    subgraph END ["END — Save (fallback)"]
+        N1["Append to .forge/memory/sessions/YYYY-MM-DD.md manually"]
+        N2["Update sprint-status.yaml"]
+        N1 --> N2
+    end
+
+    START --> EXECUTE --> END
+```
+
+**Detection**: Run `command -v forge-memory` (bash) or attempt invocation. If not found, use fallback. Never error on missing CLI.
+
 ## Memory + Autopilot Integration
 
 The memory system is what makes `/forge-auto` intelligent:
 
 - FORGE reads MEMORY.md to know exactly where the project is
 - It reads session logs to understand recent activity and avoid repeating work
-- It reads agent memories to provide continuity to each agent role
 - On resume, FORGE picks up exactly where it left off
+
+## Safety Net: Stop Hook
+
+A Claude Code Stop hook (`forge-memory-stop.sh`) runs when sessions end. It calls `consolidate` + `sync` to catch memory updates from skills that crashed before their END block. This prevents memory loss on interrupted sessions.
 
 ## Memory Configuration
 
@@ -75,12 +102,22 @@ memory:
   enabled: true          # Enable persistent memory
   auto_save: true        # Auto-save after each command
   session_logs: true     # Keep daily session logs
-  agent_memory: true     # Per-agent memory files
 ```
 
-## Vector Search
+### Environment Variables (override defaults)
 
-FORGE enriches its Markdown memory with a SQLite vector index for fast semantic search.
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `FORGE_VECTOR_WEIGHT` | `0.7` | Weight for vector similarity in hybrid search |
+| `FORGE_FTS_WEIGHT` | `0.3` | Weight for FTS5 keyword matching |
+| `FORGE_SEARCH_LIMIT` | `5` | Max results per search |
+| `FORGE_SEARCH_THRESHOLD` | `0.3` | Minimum score to include in results |
+| `FORGE_CHUNK_SIZE` | `400` | Tokens per chunk |
+| `FORGE_CHUNK_OVERLAP` | `80` | Overlap tokens between chunks |
+
+## Vector Search (optional)
+
+FORGE enriches its Markdown memory with a SQLite vector index for fast semantic search. This is optional -- FORGE works without it, but vector search improves context retrieval on large projects.
 
 ### Architecture
 
@@ -88,7 +125,6 @@ FORGE enriches its Markdown memory with a SQLite vector index for fast semantic 
 .forge/memory/
   MEMORY.md              <- source of truth
   sessions/YYYY-MM-DD.md <- source of truth
-  agents/{agent}.md      <- source of truth
   index.sqlite           <- derived index (auto-synced)
 ```
 
@@ -107,10 +143,10 @@ bash ~/.claude/skills/forge/scripts/forge-memory/setup.sh
 ### CLI Commands
 
 ```bash
-forge-memory sync [--force] [--verbose]                                           # Re-index .md files into SQLite
-forge-memory search "query" [--namespace all|project|session|agent] [--limit 5]   # Hybrid vector + keyword search
-forge-memory log "<message>" --agent <name>                                       # Append to session log
-forge-memory consolidate [--verbose]                                              # Merge session entries into MEMORY.md
-forge-memory status [--json]                                                      # Index statistics
-forge-memory reset --confirm                                                      # Reset the vector index
+forge-memory sync [--force] [--verbose]                                    # Re-index .md files into SQLite
+forge-memory search "query" [--namespace all|project|session] [--limit 5]  # Hybrid vector + keyword search
+forge-memory log "<message>" --agent <name>                                # Append to session log
+forge-memory consolidate [--verbose]                                       # Merge session entries into MEMORY.md
+forge-memory status [--json]                                               # Index statistics
+forge-memory reset --confirm                                               # Reset the vector index
 ```
