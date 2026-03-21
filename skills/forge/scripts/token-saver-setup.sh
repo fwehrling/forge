@@ -33,7 +33,8 @@ if [ ! -f "$HOOKS_DIR/output-filter.js" ]; then
 const fs = require('fs');
 const path = require('path');
 
-const TOKEN_SAVER = path.join(process.env.HOME, '.claude', 'hooks', 'token-saver.sh');
+const HOME = process.env.HOME || process.env.USERPROFILE || '/tmp';
+const TOKEN_SAVER = path.join(HOME, '.claude', 'hooks', 'token-saver.sh');
 
 // Commands to filter: matched against first two words of the command
 const FILTERED_COMMANDS = new Set([
@@ -114,8 +115,10 @@ if (require.main === module) {
 
     process.stdout.write(JSON.stringify(result));
     process.exit(0);
-  } catch {
+  } catch (err) {
     // Fail open — passthrough on any error
+    // Log to stderr for debugging (won't affect Claude output)
+    process.stderr.write(`[token-saver] hook error: ${err.message}\n`);
     process.exit(0);
   }
 }
@@ -179,7 +182,7 @@ case "$KEY" in
     ;;
   git:log)
     # Keep only commit hash + title (first indented line per commit)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | awk '/^commit [0-9a-f]/{print;t=1;next} /^(Author|Date):/{next} /^$/{next} t&&/^    /{sub(/^    /,"  ");print;t=0;next}')
+    FILTERED=$(printf '%s\n' "$OUTPUT" | awk '/^commit [0-9a-f]+/{print;t=1;next} /^(Author|Date):/{next} /^$/{next} t&&/^    /{sub(/^    /,"  ");print;t=0;next}')
     ;;
   npm:test|npx:jest|npx:vitest|pnpm:test|pnpm:run|yarn:test|bun:test)
     # Keep PASS/FAIL per file, errors, and summary — drop individual test lines
@@ -246,9 +249,10 @@ $FAIL_DETAILS"
     ;;
 esac
 
-# Fallback: if filter produced empty output, return original
+# Fallback: if filter produced empty output, return original (fail open)
 if [ -z "$FILTERED" ]; then
   printf '%s\n' "$OUTPUT"
+  echo "[token-saver] filter returned empty — showing full output" >&2
 else
   printf '%s\n' "$FILTERED"
 fi
@@ -256,16 +260,22 @@ fi
 exit $EXIT_CODE
 SAVEREOF
   chmod +x "$HOOKS_DIR/token-saver.sh"
-  echo "    ✅ Created token-saver.sh"
+  if [ -x "$HOOKS_DIR/token-saver.sh" ]; then
+    echo "    ✅ Created token-saver.sh"
+  else
+    echo "    ⚠️  Created token-saver.sh but could not make it executable" >&2
+  fi
 else
   echo "    ⏭  token-saver.sh already exists"
 fi
 
 # ── Patch settings.json ───────────────────────────────────────────────────────
 if [ -f "$SETTINGS" ]; then
+  SETTINGS_ESCAPED=$(printf '%s' "$SETTINGS" | sed "s/'/\\\\'/g")
   node -e "
 const fs = require('fs');
-const s = JSON.parse(fs.readFileSync('$SETTINGS', 'utf8'));
+const settingsPath = '${SETTINGS_ESCAPED}';
+const s = JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
 
 // Add permission
 const perm = 'Bash(~/.claude/hooks/token-saver.sh *)';
@@ -292,7 +302,7 @@ if (bashHook) {
   });
 }
 
-fs.writeFileSync('$SETTINGS', JSON.stringify(s, null, 2) + '\n');
+fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2) + '\n');
 " 2>/dev/null && echo "    ✅ Patched settings.json" || echo "    ⚠️  Could not patch settings.json (update manually)"
 fi
 

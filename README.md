@@ -149,6 +149,8 @@ Requires `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `~/.claude/settings.json` e
 ### Security Model
 5-layer defense: input validation, sandbox isolation, credential management, audit/rollback, and human gates. Autonomous loops run in Docker sandboxes with network whitelisting.
 
+**Prompt injection defense**: 3-level protection against injection from web content, code comments, third-party skills, and memory poisoning. The router detects injection patterns, flags them to the user, and never executes injected instructions. All skills that read external content (web research, code review, skill auditing) include explicit untrusted-content directives. Memory is treated as data, not commands.
+
 ### Token Saver
 
 Shell commands like `git log`, `npm test`, or `cargo build` produce verbose output that wastes tokens. Token Saver intercepts known commands via a Claude Code PreToolUse hook, executes them through a filtering wrapper, and returns only the essential lines (errors, summaries, status changes).
@@ -724,7 +726,7 @@ What FORGE adds on top of using Claude Code directly:
 - **Autonomous iteration** — Long-running loops with cost caps, circuit breakers, and sandbox isolation
 - **Scale-adaptive intelligence** — Auto-detects project complexity and adjusts the pipeline depth
 - **Integrated test strategy** — Tests specified by SM, written by Dev (TDD), audited by QA at every stage
-- **Security guardrails** — 5-layer defense for autonomous execution (sandbox, rollback, human gates)
+- **Security guardrails** — 5-layer defense for autonomous execution + 3-level prompt injection protection across all skills
 - **Parallel execution** — Agent Teams for true multi-instance parallel development
 - **Token optimization** — Output filtering hooks reduce shell output by up to 97%
 

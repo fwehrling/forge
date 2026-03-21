@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.5.1] - 2026-03-21
 
+### Added
+
+- **Prompt injection defense**: Comprehensive anti-injection system across the entire FORGE ecosystem:
+  - Router: detection patterns, response protocol, and defense scope directive
+  - Dynamic agent creation: name validation (`^[a-z0-9-]+$`) and content scan before writing
+  - Memory system: "Memory Security" section treating stored content as potentially tainted
+  - forge-audit-skill: self-protection against hostile skill files being audited
+  - forge-review: awareness of injection in code comments
+  - forge-analyze: external content warning for web research
+  - Business Pack (seo, geo, marketing, business-strategy): external content warnings
+  - security.md: documented 3-level defense and attack vector mitigation table
+- **Token Saver improvements**: HOME fallback, error logging, git log regex fix, passthrough logging, settings path escaping, chmod validation
+
 ### Fixed
 
 - **Memory fallback**: Skills no longer crash if `forge-memory` CLI is not installed. They fall back to direct Markdown reads of MEMORY.md and session files. Vector search is now optional, not a hard dependency
