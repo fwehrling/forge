@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.5.2-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.5.3-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-24%20core%20%2B%208%20business-orange)](#commands)
@@ -233,6 +233,7 @@ The AI can bypass the filter at any time by using a pipe (e.g., `git diff | cat`
   forge-auto-router.js   # UserPromptSubmit — routes requests through /forge
   forge-update-check.sh  # SessionStart — FORGE update notifications (1x/24h)
   forge-memory-sync.sh   # Stop — auto-syncs vector memory on session end
+  statusline.sh          # Status line — persistent FORGE indicator in terminal
 ```
 
 ---
@@ -266,7 +267,7 @@ git clone https://github.com/fwehrling/forge.git /tmp/forge
 cp -r /tmp/forge/skills/* ~/.claude/skills/
 ```
 
-> **Note**: Option A installs skills only. It does **not** install FORGE hooks (auto-router, token-saver, update-check, memory-sync, command-validator, skill notifications). Use [Option B](#option-b--full-install-recommended) for the complete setup.
+> **Note**: Option A installs skills only. It does **not** install FORGE hooks (auto-router, token-saver, update-check, memory-sync, command-validator, skill notifications, status line). Use [Option B](#option-b--full-install-recommended) for the complete setup.
 
 ### Option B — Full install (recommended)
 
@@ -281,7 +282,7 @@ The installer will:
 1. Detect your OS (macOS, Linux, WSL)
 2. Copy all FORGE skills to `~/.claude/skills/`
 3. Check for Python 3.9+ and offer to set up vector memory
-4. Install all FORGE hooks (auto-router, update-check, memory-sync, command-validator, token-saver, skill notifications)
+4. Install all FORGE hooks (auto-router, update-check, memory-sync, command-validator, token-saver, skill notifications, status line)
 5. Verify the installation and display a summary
 
 ### Initialize a project
@@ -765,6 +766,14 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 ---
 
 ## Changelog
+
+### v1.5.3
+
+**FORGE Visual Identity** -- Persistent status line and visible skill notifications:
+
+- **Status line**: `[Model] FORGE active | project-name` displayed persistently in the terminal bottom bar when in a FORGE project
+- **Visible skill notification**: "FORGE active : skill-name" now visible to the user in the conversation (was only visible to the AI)
+- **Auto-installed**: Status line and notifications set up automatically by `install.sh` and `/forge-update`
 
 ### v1.5.2
 

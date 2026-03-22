@@ -246,7 +246,7 @@ verify_installation() {
     # Check FORGE Hooks
     if [ "${FORGE_HOOKS_INSTALLED:-false}" = true ]; then
         local hooks_ok=true
-        for hook_file in command-validator.js output-filter.js token-saver.sh forge-auto-router.js forge-update-check.sh forge-memory-sync.sh; do
+        for hook_file in command-validator.js output-filter.js token-saver.sh forge-auto-router.js forge-update-check.sh forge-memory-sync.sh statusline.sh; do
             if [ -f "${HOME}/.claude/hooks/${hook_file}" ]; then
                 ok "Hook: ${hook_file}"
             else
@@ -281,7 +281,7 @@ print_summary() {
         echo "    ${YELLOW}–${NC} Vector memory (not installed)"
     fi
     if [ "${FORGE_HOOKS_INSTALLED:-false}" = true ]; then
-        echo "    ${GREEN}✓${NC} FORGE Hooks (security, token-saver, auto-router, update-check, memory-sync, notifications)"
+        echo "    ${GREEN}✓${NC} FORGE Hooks (security, token-saver, auto-router, update-check, memory-sync, notifications, status line)"
     else
         echo "    ${YELLOW}--${NC} FORGE Hooks (not installed)"
     fi
