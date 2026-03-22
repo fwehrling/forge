@@ -5,6 +5,18 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.3] - 2026-03-22
+
+### Added
+
+- **FORGE status line**: Persistent `[Model] FORGE active | project-name` indicator in the Claude Code terminal bottom bar when working in a FORGE project (`.forge/` detected). Installed as `~/.claude/hooks/statusline.sh` and configured automatically via `statusLine` in `settings.json`
+- **Visible skill notification**: PreToolUse[Skill] hook now uses `additionalContext` instead of `systemMessage`, making "FORGE active : skill-name" visible to the user in the conversation (previously only visible to the AI)
+
+### Changed
+
+- **`forge-hooks-setup.sh`**: Now installs `statusline.sh` (section 7) and patches `statusLine` config in `settings.json` (section 8). Hook count updated from 6 to 7
+- **`install.sh`**: Verification step now checks `statusline.sh` alongside other hook files
+
 ## [1.5.2] - 2026-03-22
 
 ### Added

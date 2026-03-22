@@ -9,7 +9,8 @@
 #   4. forge-auto-router.js   — UserPromptSubmit     — Routes requests through /forge router
 #   5. forge-update-check.sh  — SessionStart          — Notifies of FORGE updates (1x/24h)
 #   6. forge-memory-sync.sh   — Stop                  — Auto-syncs vector memory on session end
-#   7. PreToolUse[Skill]      — Inline in settings    — Displays FORGE notification on skill use
+#   7. statusline.sh          — Status line            — Persistent FORGE indicator in terminal
+#   8. PreToolUse[Skill]      — Inline in settings    — Displays FORGE notification on skill use
 #
 # Idempotent: safe to run multiple times.
 # Called by: forge-init.sh, install.sh
@@ -559,7 +560,28 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 7. Patch settings.json — Register ALL hooks + permissions
+# 7. statusline.sh — FORGE status line indicator
+# ═══════════════════════════════════════════════════════════════════════════════
+echo "  📊 Installing FORGE status line..."
+cat > "$HOOKS_DIR/statusline.sh" << 'STATUSLINEEOF'
+#!/bin/bash
+# FORGE Status Line — persistent indicator in Claude Code terminal
+# Reads JSON context from stdin, outputs status text
+input=$(cat)
+MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"' 2>/dev/null)
+CWD=$(echo "$input" | jq -r '.workspace.current_dir // ""' 2>/dev/null)
+PROJECT=$(basename "$CWD" 2>/dev/null)
+if [ -d "$CWD/.forge" ]; then
+    echo "[$MODEL] FORGE active | $PROJECT"
+else
+    echo "[$MODEL] $PROJECT"
+fi
+STATUSLINEEOF
+chmod +x "$HOOKS_DIR/statusline.sh"
+echo "    ✅ Created statusline.sh"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 8. Patch settings.json — Register ALL hooks + permissions + status line
 # ═══════════════════════════════════════════════════════════════════════════════
 echo "  📝 Patching settings.json..."
 
@@ -620,9 +642,9 @@ if (!bashHooks.some(h => h.command === validatorCmd)) {
 // PreToolUse[Bash] — output-filter.js (token optimization)
 addCommandHook('PreToolUse', 'Bash', 'node ~/.claude/hooks/output-filter.js');
 
-// PreToolUse[Skill] — FORGE notification
-const skillNotifyCmd = 'jq -r \\'.tool_input.skill // \"\"\\' | { read -r skill; if echo \"\$skill\" | grep -qi \\'forge\\'; then echo \"{\\\\\"systemMessage\\\\\": \\\\\"FORGE active : \$skill\\\\\"}\"; fi; }';
-addCommandHook('PreToolUse', 'Skill', skillNotifyCmd, { statusMessage: 'FORGE check...' });
+// PreToolUse[Skill] — FORGE notification (additionalContext = visible to user)
+const skillNotifyCmd = 'jq -r \\'.tool_input.skill // \"\"\\' | { read -r skill; if echo \"\$skill\" | grep -qi \\'forge\\'; then echo \"{\\\\\"additionalContext\\\\\": \\\\\"FORGE active : \$skill\\\\\"}\"; fi; }';
+addCommandHook('PreToolUse', 'Skill', skillNotifyCmd, { statusMessage: 'FORGE skill...' });
 
 // SessionStart — forge-update-check.sh
 addCommandHook('SessionStart', '', 'bash ~/.claude/hooks/forge-update-check.sh');
@@ -633,11 +655,20 @@ addCommandHook('Stop', '', 'bash ~/.claude/hooks/forge-memory-sync.sh');
 // UserPromptSubmit — forge-auto-router.js
 addCommandHook('UserPromptSubmit', '', 'node ~/.claude/hooks/forge-auto-router.js');
 
+// ── Status Line — persistent FORGE indicator ────────────────────────────────
+if (!s.statusLine || s.statusLine.command !== 'bash ~/.claude/hooks/statusline.sh') {
+  s.statusLine = {
+    type: 'command',
+    command: 'bash ~/.claude/hooks/statusline.sh'
+  };
+}
+
 fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2) + '\n');
 " 2>/dev/null && echo "    ✅ Patched settings.json with all FORGE hooks" || echo "    ⚠️  Could not patch settings.json (update manually)"
 
 echo ""
 echo "  ✅ FORGE Hooks — Installation complete!"
-echo "     6 hook scripts in ~/.claude/hooks/"
-echo "     5 hook events in ~/.claude/settings.json"
+echo "     7 hook scripts in ~/.claude/hooks/"
+echo "     5 hook events + status line in ~/.claude/settings.json"
 echo "     (PreToolUse[Bash], PreToolUse[Skill], SessionStart, Stop, UserPromptSubmit)"
+echo "     Status line: FORGE active indicator (visible in terminal bottom bar)"
