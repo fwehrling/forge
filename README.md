@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.5.4-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.5.5-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-24%20core%20%2B%208%20business-orange)](#commands)
@@ -58,7 +58,7 @@ The `/forge` router covers **6 domains** beyond development:
 
 | Domain | Targets |
 |--------|---------|
-| **Dev pipeline** | 19 core skills (init, analyze, plan, architect, ux, stories, build, debug, verify, deploy...) |
+| **Dev pipeline** | 20 core skills (init, analyze, plan, architect, ux, stories, build, debug, quick-spec, quick-test, verify, review, audit, audit-skill, deploy, auto, loop, party, team...) |
 | **Dev tooling** | status, resume, memory, update |
 | **Business** | forge-business-strategy, forge-strategy-panel (Business Pack) |
 | **Marketing** | forge-marketing, forge-copywriting, forge-seo, forge-geo (Business Pack) |
@@ -281,9 +281,10 @@ bash /tmp/forge/install.sh
 The installer will:
 1. Detect your OS (macOS, Linux, WSL)
 2. Copy all FORGE skills to `~/.claude/skills/`
-3. Check for Python 3.9+ and offer to set up vector memory
-4. Install all FORGE hooks (auto-router, update-check, memory-sync, command-validator, token-saver, skill notifications, status line)
-5. Verify the installation and display a summary
+3. Configure `~/.claude/CLAUDE.md` with FORGE instructions
+4. Check for Python 3.9+ and offer to set up vector memory
+5. Install all FORGE hooks (auto-router, update-check, memory-sync, command-validator, token-saver, skill notifications, status line)
+6. Verify the installation and display a summary
 
 ### Initialize a project
 
@@ -766,6 +767,14 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 ---
 
 ## Changelog
+
+### v1.5.5
+
+**Audit fixes** -- Coherence and correctness across all documentation and scripts:
+
+- **README**: Fixed core skills count (19 -> 20), added missing install step 3 (CLAUDE.md config)
+- **CHANGELOG**: Added missing release links for v1.5.3-v1.5.5
+- **Hooks**: ASCII fix in update notification, idempotency guard on statusline.sh
 
 ### v1.5.4
 

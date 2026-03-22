@@ -563,6 +563,7 @@ fi
 # 7. statusline.sh — FORGE status line indicator
 # ═══════════════════════════════════════════════════════════════════════════════
 echo "  📊 Installing FORGE status line..."
+if [ ! -f "$HOOKS_DIR/statusline.sh" ]; then
 cat > "$HOOKS_DIR/statusline.sh" << 'STATUSLINEEOF'
 #!/bin/bash
 # FORGE Status Line — persistent indicator in Claude Code terminal
@@ -578,7 +579,10 @@ else
 fi
 STATUSLINEEOF
 chmod +x "$HOOKS_DIR/statusline.sh"
-echo "    ✅ Created statusline.sh"
+  echo "    ✅ Created statusline.sh"
+else
+  echo "    ⏭  statusline.sh already exists"
+fi
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 8. Patch settings.json — Register ALL hooks + permissions + status line
