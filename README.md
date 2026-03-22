@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.5.1-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.5.2-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-24%20core%20%2B%208%20business-orange)](#commands)
@@ -227,8 +227,12 @@ The AI can bypass the filter at any time by using a pipe (e.g., `git diff | cat`
 
 ```
 ~/.claude/hooks/
-  output-filter.js    # PreToolUse hook — detects and rewrites commands
-  token-saver.sh      # Wrapper — executes command, filters output
+  output-filter.js        # PreToolUse[Bash] — detects and rewrites commands
+  token-saver.sh          # Wrapper — executes command, filters output
+  command-validator.js    # PreToolUse[Bash] — blocks dangerous commands
+  forge-auto-router.js   # UserPromptSubmit — routes requests through /forge
+  forge-update-check.sh  # SessionStart — FORGE update notifications (1x/24h)
+  forge-memory-sync.sh   # Stop — auto-syncs vector memory on session end
 ```
 
 ---
@@ -262,7 +266,7 @@ git clone https://github.com/fwehrling/forge.git /tmp/forge
 cp -r /tmp/forge/skills/* ~/.claude/skills/
 ```
 
-> **Note**: Option A installs skills only. It does **not** install Token Saver (output filtering hooks) or the update-check hook. Use [Option B](#option-b--full-install-recommended) for the complete setup.
+> **Note**: Option A installs skills only. It does **not** install FORGE hooks (auto-router, token-saver, update-check, memory-sync, command-validator, skill notifications). Use [Option B](#option-b--full-install-recommended) for the complete setup.
 
 ### Option B — Full install (recommended)
 
@@ -277,7 +281,7 @@ The installer will:
 1. Detect your OS (macOS, Linux, WSL)
 2. Copy all FORGE skills to `~/.claude/skills/`
 3. Check for Python 3.9+ and offer to set up vector memory
-4. Install Token Saver (output filtering hooks to reduce token consumption)
+4. Install all FORGE hooks (auto-router, update-check, memory-sync, command-validator, token-saver, skill notifications)
 5. Verify the installation and display a summary
 
 ### Initialize a project
@@ -762,9 +766,18 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 
 ## Changelog
 
+### v1.5.2
+
+**FORGE Hooks** -- Complete hook infrastructure installed automatically:
+
+- **`forge-hooks-setup.sh`**: New installer script deploys all FORGE hooks during `install.sh` and `/forge-update`
+- **Hooks installed**: auto-router, update-check, memory-sync, command-validator, token-saver, skill notifications
+- **Skill notification**: "FORGE active : skill-name" displayed in Claude Code when a FORGE skill is invoked
+- **Install/update streamlined**: All hooks managed in one place, idempotent and safe to re-run
+
 ### v1.5.1
 
-**Security & Reliability** — Prompt injection defense, memory improvements, and Token Saver fixes:
+**Security & Reliability** -- Prompt injection defense, memory improvements, and Token Saver fixes:
 
 - **Prompt injection defense**: 3-level protection across all skills (router detection, per-skill external content warnings, memory security)
 - **Memory fallback**: Skills no longer crash if `forge-memory` CLI is not installed (direct Markdown reads as fallback)
