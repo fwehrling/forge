@@ -5,6 +5,13 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.6] - 2026-03-22
+
+### Fixed
+
+- **CRITICAL: CLAUDE.md template missing auto-routing section**: The `Auto-Routing /forge` instructions were only in the maintainer's personal CLAUDE.md, not in the installed template. New users installing FORGE had the `UserPromptSubmit` hook active but Claude had no instructions to act on it -- `/forge` routing was silently broken for all new installs
+- **CLAUDE.md template missing Business Pack section**: Added `FORGE Business Pack` description so users know about the optional pack and its agents
+
 ## [1.5.5] - 2026-03-22
 
 ### Fixed
@@ -241,6 +248,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.5.6]: https://github.com/fwehrling/forge/releases/tag/v1.5.6
 [1.5.5]: https://github.com/fwehrling/forge/releases/tag/v1.5.5
 [1.5.4]: https://github.com/fwehrling/forge/releases/tag/v1.5.4
 [1.5.3]: https://github.com/fwehrling/forge/releases/tag/v1.5.3

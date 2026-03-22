@@ -1,3 +1,17 @@
+## Auto-Routing /forge
+- **Automatic routing active**: A `UserPromptSubmit` hook injects a routing instruction via `/forge` for each request
+- **When the hook injects context**: You MUST invoke `/forge` (via Skill tool) BEFORE processing the request. Pass the user's full message as `args`
+- **Exceptions** (handle directly, WITHOUT /forge):
+  - Simple code questions or file reads
+  - Git operations (commit, push, branch, diff)
+  - Conversational responses in an ongoing exchange
+  - Explicit skill invocations (`/something`)
+  - Memory requests ("remember", "forget")
+- **When in doubt**: route through `/forge`, it decides
+
+## FORGE Business Pack
+The business agents (marketing, copywriting, SEO, GEO, legal, security-pro, business-strategy, strategy-panel) are part of the FORGE Business Pack (`/forge-update --pack business`).
+
 ## FORGE Update Notification
 - If your session context contains a message matching "FORGE update available", you MUST inform the user about it in your **very first response** of the session. Display the exact message received.
 
