@@ -111,36 +111,8 @@ install_skills() {
         ok "Version $(cat "${CLAUDE_DIR}/skills/forge/.forge-version" | tr -d '[:space:]') recorded"
     fi
 
-    # Install update-check hook
-    mkdir -p "${CLAUDE_DIR}/hooks"
-    if [ -f "${SCRIPT_DIR}/hooks/forge-update-check.sh" ]; then
-        cp "${SCRIPT_DIR}/hooks/forge-update-check.sh" "${CLAUDE_DIR}/hooks/forge-update-check.sh"
-        chmod +x "${CLAUDE_DIR}/hooks/forge-update-check.sh"
-        ok "Update check hook installed"
-    fi
-
-    # Add SessionStart hook to settings.json if not already present
-    local settings_file="${CLAUDE_DIR}/settings.json"
-    if [ -f "$settings_file" ]; then
-        if ! grep -q 'forge-update-check' "$settings_file" 2>/dev/null; then
-            if command -v node &>/dev/null; then
-                node -e "
-                    const fs = require('fs');
-                    const s = JSON.parse(fs.readFileSync('$settings_file', 'utf8'));
-                    if (!s.hooks) s.hooks = {};
-                    if (!s.hooks.SessionStart) s.hooks.SessionStart = [];
-                    s.hooks.SessionStart.push({
-                        matcher: '',
-                        hooks: [{ type: 'command', command: 'bash ~/.claude/hooks/forge-update-check.sh' }]
-                    });
-                    fs.writeFileSync('$settings_file', JSON.stringify(s, null, 2) + '\n');
-                "
-                ok "SessionStart hook added to settings.json"
-            else
-                warn "Node.js not found — add SessionStart hook manually to ${settings_file}"
-            fi
-        fi
-    fi
+    # Note: All hooks (update-check, auto-router, memory-sync, etc.)
+    # are installed in step 5 via forge-hooks-setup.sh
 }
 
 # ─── [3/6] Update ~/.claude/CLAUDE.md ────────────────────────────────────────
@@ -223,18 +195,18 @@ check_python() {
     fi
 }
 
-# ─── [5/6] Token Saver ─────────────────────────────────────────────────────
+# ─── [5/6] FORGE Hooks ─────────────────────────────────────────────────────
 
-install_token_saver() {
-    step 5 "Installing Token Saver..."
+install_forge_hooks() {
+    step 5 "Installing FORGE Hooks..."
 
-    if bash "${CLAUDE_DIR}/skills/forge/scripts/token-saver-setup.sh"; then
-        TOKEN_SAVER_INSTALLED=true
-        ok "Token Saver installed"
+    if bash "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh"; then
+        FORGE_HOOKS_INSTALLED=true
+        ok "FORGE Hooks installed"
     else
-        warn "Token Saver setup failed. You can retry later:"
-        warn "  bash ~/.claude/skills/forge/scripts/token-saver-setup.sh"
-        TOKEN_SAVER_INSTALLED=false
+        warn "FORGE Hooks setup failed. You can retry later:"
+        warn "  bash ~/.claude/skills/forge/scripts/forge-hooks-setup.sh"
+        FORGE_HOOKS_INSTALLED=false
     fi
 }
 
@@ -271,12 +243,19 @@ verify_installation() {
         fi
     fi
 
-    # Check Token Saver
-    if [ "${TOKEN_SAVER_INSTALLED:-false}" = true ]; then
-        if [ -f "${HOME}/.claude/hooks/output-filter.js" ] && [ -f "${HOME}/.claude/hooks/token-saver.sh" ]; then
-            ok "Token Saver: output filtering hooks"
-        else
-            warn "Token Saver: hook files missing"
+    # Check FORGE Hooks
+    if [ "${FORGE_HOOKS_INSTALLED:-false}" = true ]; then
+        local hooks_ok=true
+        for hook_file in command-validator.js output-filter.js token-saver.sh forge-auto-router.js forge-update-check.sh forge-memory-sync.sh; do
+            if [ -f "${HOME}/.claude/hooks/${hook_file}" ]; then
+                ok "Hook: ${hook_file}"
+            else
+                warn "Hook missing: ${hook_file}"
+                hooks_ok=false
+            fi
+        done
+        if [ "$hooks_ok" = true ]; then
+            ok "All FORGE hooks installed"
         fi
     fi
 
@@ -301,10 +280,10 @@ print_summary() {
     else
         echo "    ${YELLOW}–${NC} Vector memory (not installed)"
     fi
-    if [ "${TOKEN_SAVER_INSTALLED:-false}" = true ]; then
-        echo "    ${GREEN}✓${NC} Token Saver (output filtering hooks)"
+    if [ "${FORGE_HOOKS_INSTALLED:-false}" = true ]; then
+        echo "    ${GREEN}✓${NC} FORGE Hooks (security, token-saver, auto-router, update-check, memory-sync, notifications)"
     else
-        echo "    ${YELLOW}–${NC} Token Saver (not installed)"
+        echo "    ${YELLOW}--${NC} FORGE Hooks (not installed)"
     fi
     echo ""
     echo "  Next steps:"
@@ -322,7 +301,7 @@ main() {
     install_skills
     inject_claude_md
     check_python
-    install_token_saver
+    install_forge_hooks
     verify_installation
     print_summary
 }

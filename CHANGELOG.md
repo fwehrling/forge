@@ -5,6 +5,25 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.2] - 2026-03-22
+
+### Added
+
+- **FORGE Hooks installer** (`forge-hooks-setup.sh`): New comprehensive setup script that installs all FORGE-specific hooks during `install.sh` and `/forge-update`. Hooks installed:
+  - `forge-auto-router.js` -- UserPromptSubmit: routes user requests through `/forge` intelligent router
+  - `forge-update-check.sh` -- SessionStart: checks for FORGE updates (1x per 24h, non-blocking)
+  - `forge-memory-sync.sh` -- Stop: auto-syncs vector memory when session ends
+  - `command-validator.js` -- PreToolUse[Bash]: blocks dangerous commands (rm -rf, DROP DATABASE, git push --force main, etc.)
+  - `output-filter.js` + `token-saver.sh` -- PreToolUse[Bash]: token optimization (output filtering)
+  - PreToolUse[Skill] notification: displays "FORGE active" in Claude Code window when a FORGE skill is invoked
+- **FORGE skill notification**: Users now see a visual "FORGE active : skill-name" message in Claude Code whenever a FORGE skill is triggered
+
+### Changed
+
+- **`install.sh`**: Step 5 now runs `forge-hooks-setup.sh` (was `token-saver-setup.sh`), installing all FORGE hooks at once. Update-check hook removed from step 2 (deduplicated into step 5). Verification step now checks all 6 hook files individually
+- **`/forge-update`**: Step 7 now runs `forge-hooks-setup.sh` to install/update all hooks during updates (was only updating `forge-update-check.sh`)
+- **`/forge-init`**: SKILL.md updated to clarify that Token Saver is installed at init time, while all other FORGE hooks come from `install.sh` or `/forge-update`
+
 ## [1.5.1] - 2026-03-21
 
 ### Added
@@ -194,6 +213,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.5.2]: https://github.com/fwehrling/forge/releases/tag/v1.5.2
 [1.5.1]: https://github.com/fwehrling/forge/releases/tag/v1.5.1
 [1.5.0]: https://github.com/fwehrling/forge/releases/tag/v1.5.0
 [1.4.2]: https://github.com/fwehrling/forge/releases/tag/v1.4.2

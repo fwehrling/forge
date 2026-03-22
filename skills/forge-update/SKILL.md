@@ -89,15 +89,22 @@ description: >
    done
    ```
 
-7. **Update version and hook** :
-   - Lire `$TMPDIR/VERSION` et écrire dans `~/.claude/skills/forge/.forge-version`
-   - Copier `$TMPDIR/hooks/forge-update-check.sh` vers `~/.claude/hooks/forge-update-check.sh` (chmod +x)
-   - Vider le cache `~/.claude/skills/forge/.forge-update-cache` pour forcer un check frais au prochain démarrage
+7. **Update version, hooks, and infrastructure** :
+   - Lire `$TMPDIR/VERSION` et ecrire dans `~/.claude/skills/forge/.forge-version`
+   - Vider le cache `~/.claude/skills/forge/.forge-update-cache` pour forcer un check frais au prochain demarrage
+   - Lancer `forge-hooks-setup.sh` pour installer/mettre a jour TOUS les hooks FORGE (idempotent) :
+     - `command-validator.js` -- PreToolUse[Bash]: bloque les commandes dangereuses
+     - `output-filter.js` -- PreToolUse[Bash]: optimisation tokens
+     - `token-saver.sh` -- script d'execution pour le filtrage de sortie
+     - `forge-auto-router.js` -- UserPromptSubmit: routage automatique via /forge
+     - `forge-update-check.sh` -- SessionStart: notification de mises a jour
+     - `forge-memory-sync.sh` -- Stop: sync memoire vectorielle en fin de session
+     - PreToolUse[Skill]: notification "FORGE active" dans la fenetre Claude Code
+   - Patche `~/.claude/settings.json` avec tous les hooks et permissions (idempotent)
    ```bash
    \cp -f "$TMPDIR/VERSION" ~/.claude/skills/forge/.forge-version
-   \cp -f "$TMPDIR/hooks/forge-update-check.sh" ~/.claude/hooks/forge-update-check.sh
-   chmod +x ~/.claude/hooks/forge-update-check.sh
    rm -f ~/.claude/skills/forge/.forge-update-cache
+   bash ~/.claude/skills/forge/scripts/forge-hooks-setup.sh
    ```
 
 8. **Suggest Business Pack** (if not installed and no `--pack` argument) :

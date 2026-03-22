@@ -77,6 +77,7 @@ Initializes the FORGE framework in a new or existing project.
    - Patches `~/.claude/settings.json` to add the hook and permission
    - Skips files that already exist (safe to re-run)
    - Covered commands: git, npm, pnpm, yarn, bun, pip, pytest, go, cargo, docker, make, mvn, gradle, dotnet, swift, tsc
+   - Note: All other FORGE hooks (auto-router, update-check, memory-sync, command-validator, notifications) are installed via `install.sh` or `/forge-update`
 
 9. **Save memory** (ensures initialization context persists for all subsequent agents):
    ```bash
