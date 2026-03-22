@@ -99,8 +99,9 @@ description: >
      - `forge-auto-router.js` -- UserPromptSubmit: routage automatique via /forge
      - `forge-update-check.sh` -- SessionStart: notification de mises a jour
      - `forge-memory-sync.sh` -- Stop: sync memoire vectorielle en fin de session
-     - PreToolUse[Skill]: notification "FORGE active" dans la fenetre Claude Code
-   - Patche `~/.claude/settings.json` avec tous les hooks et permissions (idempotent)
+     - `statusline.sh` -- Status line: indicateur persistant FORGE dans la barre du terminal
+     - PreToolUse[Skill]: notification "FORGE active" visible dans la conversation
+   - Patche `~/.claude/settings.json` avec tous les hooks, permissions, et config statusLine (idempotent)
    ```bash
    \cp -f "$TMPDIR/VERSION" ~/.claude/skills/forge/.forge-version
    rm -f ~/.claude/skills/forge/.forge-update-cache

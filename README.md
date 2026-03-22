@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.5.3-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.5.4-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-24%20core%20%2B%208%20business-orange)](#commands)
@@ -766,6 +766,10 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 ---
 
 ## Changelog
+
+### v1.5.4
+
+- **`/forge-update` doc fix**: Added missing `statusline.sh` to hooks list
 
 ### v1.5.3
 
