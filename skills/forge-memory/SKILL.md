@@ -1,14 +1,10 @@
 ---
 name: forge-memory
 description: >
-  FORGE Vector Memory — Diagnostic and maintenance tool for the vector memory index.
-  Use when the user says "memory status", "reindex memory", "search memory for",
-  "is the memory index working", "consolidate memory", "reset the vector index",
-  "debug memory", or needs to troubleshoot, inspect, or maintain the FORGE memory system.
-  This is a diagnostic tool only — all other FORGE skills automatically use vector memory search.
-  Do NOT use for regular context retrieval (it happens automatically in every /forge-* skill).
+  Vector memory diagnostic and maintenance tool.
+  Use when: "memory status", "reindex memory", "search memory for",
+  "consolidate memory", "reset the vector index", "debug memory".
   Operations: sync, search, status, reset, log, consolidate.
-  Usage: /forge-memory sync | /forge-memory search "query" | /forge-memory status
 ---
 
 # /forge-memory — FORGE Vector Memory

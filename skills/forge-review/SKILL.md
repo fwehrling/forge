@@ -1,15 +1,10 @@
 ---
 name: forge-review
 description: >
-  FORGE Reviewer Agent — Adversarial code review and artifact critique (devil's advocate).
-  Use when the user says "review this code", "critique this PR", "challenge my assumptions",
-  "find flaws in this", "devil's advocate", "review the PRD", "review the architecture",
-  "code review", or wants a critical second opinion on any artifact (code, docs, design).
-  Produces a structured review with CRITICAL/WARNING/INFO findings.
-  Do NOT use for QA/test certification (use /forge-verify).
-  Do NOT use for security-specific audit (use /forge-audit).
-  Do NOT use for multi-perspective analysis (use /forge-party).
-  Usage: /forge-review [path-to-artifact]
+  Adversarial code review and artifact critique (devil's advocate).
+  Use when: "review this code", "critique this PR", "find flaws",
+  "devil's advocate", "code review", "review the PRD", "challenge my assumptions".
+  Produces structured findings with CRITICAL/WARNING/INFO levels.
 ---
 
 # /forge-review — FORGE Reviewer Agent

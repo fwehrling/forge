@@ -5,6 +5,30 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-03-25
+
+### Changed
+
+- **Router reduced 87%**: `forge/SKILL.md` cut from 514 lines (23 KB) to 75 lines (2.9 KB). Routing tables, dynamic creation template, and prompt injection defense moved to `references/routing.md` and `references/dynamic-creation.md`
+- **All skill descriptions reduced 65%**: Average description size cut from ~630 chars to ~222 chars across all 32 FORGE skills. Removed "Do NOT use for..." clauses and "Usage:" suffixes -- disambiguation is handled by the router, not individual descriptions
+- **References reduced 94%**: `ai-coding-optimization.md` (79 KB -> 4 KB) and `ai-design-optimization.md` (54 KB -> 4 KB) replaced with concise actionable guides
+- **CLAUDE.md template reduced 94%**: Auto-routing section (63 lines) replaced with minimal 4-line FORGE section. Skill priority mapping and Agent Teams decision table removed (router handles this)
+
+### Removed
+
+- **UserPromptSubmit hook**: `forge-auto-router.js` removed -- eliminated the triple-routing pattern (hook -> router -> target skill) that added ~7,000 tokens per request. Claude Code's native skill matching via descriptions handles routing at zero additional cost
+- **PreToolUse Skill hook**: "FORGE active" notification removed -- unnecessary token overhead on every skill invocation
+- **Prompt injection defense section**: Removed from router SKILL.md -- Claude Code handles this natively
+
+### Added
+
+- **`references/routing.md`**: Extracted routing tables, intent classification, and disambiguation rules
+- **`references/dynamic-creation.md`**: Extracted dynamic agent creation template and validation rules
+
+### Fixed
+
+- **Bash hooks merged**: `command-validator.js` and `output-filter.js` combined into single `bash-interceptor.js`, halving PreToolUse latency per Bash command
+
 ## [1.5.6] - 2026-03-22
 
 ### Fixed

@@ -1,14 +1,10 @@
 ---
 name: forge-deploy
 description: >
-  FORGE DevOps Agent — Automated deployment pipeline with staging gate and production approval.
-  Use when the user says "deploy to production", "push to staging", "release the app",
-  "set up deployment", "deploy", "CI/CD pipeline", "go live", "ship it",
-  or wants to deploy the current project through staging and production environments.
+  Automated deployment pipeline with staging gate and production approval.
+  Use when: "deploy to production", "push to staging", "release the app",
+  "deploy", "CI/CD pipeline", "go live", "ship it".
   Requires deployment configuration in .forge/config.yml.
-  Do NOT use for local testing (use /forge-verify or /forge-quick-test).
-  Do NOT use for infrastructure setup without a FORGE project.
-  Usage: /forge-deploy
 ---
 
 # /forge-deploy — FORGE DevOps Agent

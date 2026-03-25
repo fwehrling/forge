@@ -1,14 +1,10 @@
 ---
 name: forge-audit-skill
 description: >
-  FORGE Skill Auditor — Security audit of third-party Claude Code skills before installation.
-  Use when the user says "audit this skill", "is this skill safe to install", "check this skill
-  for security issues", "review a third-party skill", "skill security check",
-  or wants to verify a skill for prompt injection, data exfiltration, or malicious behavior
-  before installing it. Analyzes SKILL.md and bundled scripts for threat patterns.
-  Do NOT use for project security audit (use /forge-audit).
-  Do NOT use for code review of project files (use /forge-review).
-  Usage: /forge-audit-skill [path-to-skill]
+  Security audit of third-party Claude Code skills before installation.
+  Use when: "audit this skill", "is this skill safe to install",
+  "check this skill for security issues", "skill security check".
+  Analyzes SKILL.md and scripts for prompt injection, data exfiltration, malicious behavior.
 ---
 
 # /forge-audit-skill — FORGE Skill Auditor

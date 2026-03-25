@@ -1,14 +1,10 @@
 ---
 name: forge-init
 description: >
-  FORGE Initializer — Initializes FORGE in a new or existing project.
-  Creates the .forge/ structure, templates, CLAUDE.md, and detects the tech stack.
-  Use when the user says "initialize forge", "set up forge", "start a new forge project",
-  "scaffold my project with forge", "configure forge in this repo", or "forge-init".
-  Also trigger when a user wants to start using FORGE in an existing codebase.
-  Do NOT use if .forge/ already exists and the user wants to resume work (use /forge-resume instead).
-  Do NOT use for building features (use /forge-build) or planning (use /forge-plan).
-  Usage: /forge-init or /forge-init [path]
+  Initializes FORGE in a new or existing project. Creates .forge/ structure,
+  templates, CLAUDE.md, and detects tech stack.
+  Use when: "initialize forge", "set up forge", "start a new forge project",
+  "scaffold my project with forge", "configure forge in this repo".
 ---
 
 # /forge-init — FORGE Initialization

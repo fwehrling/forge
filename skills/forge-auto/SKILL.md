@@ -1,15 +1,10 @@
 ---
 name: forge-auto
 description: >
-  FORGE Autopilot — Intelligent autonomous mode. FORGE analyzes the project state,
-  automatically decides the next action, and orchestrates all agents until completion.
-  Configurable checkpoints for human review.
-  Use when the user says "run everything automatically", "full pipeline", "just build it",
-  "do it all", "autopilot", "build the whole project end to end", "autonomous mode",
-  or wants FORGE to handle the entire dev cycle without manual step-by-step invocation.
-  Do NOT use for parallel story builds (use /forge-team pipeline instead).
-  Do NOT use for a single story (use /forge-build). Do NOT use for just planning (use /forge-plan).
-  Usage: /forge-auto or /forge-auto "specific objective"
+  FORGE Autopilot -- Intelligent autonomous mode that orchestrates all agents sequentially
+  until completion, with configurable checkpoints for human review.
+  Use when: "run everything automatically", "full pipeline", "just build it",
+  "do it all", "autopilot", "build the whole project end to end", "autonomous mode".
 ---
 
 # /forge-auto — FORGE Autopilot Mode

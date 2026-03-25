@@ -1,14 +1,10 @@
 ---
 name: forge-party
 description: >
-  FORGE Orchestrator — Launches 2-3 subagents in parallel on a topic for multi-perspective analysis.
-  Use when the user says "analyze this from multiple angles", "get different perspectives",
-  "multi-agent debate", "brainstorm with agents", "compare approaches", "what do different
-  experts think about", or wants quick collaborative analysis without full Agent Teams setup.
-  Uses Task tool subagents (lightweight) — no Agent Teams env var needed.
-  Do NOT use for true parallel builds (use /forge-team which uses real Agent Teams processes).
-  Do NOT use for single-perspective code review (use /forge-review).
-  Usage: /forge-party "topic"
+  Launches 2-3 subagents for multi-perspective analysis on a topic.
+  Use when: "analyze from multiple angles", "different perspectives",
+  "multi-agent debate", "brainstorm with agents", "compare approaches".
+  Lightweight subagents via Task tool.
 ---
 
 # /forge-party — FORGE Orchestrator

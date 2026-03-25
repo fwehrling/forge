@@ -1,14 +1,10 @@
 ---
 name: forge-security-pro
 description: >
-  FORGE Security Pro Agent (Victor) — Code Reviewer & Security Auditor. Expert OWASP Top 10,
-  audits securite, hardening backend/frontend, React Native, Node.js, Stripe, Docker. 12+ ans d'experience.
-  Use when the user says "deep security audit", "OWASP review", "hardening", "vulnerability assessment",
-  "penetration test prep", "Stripe security", "Docker security", "React Native security",
-  "security hardening", "security checklist", or wants a thorough security review outside the FORGE pipeline.
-  Do NOT use for pipeline code review (use /forge-review). Do NOT use for formal threat modeling in Enterprise track (use /forge-audit).
-  Do NOT use for auditing third-party skills (use /forge-audit-skill).
-  Usage: /forge-security-pro or via FORGE router
+  Code reviewer & security auditor (Victor) -- OWASP Top 10, hardening backend/frontend,
+  React Native, Node.js, Stripe, Docker.
+  Use when: "deep security audit", "OWASP review", "hardening", "vulnerability assessment",
+  "security hardening", "security checklist", "penetration test prep".
 ---
 
 # Victor — Code Reviewer & Security Auditor 🔒

@@ -1,15 +1,10 @@
 ---
 name: forge-marketing
 description: >
-  FORGE Marketing Agent (Maya) — Social Media & Content Strategist. Experte en creation de contenu viral,
-  strategie social media, community management et calendriers editoriaux.
-  Specialiste X/Twitter, LinkedIn, Facebook, TikTok.
-  Use when the user says "social media strategy", "content calendar", "LinkedIn post", "X/Twitter thread",
-  "TikTok content", "community management", "editorial calendar", "social media audit",
-  "content strategy", "viral content", "engagement strategy", or wants to plan social media presence.
-  Do NOT use for SEO (use /forge-seo). Do NOT use for copywriting/landing pages (use /forge-copywriting).
-  Do NOT use for code review or development tasks (use FORGE core skills).
-  Usage: /forge-marketing or via FORGE router
+  Social media strategist (Maya) -- content calendars, viral content, community management.
+  X/Twitter, LinkedIn, Facebook, TikTok.
+  Use when: "social media strategy", "content calendar", "LinkedIn post", "editorial calendar",
+  "community management", "viral content", "engagement strategy".
 ---
 
 # Maya — Social Media & Content Strategist ✨

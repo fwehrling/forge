@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.5.6-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.6.0-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-24%20core%20%2B%208%20business-orange)](#commands)
@@ -25,7 +25,7 @@ That's it. FORGE classifies your intent, picks the right agent, and handles the 
 
 ## How It Works
 
-`/forge` is the **single entry point**. Describe what you need in natural language, and the intelligent router classifies your intent, selects the best target (FORGE skill, custom agent, or dynamically created agent), and invokes it automatically.
+Each FORGE skill triggers automatically based on your request -- Claude Code matches your intent to the right skill via descriptions. For complex or ambiguous requests, `/forge` acts as an intelligent router that classifies your intent and delegates to the best target.
 
 ```bash
 /forge "build a REST API with auth"          # → routes to /forge-auto (full pipeline)
@@ -767,6 +767,16 @@ FORGE synthesizes concepts from several pioneering approaches to AI-driven devel
 ---
 
 ## Changelog
+
+### v1.6.0
+
+**Token optimization** -- Eliminated triple-routing overhead and reduced all skill sizes for ~72% token savings per session:
+
+- **Router slimmed 87%**: 514 lines -> 75 lines. Routing tables and dynamic creation moved to references/
+- **Descriptions reduced 65%**: All 32 skills cut from ~630 to ~222 chars average
+- **References reduced 94%**: ai-coding-optimization (79 KB -> 4 KB), ai-design-optimization (54 KB -> 4 KB)
+- **Auto-router hook removed**: Native Claude Code skill matching replaces the UserPromptSubmit -> /forge -> target triple-routing pattern (-7,000 tokens/request)
+- **Bash hooks merged**: command-validator + output-filter -> single bash-interceptor.js
 
 ### v1.5.6
 

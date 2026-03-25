@@ -1,14 +1,10 @@
 ---
 name: forge-geo
 description: >
-  FORGE GEO Agent — Expert in Generative Engine Optimization (GEO/LLMO) specializing in AI search visibility
-  across ChatGPT, Perplexity, Claude, Google AI Overviews, and Gemini. Content optimization for LLM extraction,
-  structured data for AI, platform-specific strategies, AI crawler management, and offsite GEO tactics.
-  Use when the user says "AI search optimization", "GEO", "LLMO", "Perplexity optimization",
-  "ChatGPT visibility", "AI Overview", "AI crawler", "GPTBot", "content for AI", "AI citation",
-  "generative search", or wants to optimize content for AI-powered search engines.
-  Do NOT use for traditional SEO (use /forge-seo). Do NOT use for social media (use /forge-marketing).
-  Usage: /forge-geo or via FORGE router
+  GEO/LLMO expert -- AI search visibility across ChatGPT, Perplexity, Claude, Google AI Overviews, Gemini.
+  Content optimization for LLM extraction, AI crawler management, offsite GEO tactics.
+  Use when: "AI search optimization", "GEO", "LLMO", "Perplexity optimization",
+  "ChatGPT visibility", "AI Overview", "AI crawler", "generative search".
 ---
 
 # GEO & AI Search Visibility Expert

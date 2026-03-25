@@ -1,14 +1,10 @@
 ---
 name: forge-ux
 description: >
-  FORGE UX Agent — Generates UX design, wireframes, design system, and accessibility guidelines.
-  Use when the user says "design the UI", "create wireframes", "design system", "UX design",
-  "user experience", "mockups", "accessibility guidelines", "WCAG compliance", "color palette",
-  "typography", or wants to define the visual and interaction design before implementation.
-  Produces docs/ux-design.md. Requires docs/prd.md to exist.
-  Do NOT use for technical architecture (use /forge-architect).
-  Do NOT use for frontend implementation (use /forge-build).
-  Usage: /forge-ux
+  UX design, wireframes, design system, and accessibility guidelines.
+  Use when: "design the UI", "create wireframes", "design system", "UX design",
+  "mockups", "accessibility guidelines", "WCAG compliance", "color palette".
+  Produces docs/ux-design.md. Requires docs/prd.md.
 ---
 
 # /forge-ux — FORGE UX Agent
