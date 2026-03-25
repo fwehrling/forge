@@ -101,7 +101,7 @@ The memory system is what makes `/forge-auto` intelligent:
 
 ## Safety Net: Stop Hook
 
-A Claude Code Stop hook (`forge-memory-stop.sh`) runs when sessions end. It calls `consolidate` + `sync` to catch memory updates from skills that crashed before their END block. This prevents memory loss on interrupted sessions.
+A Claude Code Stop hook (`forge-memory-sync.sh`) runs when sessions end. It calls `consolidate` + `sync` to catch memory updates from skills that crashed before their END block. This prevents memory loss on interrupted sessions.
 
 ## Memory Configuration
 

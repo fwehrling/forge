@@ -1,60 +1,36 @@
-## Auto-Routing /forge
-- **Automatic routing active**: A `UserPromptSubmit` hook injects a routing instruction via `/forge` for each request
-- **When the hook injects context**: You MUST invoke `/forge` (via Skill tool) BEFORE processing the request. Pass the user's full message as `args`
-- **Exceptions** (handle directly, WITHOUT /forge):
-  - Simple code questions or file reads
-  - Git operations (commit, push, branch, diff)
-  - Conversational responses in an ongoing exchange
-  - Explicit skill invocations (`/something`)
-  - Memory requests ("remember", "forget")
-- **When in doubt**: route through `/forge`, it decides
+## FORGE Update Notification
+- If your session context contains a message matching "FORGE update available", inform the user about it in your **first response** of the session
 
 ## FORGE Business Pack
 The business agents (marketing, copywriting, SEO, GEO, legal, security-pro, business-strategy, strategy-panel) are part of the FORGE Business Pack (`/forge-update --pack business`).
 
-## FORGE Update Notification
-- If your session context contains a message matching "FORGE update available", you MUST inform the user about it in your **very first response** of the session. Display the exact message received.
-
-## Skill Priority
-- **FORGE skills first**: When a FORGE project is detected (`.forge/` directory exists), always prefer FORGE skills (`/forge-*`) over other skills for development tasks (planning, architecture, building, testing, reviewing, deploying)
-- **Mapping intent → FORGE skill**:
-  - Build/implement/code → `/forge-build` or `/forge-auto`
-  - Test/verify/QA → `/forge-verify` or `/forge-quick-test`
-  - Review/audit code → `/forge-review`
-  - Plan/requirements → `/forge-plan`
-  - Architecture/design → `/forge-architect`
-  - Security audit → `/forge-audit`
-  - Deploy → `/forge-deploy`
-  - Full project → `/forge-auto`
-- **Non-FORGE skills**: Use only when no FORGE skill matches (e.g., `google-calendar`, `stripe-integration`, `hostinger-infra`)
-
 ## FORGE + Agent Teams Integration
 
-### Decision Table: Which Tool to Use
+### Decision Table
 
-| Situation | Commande | Mécanisme |
+| Situation | Commande | Mecanisme |
 |---|---|---|
-| Pipeline complet avec parallélisme stories | `/forge-team pipeline "objectif"` | Agent Teams (vrais processus) |
-| Analyse multi-perspective avec débat | `/forge-team party "sujet"` | Agent Teams (vrais processus) |
-| Build parallèle de stories existantes | `/forge-team build STORY-001 STORY-002` | Agent Teams (vrais processus) |
-| Pipeline séquentiel (1 story à la fois) | `/forge-auto` | Skill seul (pas de parallélisme) |
+| Pipeline complet avec parallelisme stories | `/forge-team pipeline "objectif"` | Agent Teams (vrais processus) |
+| Analyse multi-perspective avec debat | `/forge-team party "sujet"` | Agent Teams (vrais processus) |
+| Build parallele de stories existantes | `/forge-team build STORY-001 STORY-002` | Agent Teams (vrais processus) |
+| Pipeline sequentiel (1 story a la fois) | `/forge-auto` | Skill seul (pas de parallelisme) |
 | Analyse rapide 2-3 agents | `/forge-party "sujet"` | Subagents (Task tool) |
-| Implémentation d'1 seule story | `/forge-build STORY-XXX` | Skill seul |
+| Implementation d'1 seule story | `/forge-build STORY-XXX` | Skill seul |
 
 ### Vector Memory
 
 - **Installation globale** : `bash ~/.claude/scripts/forge-memory/setup.sh` (une seule fois)
-- **Détection auto** : le CLI `forge-memory` détecte le projet depuis le CWD (remonte jusqu'à `.forge/memory/`)
-- **Auto-sync** : les fichiers modifiés sont réindexés automatiquement avant chaque recherche
+- **Detection auto** : le CLI `forge-memory` detecte le projet depuis le CWD (remonte jusqu'a `.forge/memory/`)
+- **Auto-sync** : les fichiers modifies sont reindexes automatiquement avant chaque recherche
 - **Recherche hybride** : vectorielle (70%) + FTS5 BM25 (30%)
-- **Intégré dans tous les skills FORGE** : chaque `/forge-*` lance une recherche contextuelle au démarrage
+- **Integre dans tous les skills FORGE** : chaque `/forge-*` lance une recherche contextuelle au demarrage
 
 ### Coordination Rules for Teammates
 
 When running as a teammate in an Agent Teams session:
 
 1. **File Ownership**: Each teammate writes ONLY to its assigned directories. Check your spawn prompt for your file scope. Never write outside your scope.
-2. **Memory Protocol**: Read `.forge/memory/MEMORY.md` at start (read-only). Do NOT write to session logs — the lead handles memory consolidation.
+2. **Memory Protocol**: Read `.forge/memory/MEMORY.md` at start (read-only). Do NOT write to session logs -- the lead handles memory consolidation.
 3. **Sprint Status**: Only update `.forge/sprint-status.yaml` for your own assigned story. The lead performs final consolidation.
 4. **Task List**: Use the shared task list to communicate progress and results. Mark tasks as complete only after passing all validation gates.
 5. **Team Size**: Max 4 Dev + 1 QA + 1 Reviewer teammates. Each Dev handles exactly 1 story.

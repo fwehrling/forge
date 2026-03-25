@@ -68,12 +68,12 @@ Initializes the FORGE framework in a new or existing project.
    - This gives the user immediate access to all `/forge-*` commands
 
 8. **Install Token Saver** (global, idempotent):
-   - Creates `~/.claude/hooks/output-filter.js` (PreToolUse hook that rewrites known verbose commands)
+   - Creates `~/.claude/hooks/bash-interceptor.js` (unified PreToolUse hook: blocks dangerous commands + rewrites verbose output)
    - Creates `~/.claude/hooks/token-saver.sh` (wrapper that executes commands and filters output)
+   - Removes legacy hooks (`command-validator.js`, `output-filter.js`) if present
    - Patches `~/.claude/settings.json` to add the hook and permission
-   - Skips files that already exist (safe to re-run)
    - Covered commands: git, npm, pnpm, yarn, bun, pip, pytest, go, cargo, docker, make, mvn, gradle, dotnet, swift, tsc
-   - Note: All other FORGE hooks (auto-router, update-check, memory-sync, command-validator, notifications) are installed via `install.sh` or `/forge-update`
+   - Note: Additional FORGE hooks (update-check, memory-sync, statusline) are installed via `install.sh` or `/forge-update`
 
 9. **Save memory** (ensures initialization context persists for all subsequent agents):
    ```bash
