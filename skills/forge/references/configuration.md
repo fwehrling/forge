@@ -57,8 +57,8 @@ Output filtering hooks that reduce shell output token consumption. Installed by 
 
 ```
 hooks/
-  token-saver.sh         # Shell hook: filters stdout/stderr
-  output-filter.js       # Node.js filter: parses and compresses output
+  bash-interceptor.js    # Unified PreToolUse hook: blocks dangerous commands + rewrites verbose output
+  token-saver.sh         # Shell wrapper: executes command and filters stdout/stderr
 ```
 
 Installed to `~/.claude/hooks/` — active for all Claude Code sessions.

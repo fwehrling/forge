@@ -5,6 +5,20 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2026-03-25
+
+### Fixed
+
+- **Hook infrastructure aligned with v1.6.0**: `forge-hooks-setup.sh` and `token-saver-setup.sh` now install the unified `bash-interceptor.js` instead of the deprecated `command-validator.js` + `output-filter.js`. Both scripts also clean up legacy hooks on update
+- **UserPromptSubmit hook removed from install/update**: `forge-hooks-setup.sh` no longer installs `forge-auto-router.js` or the PreToolUse[Skill] notification hook -- these were removed in v1.6.0 but the scripts still installed them
+- **Settings.json migration**: `forge-hooks-setup.sh` now removes legacy hook entries (UserPromptSubmit, PreToolUse[Skill], old Bash hooks) from `settings.json` during update
+- **CLAUDE.md template cleaned**: Removed obsolete "Auto-Routing /forge" and "Skill Priority" sections from `templates/claude-md-forge-section.md` -- users upgrading via `/forge-update` get a clean CLAUDE.md automatically
+- **Hook naming harmonized**: Renamed `forge-memory-stop.sh` to `forge-memory-sync.sh` across repo, README, and CHANGELOG for consistency with `settings.json`
+- **`install.sh`**: Verification step and summary now reference the correct hooks (`bash-interceptor.js` instead of 3 separate files)
+- **`forge-update/SKILL.md`**: Step 7 updated with current hook list
+- **`forge-init/SKILL.md`**: Step 8 references `bash-interceptor.js` instead of `output-filter.js`
+- **README rewritten**: Condensed from 893 to ~350 lines -- clearer value proposition, scannable structure, removed redundant sections
+
 ## [1.6.0] - 2026-03-25
 
 ### Changed
@@ -101,7 +115,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Memory fallback**: Skills no longer crash if `forge-memory` CLI is not installed. They fall back to direct Markdown reads of MEMORY.md and session files. Vector search is now optional, not a hard dependency
-- **Stop hook**: Added `forge-memory-stop.sh` hook that runs `consolidate` + `sync` when sessions end, catching memory updates from skills that crashed before their END block
+- **Stop hook**: Added `forge-memory-sync.sh` hook that runs `consolidate` + `sync` when sessions end, catching memory updates from skills that crashed before their END block
 
 ### Changed
 
@@ -272,6 +286,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.6.1]: https://github.com/fwehrling/forge/releases/tag/v1.6.1
+[1.6.0]: https://github.com/fwehrling/forge/releases/tag/v1.6.0
 [1.5.6]: https://github.com/fwehrling/forge/releases/tag/v1.5.6
 [1.5.5]: https://github.com/fwehrling/forge/releases/tag/v1.5.5
 [1.5.4]: https://github.com/fwehrling/forge/releases/tag/v1.5.4

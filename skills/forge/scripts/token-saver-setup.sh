@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
-# Token Saver — Standalone setup script
-# Installs output-filter.js + token-saver.sh into ~/.claude/hooks/
+# Token Saver — Standalone setup script (v1.6.0+)
+# Installs bash-interceptor.js + token-saver.sh into ~/.claude/hooks/
 # and patches ~/.claude/settings.json.
 #
+# This is a lightweight alternative to forge-hooks-setup.sh that only
+# installs token optimization (no update-check, memory-sync, or statusline).
+# Used by forge-init when full hook setup is not needed.
+#
 # Idempotent: safe to run multiple times.
-# Called by: install.sh, forge-init.sh
+# Called by: forge-init.sh
 #
 # Usage: bash token-saver-setup.sh
 
@@ -13,85 +17,80 @@ set -euo pipefail
 HOOKS_DIR="$HOME/.claude/hooks"
 SETTINGS="$HOME/.claude/settings.json"
 
-echo "  📦 Token Saver — Setting up output filtering..."
+echo "  Token Saver — Setting up output filtering..."
 mkdir -p "$HOOKS_DIR"
 
-# ── output-filter.js ──────────────────────────────────────────────────────────
-if [ ! -f "$HOOKS_DIR/output-filter.js" ]; then
-  cat > "$HOOKS_DIR/output-filter.js" << 'FILTEREOF'
+# ── bash-interceptor.js (unified security + token optimization) ──────────────
+cat > "$HOOKS_DIR/bash-interceptor.js" << 'INTERCEPTOREOF'
+#!/usr/bin/env node
 /**
- * Token Saver — Output Filter Hook for Claude Code
+ * bash-interceptor.js — Unified PreToolUse hook for Bash
  *
- * PreToolUse hook for Bash tool.
- * Intercepts known commands and rewrites them to go through token-saver.sh
- * which executes the command and filters verbose output.
+ * Combines command validation (block dangerous commands) and
+ * output filtering (rewrite verbose commands through token-saver.sh).
  *
- * Exit 0 = passthrough (no rewrite)
- * stdout JSON with updatedInput = rewrite command
+ * Exit 0 = allow (with optional rewrite via stdout JSON)
+ * Exit 2 = block (reason on stderr)
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const HOME = process.env.HOME || process.env.USERPROFILE || '/tmp';
-const TOKEN_SAVER = path.join(HOME, '.claude', 'hooks', 'token-saver.sh');
+const TOKEN_SAVER = path.join(process.env.HOME, '.claude', 'hooks', 'token-saver.sh');
 
-// Commands to filter: matched against first two words of the command
+const BLOCKED_PATTERNS = [
+  /rm\s+(-rf?|--recursive)\s+[\/~]/i,
+  /rm\s+-rf?\s+\//i,
+  /rm\s+-rf?\s+~/i,
+  /rm\s+-rf?\s+\.\.\//i,
+  /sudo\s+rm\s+-rf?\s+\//i,
+  />\s*\/dev\/sd[a-z]/i,
+  /dd\s+if=.*of=\/dev\/sd/i,
+  /mkfs\.\w+\s+\/dev\/sd/i,
+  /chmod\s+(-R\s+)?777\s+\//i,
+  /chown\s+-R\s+.*\s+\//i,
+  /:\(\)\{\s*:\|:&\s*\};:/,
+  /while\s+true;\s*do/i,
+  /curl.*\|\s*(sudo\s+)?bash/i,
+  /wget.*\|\s*(sudo\s+)?bash/i,
+  /unset\s+(PATH|HOME|USER)/i,
+  /export\s+PATH\s*=\s*$/i,
+  /DROP\s+DATABASE/i,
+  /DROP\s+TABLE\s+\*/i,
+  /TRUNCATE\s+TABLE/i,
+  /DELETE\s+FROM\s+\w+\s*;?\s*$/i,
+  /git\s+push\s+--force\s+origin\s+main/i,
+  /git\s+push\s+-f\s+origin\s+main/i,
+  /git\s+reset\s+--hard\s+HEAD~\d{2,}/i,
+  /ssh.*rm\s+-rf/i,
+];
+
 const FILTERED_COMMANDS = new Set([
-  // Git
   'git status', 'git diff', 'git log',
-  // Node / npm
   'npm test', 'npm install', 'npx jest', 'npx vitest',
-  // pnpm
   'pnpm test', 'pnpm install', 'pnpm add', 'pnpm run',
-  // Yarn
   'yarn test', 'yarn install',
-  // Bun
   'bun test', 'bun install',
-  // Python
   'pip install', 'pytest', 'python -m',
-  // Go
   'go test',
-  // Rust
   'cargo test', 'cargo build',
-  // Docker
   'docker build',
-  // Make
   'make test', 'make',
-  // Java
-  'mvn test', 'mvn install', 'gradle test', 'gradle build',
-  // .NET
+  'mvn test', 'mvn install',
+  'gradle test', 'gradle build',
   'dotnet test', 'dotnet build',
-  // Swift
   'swift test', 'swift build',
-  // TypeScript
   'tsc',
 ]);
 
 function shouldFilter(command) {
   const trimmed = command.trim();
-
-  // Skip complex commands with pipes, chains, or subshells
-  if (/[|;&`]|\$\(/.test(trimmed)) {
-    return false;
-  }
-
-  // Extract first two words
+  if (/[|;&`]|\$\(/.test(trimmed)) return false;
   const words = trimmed.split(/\s+/);
   const key2 = words.slice(0, 2).join(' ');
   const key1 = words[0];
-
-  // Special case: "pnpm run test" → match "pnpm run" but only if 3rd word starts with "test"
-  if (key2 === 'pnpm run' && words.length >= 3 && !words[2].startsWith('test')) {
-    return false;
-  }
-
-  // Special case: "python -m pytest" → match "python -m" but only if 3rd word is "pytest"
-  if (key2 === 'python -m' && words.length >= 3 && words[2] !== 'pytest') {
-    return false;
-  }
-
-  // Match on two words first, then fall back to single word
+  if (key2 === 'pnpm run' && words.length >= 3 && !words[2].startsWith('test')) return false;
+  if (key2 === 'python -m' && words.length >= 3 && words[2] !== 'pytest') return false;
   return FILTERED_COMMANDS.has(key2) || FILTERED_COMMANDS.has(key1);
 }
 
@@ -99,177 +98,79 @@ if (require.main === module) {
   try {
     const input = fs.readFileSync(0, 'utf8');
     const data = JSON.parse(input);
-    const command = data?.tool_input?.command || '';
-
-    if (!command || !shouldFilter(command)) {
-      process.exit(0);
-    }
-
-    // Rewrite command to go through token-saver.sh
-    const escaped = command.replace(/'/g, "'\\''");
-    const result = {
-      updatedInput: {
-        command: `${TOKEN_SAVER} '${escaped}'`
+    const command = (data?.tool_input?.command || '').trim();
+    if (!command) process.exit(0);
+    for (const pattern of BLOCKED_PATTERNS) {
+      if (pattern.test(command)) {
+        process.stderr.write(`Commande dangereuse bloquee : ${pattern}\n`);
+        process.exit(2);
       }
-    };
-
-    process.stdout.write(JSON.stringify(result));
+    }
+    if (shouldFilter(command)) {
+      const escaped = command.replace(/'/g, "'\\''");
+      process.stdout.write(JSON.stringify({
+        updatedInput: { command: `${TOKEN_SAVER} '${escaped}'` }
+      }));
+    }
     process.exit(0);
-  } catch (err) {
-    // Fail open — passthrough on any error
-    // Log to stderr for debugging (won't affect Claude output)
-    process.stderr.write(`[token-saver] hook error: ${err.message}\n`);
+  } catch {
     process.exit(0);
   }
 }
-
-module.exports = { shouldFilter, FILTERED_COMMANDS };
-FILTEREOF
-  echo "    ✅ Created output-filter.js"
-else
-  echo "    ⏭  output-filter.js already exists"
-fi
+INTERCEPTOREOF
+echo "    Created bash-interceptor.js"
 
 # ── token-saver.sh ───────────────────────────────────────────────────────────
-if [ ! -f "$HOOKS_DIR/token-saver.sh" ]; then
-  cat > "$HOOKS_DIR/token-saver.sh" << 'SAVEREOF'
+cat > "$HOOKS_DIR/token-saver.sh" << 'SAVEREOF'
 #!/usr/bin/env bash
-# Token Saver — Execute command and filter verbose output
-#
-# Usage: token-saver.sh '<command>'
-# Executes the command, filters output based on known patterns,
-# preserves exit code.
-
+# Token Saver -- Execute command and filter verbose output
 set -o pipefail
-
 MAX_LINES=200
-
 CMD="$1"
-
-if [ -z "$CMD" ]; then
-  echo "Usage: token-saver.sh '<command>'" >&2
-  exit 1
-fi
-
-# Execute command, capture output and exit code
+if [ -z "$CMD" ]; then echo "Usage: token-saver.sh '<command>'" >&2; exit 1; fi
 OUTPUT=$(eval "$CMD" 2>&1)
 EXIT_CODE=$?
-
-# Short output — no point filtering
-if [ ${#OUTPUT} -lt 80 ]; then
-  printf '%s\n' "$OUTPUT"
-  exit $EXIT_CODE
-fi
-
-# Extract first two words for filter selection
+if [ ${#OUTPUT} -lt 80 ]; then printf '%s\n' "$OUTPUT"; exit $EXIT_CODE; fi
 read -r WORD1 WORD2 _ <<< "$CMD"
 KEY="${WORD1}:${WORD2}"
-
 FILTERED=""
-
 case "$KEY" in
-  git:status)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^On branch|^Your branch|^\t|^Changes|^Untracked|^nothing|modified:|new file:|deleted:|renamed:|^\?\?|^ [MADRCU?])')
-    ;;
-  git:diff)
-    # Keep diff headers + hunk markers + changed lines, cap at MAX_LINES
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^diff |^---|^\+\+\+|^@@|^[-+])' | head -n "$MAX_LINES")
-    TOTAL=$(printf '%s\n' "$OUTPUT" | grep -cE '(^diff |^---|^\+\+\+|^@@|^[-+])' || true)
-    if [ "$TOTAL" -gt "$MAX_LINES" ]; then
-      FILTERED="$FILTERED
-... ($((TOTAL - MAX_LINES)) more lines truncated)"
-    fi
-    ;;
-  git:log)
-    # Keep only commit hash + title (first indented line per commit)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | awk '/^commit [0-9a-f]+/{print;t=1;next} /^(Author|Date):/{next} /^$/{next} t&&/^    /{sub(/^    /,"  ");print;t=0;next}')
-    ;;
-  npm:test|npx:jest|npx:vitest|pnpm:test|pnpm:run|yarn:test|bun:test)
-    # Keep PASS/FAIL per file, errors, and summary — drop individual test lines
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^PASS |^FAIL |Test Suites:|Tests:|Snapshots:|Time:|Test Files|Duration|^TOTAL|^ERR!|● |ELIFECYCLE|exit code)')
-    # If tests actually failed (check summary line, not test descriptions)
-    if printf '%s\n' "$OUTPUT" | grep -qE '(^FAIL |Tests:.*failed|Test Suites:.*failed)'; then
-      FAIL_DETAILS=$(printf '%s\n' "$OUTPUT" | grep -E '(● |Expected:|Received:|at Object|> [0-9]+ \||^\s+\^|FAIL )' | head -n 60)
-      if [ -n "$FAIL_DETAILS" ]; then
-        FILTERED="$FILTERED
-$FAIL_DETAILS"
-      fi
-    fi
-    ;;
-  npm:install|pnpm:install|pnpm:add|yarn:install|bun:install)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(added|removed|changed|packages|up to date|audited|vulnerabilities|WARN|ERR!|Progress:|Done in|Resolved|Installed)')
-    ;;
-  pip:install)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(Successfully installed|already satisfied|ERROR|WARNING|Collecting|Installing)')
-    ;;
-  pytest:*|python:-m)
-    # Keep per-file results + errors + summary — drop individual test lines
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^tests/.*PASSED|^tests/.*FAILED|^tests/.*ERROR|PASSED|FAILED|ERROR|warnings? summary|short test summary|=====|^FAILED |^E )')
-    ;;
-  go:test)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^ok|^FAIL|^---|^panic|PASS|SKIP)')
-    ;;
-  cargo:test)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^test |test result|^running|^failures|FAILED|^error)')
-    ;;
-  cargo:build)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^error|^warning|Compiling|Finished|could not compile)')
-    ;;
-  docker:build)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^Step |^Successfully|^ERROR|^#[0-9]|FINISHED|CACHED|exporting to image|error:)')
-    ;;
-  make:*|make:test)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^make|Error|error:|warning:|PASS|FAIL|^gcc|^g\+\+|^cc|Nothing to be done|is up to date)')
-    ;;
-  mvn:test|mvn:install)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(BUILD SUCCESS|BUILD FAILURE|Tests run:|^\[ERROR\]|^\[WARNING\]|^Failed tests:|^Tests in error:|\[INFO\] ---)')
-    ;;
-  gradle:test|gradle:build)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(BUILD SUCCESSFUL|BUILD FAILED|tests completed|FAILURE:|> Task|^e:|actionable task)')
-    ;;
-  dotnet:test)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(Passed!|Failed!|Total tests|Passed|Failed|Skipped|error |warning )')
-    ;;
-  dotnet:build)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(Build succeeded|Build FAILED|error |warning |-> )')
-    ;;
-  swift:test)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(Test Case|Test Suite|passed|failed|Executed|error:)')
-    ;;
-  swift:build)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(Build complete|error:|warning:|Compiling|Linking)')
-    ;;
-  tsc:*)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(error TS|: error|Found [0-9]+ error)')
-    ;;
-  *)
-    # Unknown command — passthrough
-    printf '%s\n' "$OUTPUT"
-    exit $EXIT_CODE
-    ;;
+  git:status) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^On branch|^Your branch|^\t|^Changes|^Untracked|^nothing|modified:|new file:|deleted:|renamed:|^\?\?|^ [MADRCU?])') ;;
+  git:diff) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^diff |^---|^\+\+\+|^@@|^[-+])' | head -n "$MAX_LINES") ;;
+  git:log) FILTERED=$(printf '%s\n' "$OUTPUT" | awk '/^commit [0-9a-f]+/{print;t=1;next} /^(Author|Date):/{next} /^$/{next} t&&/^    /{sub(/^    /,"  ");print;t=0;next}') ;;
+  npm:test|npx:jest|npx:vitest|pnpm:test|pnpm:run|yarn:test|bun:test) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^PASS |^FAIL |Test Suites:|Tests:|Time:|Test Files|Duration|^ERR!)') ;;
+  npm:install|pnpm:install|pnpm:add|yarn:install|bun:install) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(added|removed|changed|packages|up to date|audited|vulnerabilities|WARN|ERR!|Done in)') ;;
+  pip:install) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(Successfully installed|already satisfied|ERROR|WARNING)') ;;
+  pytest:*|python:-m) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(PASSED|FAILED|ERROR|warnings? summary|short test summary|=====|^E )') ;;
+  go:test) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^ok|^FAIL|^---|^panic|PASS|SKIP)') ;;
+  cargo:test) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^test |test result|^running|^failures|FAILED|^error)') ;;
+  cargo:build) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^error|^warning|Compiling|Finished|could not compile)') ;;
+  docker:build) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^Step |^Successfully|^ERROR|FINISHED|CACHED|error:)') ;;
+  make:*|make:test) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^make|Error|error:|warning:|PASS|FAIL|Nothing to be done|is up to date)') ;;
+  mvn:test|mvn:install) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(BUILD SUCCESS|BUILD FAILURE|Tests run:|^\[ERROR\]|^\[WARNING\])') ;;
+  gradle:test|gradle:build) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(BUILD SUCCESSFUL|BUILD FAILED|tests completed|FAILURE:|> Task)') ;;
+  dotnet:test) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(Passed!|Failed!|Total tests|error |warning )') ;;
+  dotnet:build) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(Build succeeded|Build FAILED|error |warning )') ;;
+  swift:test) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(Test Case|Test Suite|passed|failed|Executed|error:)') ;;
+  swift:build) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(Build complete|error:|warning:|Compiling|Linking)') ;;
+  tsc:*) FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(error TS|: error|Found [0-9]+ error)') ;;
+  *) printf '%s\n' "$OUTPUT"; exit $EXIT_CODE ;;
 esac
-
-# Fallback: if filter produced empty output, return original (fail open)
-if [ -z "$FILTERED" ]; then
-  printf '%s\n' "$OUTPUT"
-  echo "[token-saver] filter returned empty — showing full output" >&2
-else
-  printf '%s\n' "$FILTERED"
-fi
-
+if [ -z "$FILTERED" ]; then printf '%s\n' "$OUTPUT"; else printf '%s\n' "$FILTERED"; fi
 exit $EXIT_CODE
 SAVEREOF
-  chmod +x "$HOOKS_DIR/token-saver.sh"
-  if [ -x "$HOOKS_DIR/token-saver.sh" ]; then
-    echo "    ✅ Created token-saver.sh"
-  else
-    echo "    ⚠️  Created token-saver.sh but could not make it executable" >&2
-  fi
-else
-  echo "    ⏭  token-saver.sh already exists"
-fi
+chmod +x "$HOOKS_DIR/token-saver.sh"
+echo "    Created token-saver.sh"
 
-# ── Patch settings.json ───────────────────────────────────────────────────────
+# ── Clean up legacy hooks ────────────────────────────────────────────────────
+for legacy_file in command-validator.js output-filter.js; do
+  if [ -f "$HOOKS_DIR/$legacy_file" ]; then
+    rm -f "$HOOKS_DIR/$legacy_file"
+    echo "    Removed legacy $legacy_file"
+  fi
+done
+
+# ── Patch settings.json ──────────────────────────────────────────────────────
 if [ -f "$SETTINGS" ]; then
   SETTINGS_ESCAPED=$(printf '%s' "$SETTINGS" | sed "s/'/\\\\'/g")
   node -e "
@@ -285,25 +186,26 @@ if (!s.permissions.allow.includes(perm)) {
   s.permissions.allow.push(perm);
 }
 
-// Add hook
+// Remove legacy Bash hooks, add bash-interceptor.js
 if (!s.hooks) s.hooks = {};
 if (!s.hooks.PreToolUse) s.hooks.PreToolUse = [];
-const bashHook = s.hooks.PreToolUse.find(h => h.matcher === 'Bash');
-const hookCmd = 'node ~/.claude/hooks/output-filter.js';
-if (bashHook) {
-  if (!bashHook.hooks) bashHook.hooks = [];
-  if (!bashHook.hooks.some(h => h.command === hookCmd)) {
-    bashHook.hooks.push({ type: 'command', command: hookCmd });
-  }
-} else {
-  s.hooks.PreToolUse.push({
-    matcher: 'Bash',
-    hooks: [{ type: 'command', command: hookCmd }]
-  });
+let bashEntry = s.hooks.PreToolUse.find(h => h.matcher === 'Bash');
+if (!bashEntry) {
+  bashEntry = { matcher: 'Bash', hooks: [] };
+  s.hooks.PreToolUse.push(bashEntry);
+}
+if (!bashEntry.hooks) bashEntry.hooks = [];
+bashEntry.hooks = bashEntry.hooks.filter(h =>
+  !h.command?.includes('command-validator.js') &&
+  !h.command?.includes('output-filter.js')
+);
+const interceptorCmd = 'node ~/.claude/hooks/bash-interceptor.js';
+if (!bashEntry.hooks.some(h => h.command === interceptorCmd)) {
+  bashEntry.hooks.unshift({ type: 'command', command: interceptorCmd });
 }
 
 fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2) + '\n');
-" 2>/dev/null && echo "    ✅ Patched settings.json" || echo "    ⚠️  Could not patch settings.json (update manually)"
+" 2>/dev/null && echo "    Patched settings.json" || echo "    Could not patch settings.json (update manually)"
 fi
 
 echo "    Done."

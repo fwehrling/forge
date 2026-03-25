@@ -86,16 +86,14 @@ description: >
 7. **Update version, hooks, and infrastructure** :
    - Lire `$TMPDIR/VERSION` et ecrire dans `~/.claude/skills/forge/.forge-version`
    - Vider le cache `~/.claude/skills/forge/.forge-update-cache` pour forcer un check frais au prochain demarrage
-   - Lancer `forge-hooks-setup.sh` pour installer/mettre a jour TOUS les hooks FORGE (idempotent) :
-     - `command-validator.js` -- PreToolUse[Bash]: bloque les commandes dangereuses
-     - `output-filter.js` -- PreToolUse[Bash]: optimisation tokens
+   - Lancer `forge-hooks-setup.sh` pour installer/mettre a jour les hooks FORGE (idempotent) :
+     - `bash-interceptor.js` -- PreToolUse[Bash]: bloque les commandes dangereuses + optimisation tokens
      - `token-saver.sh` -- script d'execution pour le filtrage de sortie
-     - `forge-auto-router.js` -- UserPromptSubmit: routage automatique via /forge
      - `forge-update-check.sh` -- SessionStart: notification de mises a jour
      - `forge-memory-sync.sh` -- Stop: sync memoire vectorielle en fin de session
      - `statusline.sh` -- Status line: indicateur persistant FORGE dans la barre du terminal
-     - PreToolUse[Skill]: notification "FORGE active" visible dans la conversation
-   - Patche `~/.claude/settings.json` avec tous les hooks, permissions, et config statusLine (idempotent)
+   - Nettoie les hooks obsoletes (`command-validator.js`, `output-filter.js`, `forge-auto-router.js`)
+   - Patche `~/.claude/settings.json` avec les hooks, permissions, et config statusLine (idempotent)
    ```bash
    \cp -f "$TMPDIR/VERSION" ~/.claude/skills/forge/.forge-version
    rm -f ~/.claude/skills/forge/.forge-update-cache
