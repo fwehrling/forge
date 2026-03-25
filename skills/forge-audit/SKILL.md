@@ -1,14 +1,10 @@
 ---
 name: forge-audit
 description: >
-  FORGE Security Agent — Threat modeling, OWASP audit, and compliance checks. Enterprise track only.
-  Use when the user says "security audit", "OWASP check", "threat modeling", "check for vulnerabilities",
-  "compliance audit", "GDPR compliance", "security review", "penetration test prep",
-  or wants a formal security assessment of the project.
-  Produces docs/security.md. Only available on the Enterprise track.
-  Do NOT use on Quick or Standard tracks (security is handled by Architect and QA agents).
-  Do NOT use for code review (use /forge-review). Do NOT use for skill security audit (use /forge-audit-skill).
-  Usage: /forge-audit
+  Threat modeling, OWASP audit, and compliance checks (Enterprise track).
+  Use when: "security audit", "OWASP check", "threat modeling",
+  "check for vulnerabilities", "compliance audit", "GDPR compliance",
+  "security review". Produces docs/security.md.
 ---
 
 # /forge-audit — FORGE Security Agent

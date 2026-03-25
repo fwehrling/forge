@@ -1,14 +1,10 @@
 ---
 name: forge-status
 description: >
-  FORGE Sprint Status — Displays the current sprint status with stories, metrics, and progress.
-  Use when the user says "show sprint status", "how is the sprint going", "what stories are done",
-  "project progress", "which story is next", "sprint metrics", "what's blocked",
-  or wants a quick overview of the current sprint without resuming development.
-  Reads .forge/sprint-status.yaml — requires a FORGE project with stories defined.
-  Do NOT use to resume development (use /forge-resume which analyzes state and proposes actions).
-  Do NOT use for detailed story inspection (read docs/stories/ directly).
-  Usage: /forge-status
+  Sprint status dashboard -- stories, metrics, and progress overview.
+  Use when: "sprint status", "how is the sprint going", "what stories are done",
+  "project progress", "which story is next", "sprint metrics", "what's blocked".
+  Reads .forge/sprint-status.yaml.
 ---
 
 # /forge-status — FORGE Sprint Status

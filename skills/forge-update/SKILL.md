@@ -1,15 +1,9 @@
 ---
 name: forge-update
 description: >
-  FORGE Updater — Updates all FORGE skills from the latest GitHub release.
-  Use when the user says "update forge", "upgrade forge skills", "is there a new version of forge",
-  "get the latest forge", "pull forge updates", or wants to update their local FORGE installation
-  to the latest version from GitHub. Downloads and replaces all skill files.
-  Supports optional packs: use "--pack business" to install the Business Pack
-  (marketing, copywriting, SEO, GEO, legal, security-pro, business-strategy, strategy-panel).
-  Do NOT use for updating project-specific configuration (edit .forge/config.yml manually).
-  Do NOT use for initializing FORGE (use /forge-init).
-  Usage: /forge-update or /forge-update --pack business
+  Updates FORGE skills from the latest GitHub release.
+  Use when: "update forge", "upgrade forge skills", "new version of forge",
+  "pull forge updates". Supports --pack business for the Business Pack.
 ---
 
 # /forge-update — FORGE Updater

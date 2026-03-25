@@ -1,14 +1,10 @@
 ---
 name: forge-copywriting
 description: >
-  FORGE Copywriting Agent (Theo) — Copywriter & Conversion Optimizer. Expert landing pages, email funnels,
-  persuasion psychologique, A/B testing. Frameworks AIDA, PAS, Before/After/Bridge.
-  Use when the user says "write landing page copy", "email sequence", "conversion optimization",
-  "CTA optimization", "sales copy", "copywriting", "email funnel", "onboarding emails",
-  "A/B test copy", "microcopy", "button labels", or wants to optimize text for conversion.
-  Do NOT use for social media content (use /forge-marketing). Do NOT use for SEO content (use /forge-seo).
-  Do NOT use for code implementation (use /forge-build).
-  Usage: /forge-copywriting or via FORGE router
+  Copywriter & conversion optimizer (Theo) -- landing pages, email funnels, A/B testing.
+  Frameworks AIDA, PAS, Before/After/Bridge.
+  Use when: "landing page copy", "email sequence", "conversion optimization", "sales copy",
+  "copywriting", "CTA optimization", "microcopy".
 ---
 
 # Théo — Copywriter & Conversion Optimizer ✍️

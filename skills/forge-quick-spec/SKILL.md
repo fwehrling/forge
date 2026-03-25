@@ -1,14 +1,10 @@
 ---
 name: forge-quick-spec
 description: >
-  FORGE Quick Track — Spec + direct implementation for bug fixes and small changes (< 1 day of work).
-  Use when the user says "fix this bug", "quick fix", "small change", "patch this",
-  "just fix the login issue", "minor tweak", "hotfix", or has a small, well-defined change
-  that doesn't need full planning/architecture phases. Skips PRD and architecture — goes straight
+  Quick track for bug fixes and small changes (< 1 day of work).
+  Use when: "fix this bug", "quick fix", "small change", "patch this",
+  "hotfix", "minor tweak". Skips PRD and architecture, goes straight
   to spec and implementation.
-  Do NOT use for multi-story features or large changes (use /forge-build with proper planning).
-  Do NOT use for test-only tasks (use /forge-quick-test or /forge-verify).
-  Usage: /forge-quick-spec "change description"
 ---
 
 # /forge-quick-spec — FORGE Quick Track

@@ -1,15 +1,10 @@
 ---
 name: forge-plan
 description: >
-  FORGE PM Agent — Generates or validates the Product Requirements Document (PRD).
-  Use when the user says "write the requirements", "define what we're building", "create the PRD",
-  "product requirements", "what features should we build", "plan the product", "spec out the project",
-  or wants to define the scope and features before architecture or development.
-  This is the first planning step in the FORGE pipeline — produces docs/prd.md.
-  Do NOT use for technical architecture (use /forge-architect).
-  Do NOT use for story decomposition (use /forge-stories).
-  Do NOT use for market research (use /forge-analyze, which is upstream of this skill).
-  Usage: /forge-plan or /forge-plan --validate
+  FORGE PM Agent -- Generates or validates the Product Requirements Document (PRD).
+  First planning step in the pipeline, produces docs/prd.md.
+  Use when: "write the requirements", "define what we're building", "create the PRD",
+  "product requirements", "plan the product", "spec out the project".
 ---
 
 # /forge-plan — FORGE PM Agent

@@ -1,15 +1,10 @@
 ---
 name: forge-analyze
 description: >
-  FORGE Analyst Agent — Domain research, market analysis, competitive analysis, and requirements elicitation.
-  Use when the user says "analyze the market", "research the competition", "domain analysis",
-  "I have a startup idea", "what does the market look like", "competitive landscape",
-  "before we plan, let's research", "validate this idea", or wants to understand the problem
-  space before writing requirements. This is the first step in the pipeline — upstream of /forge-plan.
-  Produces docs/analysis.md.
-  Do NOT use for writing requirements (use /forge-plan, which comes after analysis).
-  Do NOT use for technical architecture (use /forge-architect).
-  Usage: /forge-analyze
+  Domain research, market analysis, competitive analysis, and requirements elicitation.
+  Use when: "analyze the market", "research the competition", "domain analysis",
+  "validate this idea", "competitive landscape", "I have a startup idea".
+  First pipeline step, upstream of /forge-plan. Produces docs/analysis.md.
 ---
 
 # /forge-analyze — FORGE Analyst Agent

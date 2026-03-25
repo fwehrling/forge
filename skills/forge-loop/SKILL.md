@@ -1,14 +1,9 @@
 ---
 name: forge-loop
 description: >
-  FORGE Autonomous Loop — Secured iteration runner with cost caps, circuit breakers, and sandbox isolation.
-  Use when the user says "run this in a loop", "iterate autonomously", "keep working on this overnight",
-  "AFK mode", "unattended iteration", "long-running task with guardrails", "loop until done",
-  or wants Claude to iterate on a task with safety limits (cost caps, max iterations, circuit breakers).
-  This is for individual tasks needing repeated iterations — not for full pipeline orchestration.
-  Do NOT use for full pipeline automation (use /forge-auto).
-  Do NOT use for parallel agent execution (use /forge-team).
-  Usage: /forge-loop "task description" [options]
+  Autonomous iteration runner with cost caps, circuit breakers, and sandbox isolation.
+  Use when: "run in a loop", "iterate autonomously", "AFK mode",
+  "unattended iteration", "loop until done", "keep working overnight".
 ---
 
 # /forge-loop — FORGE Autonomous Loop

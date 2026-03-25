@@ -31,7 +31,7 @@ packs.yaml            # Pack manifest (core vs business skill lists)
 ## Conventions
 
 - **SKILL.md files** use YAML frontmatter (`name`, `description`) followed by Markdown instructions
-- **Descriptions** must include: natural language trigger phrases ("Use when..."), negative cases ("Do NOT use for..."), and pipeline positioning. This is the primary mechanism for automatic skill triggering
+- **Descriptions** must be concise (~300 chars max): include trigger phrases ("Use when...") and pipeline position. Omit "Do NOT use for..." clauses — the router handles disambiguation via references/
 - **French Language Rule** lives only in the hub skill (`forge/SKILL.md`), not in satellite skills — language is a user-level preference configured in `~/.claude/CLAUDE.md`
 - **Output templates**: Every agent skill should include a concrete ASCII report template showing the expected output format
 - **Memory save blocks**: Explain WHY memory matters (e.g., "ensures QA verdicts persist for trend analysis") instead of just "MANDATORY — never skip"

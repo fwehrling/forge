@@ -1,15 +1,10 @@
 ---
 name: forge-architect
 description: >
-  FORGE Architect Agent — Generates or updates the technical architecture document.
-  Use when the user says "design the system", "technical architecture", "define the tech stack",
-  "choose the database", "API design", "system design", "how should we structure the code",
-  "architecture decision", or wants to make technical design choices before implementation.
-  Produces docs/architecture.md. Requires docs/prd.md to exist (run /forge-plan first).
-  Do NOT use for product requirements (use /forge-plan).
-  Do NOT use for story breakdown (use /forge-stories).
-  Do NOT use for UX/wireframes (use /forge-ux).
-  Usage: /forge-architect
+  FORGE Architect Agent -- Generates or updates the technical architecture document.
+  Produces docs/architecture.md. Requires docs/prd.md.
+  Use when: "design the system", "technical architecture", "define the tech stack",
+  "choose the database", "API design", "system design", "architecture decision".
 ---
 
 # /forge-architect — FORGE Architect Agent

@@ -1,14 +1,10 @@
 ---
 name: forge-build
 description: >
-  FORGE Dev Agent — Implements a user story with TDD (unit + functional tests).
-  Use when the user says "implement STORY-XXX", "code this feature", "build the story",
-  "write the code for", "implement the authentication module", "develop this story",
-  or when forge-auto delegates a story implementation. Requires a story file in docs/stories/.
-  Do NOT use for code review (use /forge-review), QA/testing (use /forge-verify),
-  planning (use /forge-plan), architecture (use /forge-architect),
-  or small bug fixes (use /forge-quick-spec).
-  Usage: /forge-build or /forge-build STORY-XXX
+  FORGE Dev Agent -- Implements a user story with TDD (unit + functional tests).
+  Use when: "implement STORY-XXX", "code this feature", "build the story",
+  "write the code for", "develop this story", or when forge-auto delegates.
+  Requires a story file in docs/stories/.
 ---
 
 # /forge-build — FORGE Dev Agent

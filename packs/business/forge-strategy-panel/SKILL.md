@@ -1,14 +1,10 @@
 ---
 name: forge-strategy-panel
 description: >
-  FORGE Strategy Panel — Multi-expert business strategy panel synthesizing Christensen, Porter, Drucker,
-  Godin, Kim & Mauborgne, Collins, Taleb, Meadows, and Doumont. Supports sequential, debate, and Socratic modes.
-  Use when the user says "strategy panel", "multi-expert analysis", "business debate",
-  "strategic analysis", "should we pivot", "evaluate this business model", "challenge my strategy",
-  "expert panel", "Socratic analysis", or wants multiple strategic perspectives on a business decision.
-  Do NOT use for single-perspective market research (use /forge-business-strategy).
-  Do NOT use for code review (use /forge-review). Do NOT use for multi-agent code analysis (use /forge-party).
-  Usage: /forge-strategy-panel or via FORGE router
+  Multi-expert business strategy panel -- Christensen, Porter, Drucker, Godin, Kim & Mauborgne,
+  Collins, Taleb, Meadows, Doumont. Sequential, debate, and Socratic modes.
+  Use when: "strategy panel", "multi-expert analysis", "business debate",
+  "strategic analysis", "evaluate this business model", "expert panel".
 ---
 
 # Business Panel Expert Personas

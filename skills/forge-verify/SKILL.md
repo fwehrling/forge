@@ -1,13 +1,10 @@
 ---
 name: forge-verify
 description: >
-  FORGE QA Agent (TEA) — Audits Dev tests, fills gaps, and certifies a story as production-ready.
-  Use when the user says "verify STORY-XXX", "QA this story", "audit the tests", "certify the story",
+  FORGE QA Agent (TEA) -- Audits Dev tests, fills gaps, and certifies a story as production-ready.
+  Use when: "verify STORY-XXX", "QA this story", "audit the tests", "certify the story",
   "check test coverage", "run QA", "is this story ready", or when forge-auto delegates QA.
-  This is the formal certification process — it requires a story file and produces a PASS/FAIL verdict.
-  Do NOT use for quick test runs without story context (use /forge-quick-test instead).
-  Do NOT use for code review (use /forge-review). Do NOT use for security audit (use /forge-audit).
-  Usage: /forge-verify or /forge-verify STORY-XXX
+  Produces a PASS/FAIL verdict. Requires a story file in docs/stories/.
 ---
 
 # /forge-verify — FORGE QA Agent

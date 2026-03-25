@@ -1,15 +1,10 @@
 ---
 name: forge-legal
 description: >
-  FORGE Legal Agent — Expert juridique e-commerce et auto-entreprise (micro-entreprise) en France.
-  Specialise en droit de la consommation, RGPD, CGV/CGU, mentions legales, fiscalite auto-entrepreneur,
-  declarations URSSAF, TVA, propriete intellectuelle, et conformite reglementaire des sites marchands.
-  Use when the user says "RGPD", "CGV", "mentions legales", "auto-entrepreneur", "micro-entreprise",
-  "TVA", "URSSAF", "droit de retractation", "politique de confidentialite", "cookies",
-  "conformite juridique", "e-commerce law", "compliance", or wants legal guidance for French e-commerce.
-  Do NOT use for security audit (use /forge-security-pro or /forge-audit).
-  Do NOT use for business strategy (use /forge-business-strategy).
-  Usage: /forge-legal or via FORGE router
+  Expert juridique e-commerce & auto-entreprise France -- RGPD, CGV/CGU, mentions legales,
+  fiscalite auto-entrepreneur, URSSAF, TVA, conformite sites marchands.
+  Use when: "RGPD", "CGV", "mentions legales", "auto-entrepreneur", "micro-entreprise",
+  "TVA", "URSSAF", "conformite juridique", "e-commerce law".
 ---
 
 # Expert Juridique E-commerce & Auto-Entreprise

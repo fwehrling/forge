@@ -1,15 +1,10 @@
 ---
 name: forge-stories
 description: >
-  FORGE SM Agent (Scrum Master) — Decomposes requirements into implementable user stories
-  with acceptance criteria and test specifications.
-  Use when the user says "break down into stories", "create user stories", "sprint planning",
-  "decompose the features", "task breakdown", "split into stories", "write the stories",
-  or wants to go from architecture to actionable development tasks.
-  Produces docs/stories/STORY-XXX-*.md files. Requires docs/prd.md and docs/architecture.md.
-  Do NOT use for writing requirements (use /forge-plan).
-  Do NOT use for implementing stories (use /forge-build).
-  Usage: /forge-stories
+  FORGE SM Agent (Scrum Master) -- Decomposes requirements into implementable user stories
+  with acceptance criteria and test specifications. Produces docs/stories/STORY-XXX-*.md.
+  Use when: "break down into stories", "create user stories", "sprint planning",
+  "task breakdown", "split into stories". Requires docs/prd.md and docs/architecture.md.
 ---
 
 # /forge-stories — FORGE Scrum Master Agent

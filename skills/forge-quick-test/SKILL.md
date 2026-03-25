@@ -1,14 +1,10 @@
 ---
 name: forge-quick-test
 description: >
-  FORGE Quick QA — Zero-config testing with automatic framework detection. Lightweight alternative to /forge-verify.
-  Use when the user says "run the tests", "do the tests pass", "check if anything is broken",
-  "quick test", "test suite", "run jest/vitest/pytest", or wants to run existing tests without
-  story context or formal certification. Auto-detects test framework (jest, vitest, pytest, go test, etc.).
-  No story file required — just discovers and runs tests.
-  Do NOT use for formal story certification with verdicts (use /forge-verify which requires a story).
-  Do NOT use for writing new tests (use /forge-build which writes tests alongside implementation).
-  Usage: /forge-quick-test
+  Quick QA -- zero-config test runner with auto framework detection.
+  Use when: "run the tests", "do tests pass", "quick test", "check if broken",
+  "test suite", "run jest/vitest/pytest".
+  No story file required -- just discovers and runs tests.
 ---
 
 # /forge-quick-test — FORGE Quick QA

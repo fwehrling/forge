@@ -1,15 +1,10 @@
 ---
 name: forge-debug
 description: >
-  FORGE Debug Agent — Systematic root cause investigation for bugs, test failures, and unexpected behavior.
-  4-phase scientific method: investigate, analyze patterns, form hypothesis, implement fix.
-  Use when the user says "I don't understand why this crashes", "it's broken and I don't know why",
-  "debug this", "find the root cause", "why is this failing", "flaky test", "test keeps failing",
-  "unexpected behavior", "performance issue", "build failure", or when the cause of a bug is unknown.
-  Do NOT use when the user already knows the cause and just wants a fix (use /forge-quick-spec).
-  Do NOT use for code review (use /forge-review). Do NOT use for QA certification (use /forge-verify).
-  Chains to /forge-quick-spec once root cause is identified for implementation + tests + commit.
-  Usage: /forge-debug or via FORGE router
+  FORGE Debug Agent -- Systematic root cause investigation for bugs, test failures,
+  and unexpected behavior. 4-phase scientific method: investigate, analyze, hypothesize, fix.
+  Use when: "debug this", "find the root cause", "why is this failing", "flaky test",
+  "unexpected behavior", "it's broken and I don't know why".
 ---
 
 # FORGE Debug Agent — Systematic Root Cause Investigation
