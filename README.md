@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.6.1-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.6.2-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-24%20core%20%2B%208%20business-orange)](#commands)
@@ -166,7 +166,7 @@ git clone https://github.com/fwehrling/forge.git /tmp/forge
 bash /tmp/forge/install.sh
 ```
 
-The installer copies skills, configures hooks, and optionally sets up vector memory. Then in your project:
+The installer copies skills, configures hooks, and sets up vector memory automatically. Then in your project:
 
 ```bash
 /forge-init
@@ -243,7 +243,9 @@ FORGE adjusts to your project's complexity:
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.6.1**: Hook infrastructure aligned with v1.6.0 token optimization. README rewritten.
+**Latest -- v1.6.2**: Non-interactive install -- vector memory installs automatically without prompts.
+
+**v1.6.1**: Hook infrastructure aligned with v1.6.0 token optimization. README rewritten.
 
 **v1.6.0**: Major token optimization (-72% per session). Router slimmed 87%, all descriptions reduced 65%, triple-routing eliminated, hooks unified.
 
