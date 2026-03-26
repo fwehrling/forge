@@ -5,6 +5,13 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.2] - 2026-03-26
+
+### Changed
+
+- **Non-interactive install**: `install.sh` now installs vector memory automatically without prompting. The interactive confirmation was removed -- vector memory is part of the standard install
+- **`setup.sh --auto` flag**: `forge-memory/setup.sh` accepts `--auto` to skip the initial sync confirmation prompt. Interactive mode is preserved when the script is called standalone (without `--auto`)
+
 ## [1.6.1] - 2026-03-25
 
 ### Fixed
@@ -286,6 +293,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.6.2]: https://github.com/fwehrling/forge/releases/tag/v1.6.2
 [1.6.1]: https://github.com/fwehrling/forge/releases/tag/v1.6.1
 [1.6.0]: https://github.com/fwehrling/forge/releases/tag/v1.6.0
 [1.5.6]: https://github.com/fwehrling/forge/releases/tag/v1.5.6
