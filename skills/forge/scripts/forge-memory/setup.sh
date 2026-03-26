@@ -4,6 +4,10 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 VENV_DIR="${SCRIPT_DIR}/.venv"
+AUTO_MODE=false
+if [[ "${1:-}" == "--auto" ]]; then
+    AUTO_MODE=true
+fi
 
 echo "🧠 FORGE Vector Memory — Installation"
 echo ""
@@ -151,14 +155,19 @@ if [ -n "${PROJECT_ROOT}" ]; then
     fi
 
     if [ "${NEEDS_SYNC}" = true ]; then
-        echo ""
-        read -r -p "→ Run initial sync now? [Y/n] " REPLY
-        REPLY="${REPLY:-Y}"
-        if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+        if [ "${AUTO_MODE}" = true ]; then
             echo ""
             "${WRAPPER}" sync --verbose
         else
-            echo "  Skipped. Run 'forge-memory sync' when ready."
+            echo ""
+            read -r -p "→ Run initial sync now? [Y/n] " REPLY
+            REPLY="${REPLY:-Y}"
+            if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
+                echo ""
+                "${WRAPPER}" sync --verbose
+            else
+                echo "  Skipped. Run 'forge-memory sync' when ready."
+            fi
         fi
     fi
 else

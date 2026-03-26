@@ -179,19 +179,13 @@ check_python() {
     fi
 
     ok "Python ${py_version} detected (via ${py_cmd})"
-    echo ""
-    read -p "$(echo -e "${YELLOW}?${NC}") Install vector memory? (Python venv + ~80 MB model download) [y/N] " answer
-    if [[ "${answer}" =~ ^[Yy]$ ]]; then
-        info "Running forge-memory setup..."
-        if bash "${CLAUDE_DIR}/skills/forge/scripts/forge-memory/setup.sh"; then
-            VECTOR_MEMORY_INSTALLED=true
-            ok "Vector memory installed"
-        else
-            warn "Vector memory setup failed. You can retry later:"
-            warn "  bash ~/.claude/skills/forge/scripts/forge-memory/setup.sh"
-        fi
+    info "Installing vector memory (Python venv + ~80 MB model)..."
+    if bash "${CLAUDE_DIR}/skills/forge/scripts/forge-memory/setup.sh" --auto; then
+        VECTOR_MEMORY_INSTALLED=true
+        ok "Vector memory installed"
     else
-        info "Skipped. Run later: bash ~/.claude/skills/forge/scripts/forge-memory/setup.sh"
+        warn "Vector memory setup failed. You can retry later:"
+        warn "  bash ~/.claude/skills/forge/scripts/forge-memory/setup.sh"
     fi
 }
 
