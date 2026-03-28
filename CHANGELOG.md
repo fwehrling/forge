@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.7] - 2026-03-28
+
+### Added
+
+- **Quick-spec next steps**: `/forge-quick-spec` now suggests `/forge-verify` and `/forge-review` as next steps in its completion report. Previously the quick track ended at commit with no pipeline continuation guidance
+
 ## [1.7.6] - 2026-03-28
 
 ### Changed

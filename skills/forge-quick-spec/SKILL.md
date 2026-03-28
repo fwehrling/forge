@@ -76,4 +76,8 @@ Skips the planning and architecture phases.
 
     Commit proposed:
       fix: <description>
+
+    Next steps:
+      /forge-verify  — QA audit on the changed code
+      /forge-review  — Adversarial code review
     ```
