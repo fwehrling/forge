@@ -49,14 +49,13 @@ Want more control? Every step is a standalone command:
 
 11 specialized agents (Analyst, PM, Architect, UX, Scrum Master, Dev, Debug, QA, Reviewer, Orchestrator, Security) that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
 
-```mermaid
-flowchart LR
-    R["Requirements\nAnalyst + PM"]
-    D["Design\nArchitect + UX"]
-    DEV["Development\nSM + Dev"]
-    Q["Quality\nQA + Review + Deploy"]
-    R ==> D ==> DEV ==> Q
-```
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/pipeline.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/pipeline.svg">
+    <img alt="FORGE Pipeline: Requirements → Design → Development → Quality" src="assets/pipeline.svg" width="700">
+  </picture>
+</p>
 
 ### Memory That Persists
 
