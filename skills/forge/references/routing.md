@@ -53,7 +53,6 @@ Analyze requests along 4 dimensions:
 | Code review, critique | `forge-review` |
 | Security audit (FORGE project) | `forge-audit` |
 | Audit third-party skill | `forge-audit-skill` |
-| Deploy | `forge-deploy` |
 | Full pipeline, autopilot | `forge-auto` |
 | Autonomous loop | `forge-loop` |
 | Multi-perspective (2-3 agents) | `forge-party` |

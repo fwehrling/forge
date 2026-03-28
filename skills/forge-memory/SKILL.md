@@ -1,10 +1,9 @@
 ---
 name: forge-memory
 description: >
-  Vector memory diagnostic and maintenance tool.
-  Use when: "memory status", "reindex memory", "search memory for",
-  "consolidate memory", "reset the vector index", "debug memory".
-  Operations: sync, search, status, reset, log, consolidate.
+  Vector memory diagnostic -- sync, search, status, reset, log, consolidate.
+paths:
+  - ".forge/**"
 ---
 
 # /forge-memory — FORGE Vector Memory

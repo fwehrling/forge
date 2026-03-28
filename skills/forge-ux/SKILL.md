@@ -1,26 +1,29 @@
 ---
 name: forge-ux
 description: >
-  UX design, wireframes, design system, and accessibility guidelines.
-  Use when: "design the UI", "create wireframes", "design system", "UX design",
-  "mockups", "accessibility guidelines", "WCAG compliance", "color palette".
+  UX design, wireframes, design system, accessibility (WCAG).
   Produces docs/ux-design.md. Requires docs/prd.md.
+paths:
+  - ".forge/**"
 ---
 
 # /forge-ux — FORGE UX Agent
 
 You are the FORGE **UX Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/ux.md`.
 
+## Context Cache
+
+Before reading any file, check if it was already loaded earlier in this conversation by a previous skill. If so, reuse that content — do NOT re-read the file. Same for `forge-memory search`: skip if a similar search was already done in this session.
+
 ## Workflow
 
-1. **Load context**:
+1. **Load context** (skip items already in conversation):
    - Read `.forge/memory/MEMORY.md` for project context
    - Read the latest session from `.forge/memory/sessions/` for continuity
    - `forge-memory search "<project domain> UX design" --limit 3`
-     → Load relevant past decisions and context
 
-2. Read `docs/prd.md` for requirements (user stories, personas, functional requirements)
-3. Read `docs/architecture.md` for technical constraints and component structure
+2. Read `docs/prd.md` for requirements — skip if already loaded
+3. Read `docs/architecture.md` for technical constraints — skip if already loaded
 4. If `docs/ux-design.md` exists: Edit/Validate mode
 5. Otherwise: Create mode
    - Define user personas and journeys (from `docs/prd.md` user stories)

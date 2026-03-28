@@ -22,8 +22,9 @@ step()  { echo -e "\n${BOLD}[$1/$TOTAL_STEPS] $2${NC}"; }
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CLAUDE_DIR="${HOME}/.claude"
-TOTAL_STEPS=6
+TOTAL_STEPS=7
 VECTOR_MEMORY_INSTALLED=false
+RTK_INSTALLED=false
 
 # ─── Banner ──────────────────────────────────────────────────────────────────
 
@@ -204,10 +205,68 @@ install_forge_hooks() {
     fi
 }
 
-# ─── [6/6] Verify installation ──────────────────────────────────────────────
+# ─── [6/7] RTK (Token Optimization) ─────────────────────────────────────────
+
+check_rtk() {
+    step 6 "Checking RTK (token optimizer)..."
+
+    if command -v rtk &>/dev/null; then
+        RTK_INSTALLED=true
+        ok "RTK detected ($(rtk --version 2>/dev/null || echo 'installed'))"
+        info "FORGE will use RTK for output compression (60-90% token savings)"
+        return
+    fi
+
+    echo ""
+    info "RTK (Rust Token Killer) compresses command outputs before they reach Claude."
+    info "Reduces token consumption by 60-90% on git, test, build, and lint commands."
+    info "More info: https://github.com/rtk-ai/rtk"
+    echo ""
+
+    if [ -t 0 ]; then
+        printf "  Install RTK? [y/N] "
+        read -r REPLY < /dev/tty
+        case "$REPLY" in
+            [yY]|[yY][eE][sS])
+                if command -v brew &>/dev/null; then
+                    info "Installing via Homebrew..."
+                    if brew install rtk 2>/dev/null; then
+                        RTK_INSTALLED=true
+                        ok "RTK installed via Homebrew"
+                    else
+                        warn "Homebrew install failed. Trying curl..."
+                        if curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh 2>/dev/null; then
+                            RTK_INSTALLED=true
+                            ok "RTK installed via curl"
+                        else
+                            warn "RTK installation failed. Install manually: brew install rtk"
+                        fi
+                    fi
+                else
+                    info "Installing via curl..."
+                    if curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh 2>/dev/null; then
+                        RTK_INSTALLED=true
+                        ok "RTK installed"
+                    else
+                        warn "RTK installation failed. Install manually: https://github.com/rtk-ai/rtk"
+                    fi
+                fi
+                ;;
+            *)
+                info "Skipped. FORGE will use built-in token-saver (less efficient)."
+                info "Install later: brew install rtk"
+                ;;
+        esac
+    else
+        info "Non-interactive mode: skipping RTK installation."
+        info "Install later: brew install rtk"
+    fi
+}
+
+# ─── [7/7] Verify installation ──────────────────────────────────────────────
 
 verify_installation() {
-    step 6 "Verifying installation..."
+    step 7 "Verifying installation..."
 
     local errors=0
 
@@ -220,7 +279,7 @@ verify_installation() {
     fi
 
     # Check key skills
-    for skill in forge-auto forge-build forge-verify forge-plan forge-init forge-ux forge-deploy forge-loop forge-analyze forge-audit forge-quick-test forge-audit-skill forge-stories forge-architect forge-party forge-team forge-memory forge-quick-spec forge-review forge-resume forge-status forge-update; do
+    for skill in forge-auto forge-build forge-verify forge-plan forge-init forge-ux forge-loop forge-analyze forge-audit forge-quick-test forge-audit-skill forge-stories forge-architect forge-party forge-team forge-memory forge-quick-spec forge-review forge-resume forge-status forge-update; do
         if [ -f "${CLAUDE_DIR}/skills/${skill}/SKILL.md" ]; then
             ok "Skill: ${skill}"
         else
@@ -240,7 +299,7 @@ verify_installation() {
     # Check FORGE Hooks
     if [ "${FORGE_HOOKS_INSTALLED:-false}" = true ]; then
         local hooks_ok=true
-        for hook_file in bash-interceptor.js token-saver.sh forge-update-check.sh forge-memory-sync.sh statusline.sh; do
+        for hook_file in bash-interceptor.js token-saver.sh forge-update-check.sh forge-memory-sync.sh; do
             if [ -f "${HOME}/.claude/hooks/${hook_file}" ]; then
                 ok "Hook: ${hook_file}"
             else
@@ -248,6 +307,10 @@ verify_installation() {
                 hooks_ok=false
             fi
         done
+        # statusline.sh is optional
+        if [ -f "${HOME}/.claude/hooks/statusline.sh" ]; then
+            ok "Hook: statusline.sh (optional)"
+        fi
         if [ "$hooks_ok" = true ]; then
             ok "All FORGE hooks installed"
         fi
@@ -275,10 +338,34 @@ print_summary() {
         echo "    ${YELLOW}–${NC} Vector memory (not installed)"
     fi
     if [ "${FORGE_HOOKS_INSTALLED:-false}" = true ]; then
-        echo "    ${GREEN}✓${NC} FORGE Hooks (bash-interceptor, token-saver, update-check, memory-sync, status line)"
+        local sl_status=""
+        if [ -f "${HOME}/.claude/hooks/statusline.sh" ]; then
+            sl_status=", status line"
+        fi
+        echo "    ${GREEN}✓${NC} FORGE Hooks (bash-interceptor, token-saver, update-check, memory-sync${sl_status})"
     else
         echo "    ${YELLOW}--${NC} FORGE Hooks (not installed)"
     fi
+    if [ "$RTK_INSTALLED" = true ]; then
+        echo "    ${GREEN}✓${NC} RTK token optimizer (60-90% output compression)"
+    else
+        echo "    ${YELLOW}--${NC} RTK (not installed -- using built-in token-saver)"
+    fi
+    # Suggest Business Pack if not installed
+    local has_business_pack=false
+    for bp_skill in forge-marketing forge-copywriting forge-seo forge-geo forge-legal forge-security-pro forge-business-strategy forge-strategy-panel; do
+        if [ -d "${CLAUDE_DIR}/skills/${bp_skill}" ]; then
+            has_business_pack=true
+            break
+        fi
+    done
+
+    if [ "$has_business_pack" = false ] && [ -d "${SCRIPT_DIR}/packs/business" ]; then
+        echo ""
+        echo -e "  ${YELLOW}Tip:${NC} FORGE Business Pack available (marketing, SEO, legal, security, strategy)."
+        echo "        Install with: /forge-update --pack business"
+    fi
+
     echo ""
     echo "  Next steps:"
     echo "    1. Open Claude Code in your project"
@@ -296,6 +383,7 @@ main() {
     inject_claude_md
     check_python
     install_forge_hooks
+    check_rtk
     verify_installation
     print_summary
 }

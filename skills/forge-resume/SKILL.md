@@ -1,9 +1,9 @@
 ---
 name: forge-resume
 description: >
-  Resume a FORGE project -- analyzes current state and proposes next steps.
-  Use when: "resume the project", "where did I leave off", "continue development",
-  "pick up where I left off", "what should I do next", "I'm back, what's next".
+  Resume a FORGE project -- analyzes current state, proposes next steps.
+paths:
+  - ".forge/**"
 ---
 
 # /forge-resume — Resume a FORGE Project
@@ -30,9 +30,8 @@ and identifying the next action to take.
      - `pending`: to do
      - `blocked`: blocked (identify blockers)
 
-   - Vector search for recent context:
+   - Vector search for recent context (skip if similar search done in this conversation):
      `forge-memory search "<project name> recent activity" --limit 3`
-     → Load relevant history to better contextualize the resume
 
 3. **Determine the next action**:
 

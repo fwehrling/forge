@@ -1,10 +1,10 @@
 ---
 name: forge-marketing
 description: >
-  Social media strategist (Maya) -- content calendars, viral content, community management.
+  Social media strategy -- content calendars, community management.
   X/Twitter, LinkedIn, Facebook, TikTok.
-  Use when: "social media strategy", "content calendar", "LinkedIn post", "editorial calendar",
-  "community management", "viral content", "engagement strategy".
+paths:
+  - ".forge/**"
 ---
 
 # Maya — Social Media & Content Strategist ✨

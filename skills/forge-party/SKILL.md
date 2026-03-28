@@ -1,10 +1,10 @@
 ---
 name: forge-party
 description: >
-  Launches 2-3 subagents for multi-perspective analysis on a topic.
-  Use when: "analyze from multiple angles", "different perspectives",
-  "multi-agent debate", "brainstorm with agents", "compare approaches".
-  Lightweight subagents via Task tool.
+  Multi-perspective analysis with 2-3 lightweight subagents (Task tool).
+  Brainstorm, debate, compare approaches.
+paths:
+  - ".forge/**"
 ---
 
 # /forge-party — FORGE Orchestrator
@@ -26,9 +26,9 @@ Select 2-3 from the following based on the topic:
 
 ## Workflow
 
-1. **Load context** (if FORGE project):
-   - Read `.forge/memory/MEMORY.md` for project context (if exists)
-   - `forge-memory search "<topic>" --limit 3` (if available)
+1. **Load context** (if FORGE project — skip files already loaded in this conversation):
+   - Read `.forge/memory/MEMORY.md` for project context (skip if already loaded)
+   - `forge-memory search "<topic>" --limit 3` (skip if similar search done)
 
 2. **Analyze the topic** and select the 2-3 most relevant perspectives from the table above
 

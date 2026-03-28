@@ -1,10 +1,10 @@
 ---
 name: forge-auto
 description: >
-  FORGE Autopilot -- Intelligent autonomous mode that orchestrates all agents sequentially
-  until completion, with configurable checkpoints for human review.
-  Use when: "run everything automatically", "full pipeline", "just build it",
-  "do it all", "autopilot", "build the whole project end to end", "autonomous mode".
+  Autopilot -- orchestrates all agents sequentially with checkpoints.
+  Full pipeline, autonomous mode, end-to-end build.
+paths:
+  - ".forge/**"
 ---
 
 # /forge-auto — FORGE Autopilot Mode
@@ -21,13 +21,12 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
 
 ## Workflow
 
-1. **Load memory**:
+1. **Load memory** (skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context
    - Read the latest session from `.forge/memory/sessions/` for continuity
    - Read `.forge/sprint-status.yaml` for the current state
    - Read `.forge/config.yml` for configuration
-   - `forge-memory search "<current objective>" --limit 3`
-     → Load relevant past decisions and context
+   - `forge-memory search "<current objective>" --limit 3` — skip if similar search done
 
 2. **Analyze state and determine the phase**:
 
@@ -47,7 +46,7 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
    - **QA verdict = PASS or CONCERNS** → Launch `/forge-review` on the story's source code (adversarial analysis)
    - **Review raises CRITICAL issues** → Fix, re-run `/forge-verify`, re-run `/forge-review`
    - **Review is clean** → Move to the next story
-   - **All stories completed** → Propose `/forge-deploy` or new stories
+   - **All stories completed** → Propose new stories or wrap up
 
 3. **Execute with the appropriate agents**:
    - Each phase invokes the corresponding agent (PM, Architect, UX, SM, Dev, QA)

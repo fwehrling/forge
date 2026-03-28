@@ -1,10 +1,9 @@
 ---
 name: forge-audit
 description: >
-  Threat modeling, OWASP audit, and compliance checks (Enterprise track).
-  Use when: "security audit", "OWASP check", "threat modeling",
-  "check for vulnerabilities", "compliance audit", "GDPR compliance",
-  "security review". Produces docs/security.md.
+  Threat modeling, OWASP audit, compliance checks. Produces docs/security.md.
+paths:
+  - ".forge/**"
 ---
 
 # /forge-audit — FORGE Security Agent
@@ -13,16 +12,19 @@ You are the FORGE **Security Agent**. Load the full persona from `~/.claude/skil
 
 **Note**: This agent is part of the **Enterprise track** only. For Quick and Standard tracks, security considerations are handled by the Architect and QA agents.
 
+## Context Cache
+
+Before reading any file, check if it was already loaded earlier in this conversation by a previous skill. If so, reuse that content — do NOT re-read the file. Same for `forge-memory search`: skip if a similar search was already done in this session.
+
 ## Workflow
 
-1. **Load context**:
+1. **Load context** (skip items already in conversation):
    - Read `.forge/memory/MEMORY.md` for project context
    - Read the latest session from `.forge/memory/sessions/` for continuity
    - `forge-memory search "<project domain> security threats" --limit 3`
-     → Load relevant past decisions and context
 
-2. Read `docs/architecture.md` for system design and attack surface
-3. Read `docs/prd.md` for data sensitivity and compliance requirements
+2. Read `docs/architecture.md` for system design — skip if already loaded
+3. Read `docs/prd.md` for data sensitivity — skip if already loaded
 4. If `docs/security.md` exists: Edit/Validate mode
 5. Otherwise: Create mode
    - **Threat modeling**: STRIDE analysis, attack surface mapping, trust boundaries

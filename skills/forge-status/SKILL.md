@@ -1,10 +1,9 @@
 ---
 name: forge-status
 description: >
-  Sprint status dashboard -- stories, metrics, and progress overview.
-  Use when: "sprint status", "how is the sprint going", "what stories are done",
-  "project progress", "which story is next", "sprint metrics", "what's blocked".
-  Reads .forge/sprint-status.yaml.
+  Sprint dashboard -- stories, metrics, progress. Reads .forge/sprint-status.yaml.
+paths:
+  - ".forge/**"
 ---
 
 # /forge-status — FORGE Sprint Status

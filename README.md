@@ -2,10 +2,10 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.6.2-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.7.0-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
-[![Skills](https://img.shields.io/badge/skills-24%20core%20%2B%208%20business-orange)](#commands)
+[![Skills](https://img.shields.io/badge/skills-23%20core%20%2B%208%20business-orange)](#commands)
 
 > **Stop prompting. Start shipping.**
 > FORGE turns Claude Code into a team of AI agents that plan, build, test, review, and deploy your project -- while you focus on decisions that matter.
@@ -14,7 +14,7 @@
 "Build a SaaS with auth, payments, and a dashboard"
 ```
 
-One sentence. FORGE breaks it into requirements, architecture, stories, code, tests, and deploys it. Each phase has a specialized agent. Artifacts flow from one to the next. Nothing gets lost.
+One sentence. FORGE breaks it into requirements, architecture, stories, code, and tests. Each phase has a specialized agent. Artifacts flow from one to the next. Nothing gets lost.
 
 ---
 
@@ -29,7 +29,7 @@ git clone https://github.com/fwehrling/forge.git /tmp/forge && bash /tmp/forge/i
 /forge-auto "Build a REST API with JWT auth"   # Full pipeline, autopilot
 ```
 
-That's it. FORGE handles the rest: requirements, architecture, stories, TDD implementation, QA, and deployment.
+That's it. FORGE handles the rest: requirements, architecture, stories, TDD implementation, and QA.
 
 Want more control? Every step is a standalone command:
 
@@ -47,7 +47,7 @@ Want more control? Every step is a standalone command:
 
 ### AI Agents That Actually Collaborate
 
-12 specialized agents (Analyst, PM, Architect, UX, Scrum Master, Dev, Debug, QA, Reviewer, Orchestrator, DevOps, Security) that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
+11 specialized agents (Analyst, PM, Architect, UX, Scrum Master, Dev, Debug, QA, Reviewer, Orchestrator, Security) that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
 
 ```mermaid
 flowchart LR
@@ -71,14 +71,17 @@ FORGE remembers everything across sessions. Two-layer system: Markdown files for
 
 ### Built-In Token Optimization
 
-Shell output wastes tokens. FORGE intercepts verbose commands and filters them automatically:
+Shell output wastes tokens. FORGE intercepts verbose commands and compresses them automatically. With [RTK](https://github.com/rtk-ai/rtk) (optional, proposed at install):
 
 | Command | Before | After | Savings |
 |---------|--------|-------|---------|
 | `npm test` (713 tests) | 52 KB | 1 KB | **-97%** |
 | `git diff` (20 commits) | 420 KB | 7 KB | **-98%** |
+| `git status/add/commit/push` | verbose | 1-2 lines | **-92%** |
 
-Zero config. Works with git, npm, pnpm, yarn, pip, pytest, cargo, go, docker, make, mvn, gradle, dotnet, swift, tsc.
+Zero config. RTK provides 60-90% compression on 50+ commands. Falls back to built-in `token-saver.sh` if RTK is not installed.
+
+Skills use `paths` frontmatter to load only in FORGE projects -- zero token cost in non-FORGE sessions.
 
 ### Beyond Code
 
@@ -129,7 +132,6 @@ Install with: `/forge-update --pack business`
 | `/forge-build` | Dev | Source + tests (TDD) |
 | `/forge-debug` | Debug | Root cause + fix |
 | `/forge-verify` | QA | Verdict (PASS/FAIL) |
-| `/forge-deploy` | DevOps | Deployed app |
 
 ### Tools
 
@@ -158,6 +160,7 @@ Install with: `/forge-update --pack business`
 - Git
 - macOS, Linux, or Windows (via WSL)
 - Python 3.9+ (optional -- for vector memory)
+- [RTK](https://github.com/rtk-ai/rtk) (optional -- for 60-90% token compression, proposed at install)
 
 ### Quick Install
 
@@ -195,7 +198,7 @@ your-project/
   CLAUDE.md              # Project conventions (auto-generated)
 
 ~/.claude/
-  skills/forge-*/        # 24 core skills (+ 8 business pack)
+  skills/forge-*/        # 23 core skills (+ 8 business pack)
   hooks/
     bash-interceptor.js  # Security + token optimization
     token-saver.sh       # Output filtering
@@ -243,11 +246,9 @@ FORGE adjusts to your project's complexity:
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.6.2**: Non-interactive install -- vector memory installs automatically without prompts.
+**Latest -- v1.7.0**: RTK integration (60-90% output compression), `paths` frontmatter (skills load only in FORGE projects), descriptions reduced 61%, context cache, `forge-deploy` removed.
 
-**v1.6.1**: Hook infrastructure aligned with v1.6.0 token optimization. README rewritten.
-
-**v1.6.0**: Major token optimization (-72% per session). Router slimmed 87%, all descriptions reduced 65%, triple-routing eliminated, hooks unified.
+**v1.6.x**: Non-interactive install, hook infrastructure aligned, token optimization (-72%).
 
 **v1.5.0**: Business Pack (8 skills), Debug agent, Resolution Cascade.
 

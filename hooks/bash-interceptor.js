@@ -3,7 +3,9 @@
  * bash-interceptor.js — Unified PreToolUse hook for Bash
  *
  * Combines command validation (block dangerous commands) and
- * output filtering (rewrite verbose commands through token-saver.sh).
+ * output filtering (rewrite verbose commands through RTK or token-saver.sh).
+ *
+ * Priority: RTK (if installed) > token-saver.sh (fallback)
  *
  * Exit 0 = allow (with optional rewrite via stdout JSON)
  * Exit 2 = block (reason on stderr)
@@ -11,8 +13,22 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const TOKEN_SAVER = path.join(process.env.HOME, '.claude', 'hooks', 'token-saver.sh');
+
+// --- Detect RTK (cached for process lifetime) ---
+
+let _rtkPath = undefined;
+function getRtkPath() {
+  if (_rtkPath !== undefined) return _rtkPath;
+  try {
+    _rtkPath = execSync('which rtk', { encoding: 'utf8', timeout: 500 }).trim();
+  } catch {
+    _rtkPath = null;
+  }
+  return _rtkPath;
+}
 
 // --- BLOCKED PATTERNS (dangerous commands) ---
 
@@ -43,10 +59,12 @@ const BLOCKED_PATTERNS = [
   /ssh.*rm\s+-rf/i,
 ];
 
-// --- FILTERED COMMANDS (rewrite through token-saver) ---
+// --- FILTERED COMMANDS (rewrite through RTK or token-saver) ---
 
 const FILTERED_COMMANDS = new Set([
   'git status', 'git diff', 'git log',
+  'git add', 'git commit', 'git push', 'git pull', 'git fetch',
+  'git checkout', 'git merge', 'git rebase',
   'npm test', 'npm install', 'npx jest', 'npx vitest',
   'pnpm test', 'pnpm install', 'pnpm add', 'pnpm run',
   'yarn test', 'yarn install',
@@ -95,12 +113,21 @@ if (require.main === module) {
       }
     }
 
-    // Step 2: Rewrite verbose commands through token-saver
+    // Step 2: Rewrite verbose commands for token optimization
     if (shouldFilter(command)) {
-      const escaped = command.replace(/'/g, "'\\''");
-      process.stdout.write(JSON.stringify({
-        updatedInput: { command: `${TOKEN_SAVER} '${escaped}'` }
-      }));
+      const rtk = getRtkPath();
+      if (rtk) {
+        // RTK handles compression natively -- prefix with rtk
+        process.stdout.write(JSON.stringify({
+          updatedInput: { command: `rtk ${command}` }
+        }));
+      } else {
+        // Fallback to token-saver.sh
+        const escaped = command.replace(/'/g, "'\\''");
+        process.stdout.write(JSON.stringify({
+          updatedInput: { command: `${TOKEN_SAVER} '${escaped}'` }
+        }));
+      }
     }
 
     process.exit(0);

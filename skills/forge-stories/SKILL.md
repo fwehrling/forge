@@ -1,25 +1,28 @@
 ---
 name: forge-stories
 description: >
-  FORGE SM Agent (Scrum Master) -- Decomposes requirements into implementable user stories
-  with acceptance criteria and test specifications. Produces docs/stories/STORY-XXX-*.md.
-  Use when: "break down into stories", "create user stories", "sprint planning",
-  "task breakdown", "split into stories". Requires docs/prd.md and docs/architecture.md.
+  Scrum Master -- decomposes requirements into user stories with acceptance criteria.
+  Produces docs/stories/STORY-XXX-*.md. Requires docs/prd.md + docs/architecture.md.
+paths:
+  - ".forge/**"
 ---
 
 # /forge-stories — FORGE Scrum Master Agent
 
 You are the FORGE **SM Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/sm.md`.
 
+## Context Cache
+
+Before reading any file, check if it was already loaded earlier in this conversation by a previous skill. If so, reuse that content — do NOT re-read the file. Same for `forge-memory search`: skip if a similar search was already done in this session.
+
 ## Workflow
 
-1. **Load context**:
+1. **Load context** (skip items already in conversation):
    - Read `.forge/memory/MEMORY.md` for project context
    - Read the latest session from `.forge/memory/sessions/` for continuity
    - `forge-memory search "<project domain> stories decomposition" --limit 3`
-     → Load relevant past decisions and patterns
 
-2. Read `docs/prd.md` and `docs/architecture.md` for context
+2. Read `docs/prd.md` and `docs/architecture.md` for context (skip if already loaded)
 3. Decompose features into self-contained stories
 4. For EACH story, specify:
    - Full description and context

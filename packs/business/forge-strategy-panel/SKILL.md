@@ -1,10 +1,10 @@
 ---
 name: forge-strategy-panel
 description: >
-  Multi-expert business strategy panel -- Christensen, Porter, Drucker, Godin, Kim & Mauborgne,
-  Collins, Taleb, Meadows, Doumont. Sequential, debate, and Socratic modes.
-  Use when: "strategy panel", "multi-expert analysis", "business debate",
-  "strategic analysis", "evaluate this business model", "expert panel".
+  Multi-expert strategy panel (Porter, Christensen, Drucker, Godin...).
+  Sequential, debate, and Socratic modes.
+paths:
+  - ".forge/**"
 ---
 
 # Business Panel Expert Personas

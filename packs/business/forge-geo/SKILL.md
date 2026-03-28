@@ -1,10 +1,10 @@
 ---
 name: forge-geo
 description: >
-  GEO/LLMO expert -- AI search visibility across ChatGPT, Perplexity, Claude, Google AI Overviews, Gemini.
-  Content optimization for LLM extraction, AI crawler management, offsite GEO tactics.
-  Use when: "AI search optimization", "GEO", "LLMO", "Perplexity optimization",
-  "ChatGPT visibility", "AI Overview", "AI crawler", "generative search".
+  GEO/LLMO -- AI search visibility (ChatGPT, Perplexity, Claude, Google AI Overviews).
+  LLM content optimization, AI crawler management.
+paths:
+  - ".forge/**"
 ---
 
 # GEO & AI Search Visibility Expert

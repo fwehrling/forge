@@ -1,10 +1,11 @@
 ---
 name: forge-build
 description: >
-  FORGE Dev Agent -- Implements a user story with TDD (unit + functional tests).
-  Use when: "implement STORY-XXX", "code this feature", "build the story",
-  "write the code for", "develop this story", or when forge-auto delegates.
+  Dev Agent -- implements a user story with TDD (unit + functional tests).
   Requires a story file in docs/stories/.
+paths:
+  - ".forge/**"
+  - "docs/stories/**"
 ---
 
 # /forge-build — FORGE Dev Agent
@@ -30,12 +31,11 @@ You are the FORGE **Dev Agent**. Load the full persona from `~/.claude/skills/fo
      - **Reference**: `~/.claude/skills/forge/references/ai-design-optimization.md` for YC-standard design patterns
    - This is a suggestion, not mandatory — the user decides
 
-3. **Load context**:
+3. **Load context** (skip files already loaded in this conversation):
    - Read the full story file
-   - Read `docs/architecture.md` (section 2.4 Design System)
-   - Read `.forge/config.yml` section `design:`
-   - `forge-memory search "<story title> <AC keywords>" --limit 3`
-   - Load relevant past decisions, patterns, and blockers as additional context
+   - Read `docs/architecture.md` (section 2.4 Design System) — skip if already loaded
+   - Read `.forge/config.yml` section `design:` — skip if already loaded
+   - `forge-memory search "<story title> <AC keywords>" --limit 3` — skip if similar search done
 
 4. **Write unit tests** (TDD):
    - 1 test file per module/component in `tests/unit/<module>/`
