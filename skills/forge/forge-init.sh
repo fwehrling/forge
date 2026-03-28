@@ -226,7 +226,6 @@ if [ ! -f "${PROJECT_PATH}/CLAUDE.md" ]; then
 - \`/forge-build\` — Implement current story (Dev agent)
 - \`/forge-loop "task"\` — Autonomous iteration loop
 - \`/forge-verify\` — Run tests and validation (QA agent)
-- \`/forge-deploy\` — Deploy to configured environment
 - \`/forge-status\` — Project status overview
 - \`/forge-audit\` — Security audit (Security agent)
 

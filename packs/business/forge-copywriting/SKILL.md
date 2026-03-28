@@ -1,10 +1,10 @@
 ---
 name: forge-copywriting
 description: >
-  Copywriter & conversion optimizer (Theo) -- landing pages, email funnels, A/B testing.
-  Frameworks AIDA, PAS, Before/After/Bridge.
-  Use when: "landing page copy", "email sequence", "conversion optimization", "sales copy",
-  "copywriting", "CTA optimization", "microcopy".
+  Copywriting & conversion -- landing pages, email funnels, A/B testing.
+  Frameworks: AIDA, PAS, Before/After/Bridge.
+paths:
+  - ".forge/**"
 ---
 
 # Théo — Copywriter & Conversion Optimizer ✍️

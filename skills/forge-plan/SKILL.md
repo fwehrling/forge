@@ -1,22 +1,24 @@
 ---
 name: forge-plan
 description: >
-  FORGE PM Agent -- Generates or validates the Product Requirements Document (PRD).
-  First planning step in the pipeline, produces docs/prd.md.
-  Use when: "write the requirements", "define what we're building", "create the PRD",
-  "product requirements", "plan the product", "spec out the project".
+  PM Agent -- generates or validates the PRD. Produces docs/prd.md.
+paths:
+  - ".forge/**"
 ---
 
 # /forge-plan — FORGE PM Agent
 
 You are the FORGE **PM Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/pm.md`.
 
+## Context Cache
+
+Before reading any file, check if it was already loaded earlier in this conversation by a previous skill. If so, reuse that content — do NOT re-read the file. Same for `forge-memory search`: skip if a similar search was already done in this session.
+
 ## Workflow
 
-1. **Load context**:
-   - Read `docs/analysis.md` if it exists
-   - `forge-memory search "<objective or domain keywords>" --limit 3`
-   - Load relevant past decisions, constraints, and patterns
+1. **Load context** (skip items already in conversation):
+   - Read `docs/analysis.md` if it exists — skip if already loaded
+   - `forge-memory search "<objective or domain keywords>" --limit 3` — skip if similar search done
 
 2. **Determine mode**:
    - If `docs/prd.md` exists and `--validate` flag: check consistency and completeness

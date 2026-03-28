@@ -36,7 +36,9 @@ cat > "$HOOKS_DIR/bash-interceptor.js" << 'INTERCEPTOREOF'
  * bash-interceptor.js — Unified PreToolUse hook for Bash
  *
  * Combines command validation (block dangerous commands) and
- * output filtering (rewrite verbose commands through token-saver.sh).
+ * output filtering (rewrite verbose commands through RTK or token-saver.sh).
+ *
+ * Priority: RTK (if installed) > token-saver.sh (fallback)
  *
  * Exit 0 = allow (with optional rewrite via stdout JSON)
  * Exit 2 = block (reason on stderr)
@@ -44,8 +46,22 @@ cat > "$HOOKS_DIR/bash-interceptor.js" << 'INTERCEPTOREOF'
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const TOKEN_SAVER = path.join(process.env.HOME, '.claude', 'hooks', 'token-saver.sh');
+
+// --- Detect RTK (cached for process lifetime) ---
+
+let _rtkPath = undefined;
+function getRtkPath() {
+  if (_rtkPath !== undefined) return _rtkPath;
+  try {
+    _rtkPath = execSync('which rtk', { encoding: 'utf8', timeout: 500 }).trim();
+  } catch {
+    _rtkPath = null;
+  }
+  return _rtkPath;
+}
 
 // --- BLOCKED PATTERNS (dangerous commands) ---
 
@@ -76,10 +92,12 @@ const BLOCKED_PATTERNS = [
   /ssh.*rm\s+-rf/i,
 ];
 
-// --- FILTERED COMMANDS (rewrite through token-saver) ---
+// --- FILTERED COMMANDS (rewrite through RTK or token-saver) ---
 
 const FILTERED_COMMANDS = new Set([
   'git status', 'git diff', 'git log',
+  'git add', 'git commit', 'git push', 'git pull', 'git fetch',
+  'git checkout', 'git merge', 'git rebase',
   'npm test', 'npm install', 'npx jest', 'npx vitest',
   'pnpm test', 'pnpm install', 'pnpm add', 'pnpm run',
   'yarn test', 'yarn install',
@@ -128,12 +146,21 @@ if (require.main === module) {
       }
     }
 
-    // Step 2: Rewrite verbose commands through token-saver
+    // Step 2: Rewrite verbose commands for token optimization
     if (shouldFilter(command)) {
-      const escaped = command.replace(/'/g, "'\\''");
-      process.stdout.write(JSON.stringify({
-        updatedInput: { command: `${TOKEN_SAVER} '${escaped}'` }
-      }));
+      const rtk = getRtkPath();
+      if (rtk) {
+        // RTK handles compression natively -- prefix with rtk
+        process.stdout.write(JSON.stringify({
+          updatedInput: { command: `rtk ${command}` }
+        }));
+      } else {
+        // Fallback to token-saver.sh
+        const escaped = command.replace(/'/g, "'\\''");
+        process.stdout.write(JSON.stringify({
+          updatedInput: { command: `${TOKEN_SAVER} '${escaped}'` }
+        }));
+      }
     }
 
     process.exit(0);
@@ -150,6 +177,7 @@ echo "    Created bash-interceptor.js"
 cat > "$HOOKS_DIR/token-saver.sh" << 'SAVEREOF'
 #!/usr/bin/env bash
 # Token Saver -- Execute command and filter verbose output
+# Fallback for when RTK is not installed.
 #
 # Usage: token-saver.sh '<command>'
 # Executes the command, filters output based on known patterns,
@@ -167,11 +195,12 @@ if [ -z "$CMD" ]; then
 fi
 
 # Execute command, capture output and exit code
-OUTPUT=$(eval "$CMD" 2>&1)
+OUTPUT=$(bash -c "$CMD" 2>&1)
 EXIT_CODE=$?
 
 # Short output -- no point filtering
-if [ ${#OUTPUT} -lt 80 ]; then
+LINE_COUNT=$(printf '%s\n' "$OUTPUT" | wc -l)
+if [ "$LINE_COUNT" -lt 5 ]; then
   printf '%s\n' "$OUTPUT"
   exit $EXIT_CODE
 fi
@@ -195,12 +224,23 @@ case "$KEY" in
     fi
     ;;
   git:log)
-    FILTERED=$(printf '%s\n' "$OUTPUT" | awk '/^commit [0-9a-f]+/{print;t=1;next} /^(Author|Date):/{next} /^$/{next} t&&/^    /{sub(/^    /,"  ");print;t=0;next}')
+    # Keep commit hash + date + message (one-line format)
+    FILTERED=$(printf '%s\n' "$OUTPUT" | awk '
+      /^commit [0-9a-f]+/{hash=$2; next}
+      /^Date:/{gsub(/^Date:\s+/,""); date=$0; next}
+      /^Author:/{next}
+      /^$/{next}
+      /^    /{sub(/^    /,""); if(hash){printf "%s %s %s\n",substr(hash,1,7),date,$0; hash=""}}
+    ')
+    ;;
+  git:add|git:commit|git:push|git:pull|git:fetch|git:checkout|git:merge|git:rebase)
+    # Ultra-compact: just summary lines
+    FILTERED=$(printf '%s\n' "$OUTPUT" | grep -vE '(^\s*$|^remote:|Counting|Compressing|Writing|Total|Resolving|Unpacking)' | head -n 10)
     ;;
   npm:test|npx:jest|npx:vitest|pnpm:test|pnpm:run|yarn:test|bun:test)
     FILTERED=$(printf '%s\n' "$OUTPUT" | grep -E '(^PASS |^FAIL |Test Suites:|Tests:|Snapshots:|Time:|Test Files|Duration|^TOTAL|^ERR!|ELIFECYCLE|exit code)')
     if printf '%s\n' "$OUTPUT" | grep -qE '(^FAIL |Tests:.*failed|Test Suites:.*failed)'; then
-      FAIL_DETAILS=$(printf '%s\n' "$OUTPUT" | grep -E '(Expected:|Received:|at Object|> [0-9]+ \||^\s+\^|FAIL )' | head -n 60)
+      FAIL_DETAILS=$(printf '%s\n' "$OUTPUT" | grep -E '(Expected:|Received:|at Object|> [0-9]+ \||^\s+\^|FAIL |● )' | head -n 60)
       if [ -n "$FAIL_DETAILS" ]; then
         FILTERED="$FILTERED
 $FAIL_DETAILS"
@@ -261,7 +301,6 @@ esac
 # Fallback: if filter produced empty output, return original (fail open)
 if [ -z "$FILTERED" ]; then
   printf '%s\n' "$OUTPUT"
-  echo "[token-saver] filter returned empty -- showing full output" >&2
 else
   printf '%s\n' "$FILTERED"
 fi
@@ -364,6 +403,50 @@ echo "    Created forge-memory-sync.sh"
 # ═══════════════════════════════════════════════════════════════════════════════
 # 5. statusline.sh — FORGE status line indicator
 # ═══════════════════════════════════════════════════════════════════════════════
+INSTALL_STATUSLINE=false
+
+# Check if user already has a non-FORGE statusLine configured
+EXISTING_STATUSLINE=""
+if [ -f "$SETTINGS" ]; then
+  EXISTING_STATUSLINE=$(node -e "
+    const s = JSON.parse(require('fs').readFileSync('$SETTINGS', 'utf8'));
+    if (s.statusLine && s.statusLine.command && !s.statusLine.command.includes('statusline.sh')) {
+      process.stdout.write(s.statusLine.command);
+    }
+  " 2>/dev/null || true)
+fi
+
+# Show what the status line provides and ask
+echo ""
+echo "  FORGE Status Line (optional):"
+echo "    Adds a persistent indicator in the Claude Code terminal bar:"
+echo "    [Model] FORGE project-name | CTX:42% | 5h:67% (reset 2h30m) | 7d:12% (reset 5d3h)"
+echo "    - Model name and project detection"
+echo "    - FORGE marker when .forge/ is detected"
+echo "    - Context window usage (with warning at 30%/50%)"
+echo "    - Rate limits: 5-hour and 7-day windows with reset countdown"
+echo ""
+
+if [ -n "$EXISTING_STATUSLINE" ]; then
+  echo "    Note: You already have a status line configured:"
+  echo "      $EXISTING_STATUSLINE"
+  echo "    Installing FORGE status line will replace it."
+  echo ""
+fi
+
+# Interactive prompt (skip if --auto flag or non-interactive)
+if [ -t 0 ] && [ "${FORGE_AUTO:-}" != "true" ]; then
+  printf "  Install FORGE status line? [y/N] "
+  read -r REPLY < /dev/tty
+  case "$REPLY" in
+    [yY]|[yY][eE][sS]) INSTALL_STATUSLINE=true ;;
+  esac
+else
+  echo "    (Non-interactive mode: skipping status line installation)"
+  echo "    Run 'bash ~/.claude/skills/forge/scripts/forge-hooks-setup.sh' interactively to install it."
+fi
+
+if [ "$INSTALL_STATUSLINE" = true ]; then
 cat > "$HOOKS_DIR/statusline.sh" << 'STATUSLINEEOF'
 #!/bin/bash
 # FORGE Status Line — persistent indicator in Claude Code terminal
@@ -372,14 +455,91 @@ input=$(cat)
 MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"' 2>/dev/null)
 CWD=$(echo "$input" | jq -r '.workspace.current_dir // ""' 2>/dev/null)
 PROJECT=$(basename "$CWD" 2>/dev/null)
-if [ -d "$CWD/.forge" ]; then
-    echo "[$MODEL] FORGE active | $PROJECT"
-else
-    echo "[$MODEL] $PROJECT"
+
+# Rate limits: 5-hour window
+FIVE_PCT=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' 2>/dev/null)
+FIVE_RESET=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty' 2>/dev/null)
+
+# Rate limits: 7-day window
+WEEK_PCT=$(echo "$input" | jq -r '.rate_limits.seven_day.used_percentage // empty' 2>/dev/null)
+WEEK_RESET=$(echo "$input" | jq -r '.rate_limits.seven_day.resets_at // empty' 2>/dev/null)
+
+# Build rate limit display
+RATE_PARTS=""
+
+if [ -n "$FIVE_PCT" ] && [ -n "$FIVE_RESET" ]; then
+    NOW=$(date +%s)
+    DIFF=$(( FIVE_RESET - NOW ))
+    if [ "$DIFF" -le 0 ]; then
+        FIVE_REMAINING="resets now"
+    else
+        FIVE_H=$(( DIFF / 3600 ))
+        FIVE_M=$(( (DIFF % 3600) / 60 ))
+        if [ "$FIVE_H" -gt 0 ]; then
+            FIVE_REMAINING="${FIVE_H}h${FIVE_M}m"
+        else
+            FIVE_REMAINING="${FIVE_M}m"
+        fi
+    fi
+    FIVE_INT=$(printf '%.0f' "$FIVE_PCT")
+    RATE_PARTS="5h:${FIVE_INT}% (reset ${FIVE_REMAINING})"
 fi
+
+if [ -n "$WEEK_PCT" ] && [ -n "$WEEK_RESET" ]; then
+    NOW=$(date +%s)
+    DIFF=$(( WEEK_RESET - NOW ))
+    if [ "$DIFF" -le 0 ]; then
+        WEEK_REMAINING="resets now"
+    else
+        WEEK_D=$(( DIFF / 86400 ))
+        WEEK_H=$(( (DIFF % 86400) / 3600 ))
+        WEEK_M=$(( (DIFF % 3600) / 60 ))
+        if [ "$WEEK_D" -gt 0 ]; then
+            WEEK_REMAINING="${WEEK_D}d${WEEK_H}h"
+        elif [ "$WEEK_H" -gt 0 ]; then
+            WEEK_REMAINING="${WEEK_H}h${WEEK_M}m"
+        else
+            WEEK_REMAINING="${WEEK_M}m"
+        fi
+    fi
+    WEEK_INT=$(printf '%.0f' "$WEEK_PCT")
+    if [ -n "$RATE_PARTS" ]; then
+        RATE_PARTS="${RATE_PARTS} | 7d:${WEEK_INT}% (reset ${WEEK_REMAINING})"
+    else
+        RATE_PARTS="7d:${WEEK_INT}% (reset ${WEEK_REMAINING})"
+    fi
+fi
+
+# Context window usage
+USED_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null)
+USED_PCT=${USED_PCT%.*}  # truncate to integer
+
+if [ "$USED_PCT" -ge 50 ] 2>/dev/null; then
+    CTX="CTX:${USED_PCT}%!"
+elif [ "$USED_PCT" -ge 30 ] 2>/dev/null; then
+    CTX="CTX:${USED_PCT}%~"
+else
+    CTX="CTX:${USED_PCT}%"
+fi
+
+# Build final status line
+FORGE_MARKER=""
+if [ -d "$CWD/.forge" ]; then
+    FORGE_MARKER=" FORGE"
+fi
+
+PARTS="${CTX}"
+if [ -n "$RATE_PARTS" ]; then
+    PARTS="${CTX} | ${RATE_PARTS}"
+fi
+
+echo "[${MODEL}]${FORGE_MARKER} ${PROJECT} | ${PARTS}"
 STATUSLINEEOF
 chmod +x "$HOOKS_DIR/statusline.sh"
 echo "    Created statusline.sh"
+else
+  echo "    Skipped statusline.sh (user declined)"
+fi
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 6. Clean up legacy hooks from pre-v1.6.0
@@ -504,12 +664,14 @@ addCommandHook('SessionStart', '', 'bash ~/.claude/hooks/forge-update-check.sh')
 // Stop -- forge-memory-sync.sh
 addCommandHook('Stop', '', 'bash ~/.claude/hooks/forge-memory-sync.sh');
 
-// -- Status Line --
-if (!s.statusLine || !s.statusLine.command?.includes('statusline.sh')) {
-  s.statusLine = {
-    type: 'command',
-    command: 'bash ~/.claude/hooks/statusline.sh'
-  };
+// -- Status Line (only if user accepted) --
+if ('${INSTALL_STATUSLINE}' === 'true') {
+  if (!s.statusLine || !s.statusLine.command?.includes('statusline.sh')) {
+    s.statusLine = {
+      type: 'command',
+      command: 'bash ~/.claude/hooks/statusline.sh'
+    };
+  }
 }
 
 fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2) + '\n');
@@ -517,6 +679,11 @@ fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2) + '\n');
 
 echo ""
 echo "  FORGE Hooks -- Installation complete!"
-echo "     5 hook scripts in ~/.claude/hooks/"
-echo "     3 hook events + status line in ~/.claude/settings.json"
+if [ "$INSTALL_STATUSLINE" = true ]; then
+  echo "     5 hook scripts in ~/.claude/hooks/"
+  echo "     3 hook events + status line in ~/.claude/settings.json"
+else
+  echo "     4 hook scripts in ~/.claude/hooks/"
+  echo "     3 hook events in ~/.claude/settings.json"
+fi
 echo "     (PreToolUse[Bash], SessionStart, Stop)"

@@ -1,9 +1,9 @@
 ---
 name: forge-loop
 description: >
-  Autonomous iteration runner with cost caps, circuit breakers, and sandbox isolation.
-  Use when: "run in a loop", "iterate autonomously", "AFK mode",
-  "unattended iteration", "loop until done", "keep working overnight".
+  Autonomous iteration runner with cost caps, circuit breakers, sandbox.
+  AFK mode, unattended iteration.
+disable-model-invocation: true
 ---
 
 # /forge-loop — FORGE Autonomous Loop
@@ -49,10 +49,10 @@ This skill wraps `forge-loop.sh` to provide autonomous iteration with security g
 
 ## Workflow
 
-1. **Load context** (if FORGE project):
-   - Read `.forge/memory/MEMORY.md` for project context (if exists)
+1. **Load context** (if FORGE project — skip files already loaded in this conversation):
+   - Read `.forge/memory/MEMORY.md` for project context (skip if already loaded)
    - Read the latest session from `.forge/memory/sessions/` for continuity
-   - `forge-memory search "<task description>" --limit 3` (if available)
+   - `forge-memory search "<task description>" --limit 3` (skip if similar search done)
 
 2. Validate arguments and check that a task description is provided
 3. Locate the `forge-loop.sh` script at `~/.claude/skills/forge/forge-loop.sh`

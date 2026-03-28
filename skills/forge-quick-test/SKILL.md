@@ -1,10 +1,7 @@
 ---
 name: forge-quick-test
 description: >
-  Quick QA -- zero-config test runner with auto framework detection.
-  Use when: "run the tests", "do tests pass", "quick test", "check if broken",
-  "test suite", "run jest/vitest/pytest".
-  No story file required -- just discovers and runs tests.
+  Zero-config test runner with auto framework detection. No story file needed.
 ---
 
 # /forge-quick-test — FORGE Quick QA

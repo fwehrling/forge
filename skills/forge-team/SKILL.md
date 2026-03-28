@@ -1,10 +1,10 @@
 ---
 name: forge-team
 description: >
-  FORGE + Agent Teams -- True parallel execution using real Claude Code processes.
-  3 patterns: pipeline (parallel stories), party (multi-agent debate), build (parallel dev).
-  Use when: "build stories in parallel", "launch multiple agents", "team pipeline",
-  "parallel build", "multi-agent debate". Requires Agent Teams enabled.
+  Agent Teams -- true parallel execution (real Claude Code processes).
+  3 patterns: pipeline, party, build. Requires Agent Teams enabled.
+paths:
+  - ".forge/**"
 ---
 
 # /forge-team — FORGE + Agent Teams Bridge

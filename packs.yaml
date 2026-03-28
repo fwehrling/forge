@@ -17,7 +17,6 @@ core:
   - forge-review
   - forge-audit
   - forge-audit-skill
-  - forge-deploy
   - forge-auto
   - forge-loop
   - forge-party

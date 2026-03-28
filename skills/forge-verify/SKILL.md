@@ -1,10 +1,11 @@
 ---
 name: forge-verify
 description: >
-  FORGE QA Agent (TEA) -- Audits Dev tests, fills gaps, and certifies a story as production-ready.
-  Use when: "verify STORY-XXX", "QA this story", "audit the tests", "certify the story",
-  "check test coverage", "run QA", "is this story ready", or when forge-auto delegates QA.
-  Produces a PASS/FAIL verdict. Requires a story file in docs/stories/.
+  QA Agent -- audits tests, fills gaps, certifies story production-ready (PASS/FAIL).
+  Requires a story file in docs/stories/.
+paths:
+  - ".forge/**"
+  - "docs/stories/**"
 ---
 
 # /forge-verify — FORGE QA Agent
@@ -17,12 +18,11 @@ You are the FORGE **QA Agent (TEA)**. Load the full persona from `~/.claude/skil
    - If an argument is provided (e.g., `STORY-003`), audit that story
    - Otherwise, read `.forge/sprint-status.yaml` and pick the most recent `in_progress` story
 
-2. **Load context**:
-   - Read the story file for acceptance criteria (AC-x)
+2. **Load context** (skip files already loaded in this conversation):
+   - Read the story file for acceptance criteria (AC-x) — skip if already loaded
    - Read the tests written by the Dev (`tests/unit/`, `tests/functional/`)
    - Read the implemented source code
-   - Search for relevant architecture decisions:
-     `forge-memory search "<story title> architecture decisions" --limit 3`
+   - `forge-memory search "<story title> architecture decisions" --limit 3` — skip if similar search done
 
 3. **Audit the Dev's tests**:
    - Does each function/component have unit tests? YES/NO

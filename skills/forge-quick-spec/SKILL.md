@@ -1,10 +1,7 @@
 ---
 name: forge-quick-spec
 description: >
-  Quick track for bug fixes and small changes (< 1 day of work).
-  Use when: "fix this bug", "quick fix", "small change", "patch this",
-  "hotfix", "minor tweak". Skips PRD and architecture, goes straight
-  to spec and implementation.
+  Quick track for bug fixes and small changes (< 1 day). Skips PRD/architecture.
 ---
 
 # /forge-quick-spec — FORGE Quick Track
@@ -14,9 +11,9 @@ Skips the planning and architecture phases.
 
 ## Workflow
 
-1. **Load context** (if FORGE project):
-   - Read `.forge/memory/MEMORY.md` for project context (if exists)
-   - `forge-memory search "<change description>" --limit 3` (if available)
+1. **Load context** (if FORGE project — skip files already loaded in this conversation):
+   - Read `.forge/memory/MEMORY.md` for project context (skip if already loaded)
+   - `forge-memory search "<change description>" --limit 3` (skip if similar search done)
 
 2. **Classify the request**: Bug fix or small feature change?
 

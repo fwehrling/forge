@@ -5,6 +5,28 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-03-28
+
+### Added
+
+- **RTK integration**: `bash-interceptor.js` auto-detects [RTK](https://github.com/rtk-ai/rtk) (Rust Token Killer) for 60-90% output compression. Falls back to `token-saver.sh` if not installed
+- **RTK install step**: `install.sh` now proposes RTK installation (step 6/7) with Homebrew or curl
+- **`paths` frontmatter**: 25 skills use `paths: [".forge/**"]` so their descriptions are only loaded in FORGE projects -- zero token cost in non-FORGE projects
+- **`disable-model-invocation`**: `forge-audit-skill` and `forge-loop` are hidden from auto-invocation (manual only via `/`)
+- **Business Pack suggestion in install.sh**: first install now suggests the Business Pack if not present
+- **Context Cache protocol**: 14 pipeline skills include "skip if already loaded" directives to avoid re-reading `docs/prd.md`, `docs/architecture.md`, and `MEMORY.md` across chained skills
+
+### Changed
+
+- **Skill descriptions reduced 61%**: all 32 descriptions shortened from ~9,200 to ~3,555 chars total (~120 chars avg vs ~290 before). Removed verbose "Use when:" lists, kept keywords natural
+- **token-saver.sh improved**: replaced `eval` with `bash -c`, added `git add/commit/push/pull/fetch/checkout/merge/rebase` filters, improved `git log` compact format (hash + date + message), better test failure capture
+- **bash-interceptor.js**: added git write commands to filtered set (add, commit, push, pull, fetch, checkout, merge, rebase)
+- **Install steps**: 6 -> 7 steps (added RTK check)
+
+### Removed
+
+- **`forge-deploy`**: skill removed along with all references (router, auto, review, configuration, routing, packs.yaml, install.sh)
+
 ## [1.6.2] - 2026-03-26
 
 ### Changed

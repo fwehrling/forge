@@ -1,10 +1,9 @@
 ---
 name: forge-legal
 description: >
-  Expert juridique e-commerce & auto-entreprise France -- RGPD, CGV/CGU, mentions legales,
-  fiscalite auto-entrepreneur, URSSAF, TVA, conformite sites marchands.
-  Use when: "RGPD", "CGV", "mentions legales", "auto-entrepreneur", "micro-entreprise",
-  "TVA", "URSSAF", "conformite juridique", "e-commerce law".
+  Droit e-commerce & auto-entreprise France -- RGPD, CGV, mentions legales, TVA, URSSAF.
+paths:
+  - ".forge/**"
 ---
 
 # Expert Juridique E-commerce & Auto-Entreprise

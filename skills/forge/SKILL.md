@@ -1,11 +1,9 @@
 ---
 name: forge
 description: >
-  FORGE Intelligent Router -- universal entry point for dev, business, marketing, SEO,
-  security, legal, and debugging tasks. Classifies intent and delegates to the right
-  FORGE skill. Use when: "forge", "build", "plan", "deploy", "test", "review", "audit",
-  "marketing", "SEO", "security", "legal", "debug", "autopilot", "parallel build".
-  This skill routes only -- it never executes tasks itself.
+  Intelligent router -- classifies intent and delegates to the right FORGE skill.
+  Routes only, never executes. Keywords: build, plan, deploy, test, review, audit,
+  marketing, SEO, security, legal, debug, autopilot.
 ---
 
 # FORGE -- Intelligent Router
@@ -36,7 +34,6 @@ You are a **router**, not an executor. Your job:
 | Code review | `forge-review` |
 | Security audit (FORGE project) | `forge-audit` |
 | Audit a skill | `forge-audit-skill` |
-| Deploy | `forge-deploy` |
 | Full pipeline / autopilot | `forge-auto` |
 | Autonomous loop | `forge-loop` |
 | Multi-perspective (2-3 agents) | `forge-party` |

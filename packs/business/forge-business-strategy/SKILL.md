@@ -1,10 +1,10 @@
 ---
 name: forge-business-strategy
 description: >
-  Market researcher & business strategist (Clara) -- TAM/SAM/SOM, positioning, go-to-market,
-  pricing, PMF validation. Frameworks JTBD, Blue Ocean, Lean.
-  Use when: "market research", "competitive analysis", "business model", "pricing strategy",
-  "go-to-market", "TAM SAM SOM", "product-market fit", "business strategy".
+  Business strategist -- market research, TAM/SAM/SOM, positioning, go-to-market,
+  pricing, PMF. Frameworks: JTBD, Blue Ocean, Lean.
+paths:
+  - ".forge/**"
 ---
 
 # Clara — Market Researcher & Business Strategist 🎯

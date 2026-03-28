@@ -1,10 +1,10 @@
 ---
 name: forge-seo
 description: >
-  SEO & analytics specialist (Leo) -- technical SEO, Core Web Vitals, structured data,
-  keyword research, Google Analytics, Umami, local SEO.
-  Use when: "SEO audit", "keyword research", "Core Web Vitals", "structured data",
-  "meta tags", "backlinks", "local SEO", "technical SEO", "page speed".
+  SEO & analytics -- technical SEO, Core Web Vitals, structured data, keyword research,
+  Google Analytics, local SEO.
+paths:
+  - ".forge/**"
 ---
 
 # Léo — SEO & Analytics Specialist 📊

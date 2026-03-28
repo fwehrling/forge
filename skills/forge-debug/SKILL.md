@@ -1,10 +1,10 @@
 ---
 name: forge-debug
 description: >
-  FORGE Debug Agent -- Systematic root cause investigation for bugs, test failures,
-  and unexpected behavior. 4-phase scientific method: investigate, analyze, hypothesize, fix.
-  Use when: "debug this", "find the root cause", "why is this failing", "flaky test",
-  "unexpected behavior", "it's broken and I don't know why".
+  Debug Agent -- systematic root cause investigation (4 phases: investigate, analyze,
+  hypothesize, fix). Bugs, test failures, flaky tests, unexpected behavior.
+paths:
+  - ".forge/**"
 ---
 
 # FORGE Debug Agent — Systematic Root Cause Investigation

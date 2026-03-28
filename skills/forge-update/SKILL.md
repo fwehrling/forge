@@ -1,9 +1,7 @@
 ---
 name: forge-update
 description: >
-  Updates FORGE skills from the latest GitHub release.
-  Use when: "update forge", "upgrade forge skills", "new version of forge",
-  "pull forge updates". Supports --pack business for the Business Pack.
+  Updates FORGE skills from GitHub. Supports --pack business.
 ---
 
 # /forge-update — FORGE Updater

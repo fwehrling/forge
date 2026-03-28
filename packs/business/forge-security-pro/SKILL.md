@@ -1,10 +1,9 @@
 ---
 name: forge-security-pro
 description: >
-  Code reviewer & security auditor (Victor) -- OWASP Top 10, hardening backend/frontend,
-  React Native, Node.js, Stripe, Docker.
-  Use when: "deep security audit", "OWASP review", "hardening", "vulnerability assessment",
-  "security hardening", "security checklist", "penetration test prep".
+  Deep security audit -- OWASP Top 10, hardening, React Native, Node.js, Stripe, Docker.
+paths:
+  - ".forge/**"
 ---
 
 # Victor — Code Reviewer & Security Auditor 🔒

@@ -1,10 +1,7 @@
 ---
 name: forge-init
 description: >
-  Initializes FORGE in a new or existing project. Creates .forge/ structure,
-  templates, CLAUDE.md, and detects tech stack.
-  Use when: "initialize forge", "set up forge", "start a new forge project",
-  "scaffold my project with forge", "configure forge in this repo".
+  Initialize FORGE in a project -- creates .forge/ structure, CLAUDE.md, detects tech stack.
 ---
 
 # /forge-init — FORGE Initialization
