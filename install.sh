@@ -97,6 +97,15 @@ install_skills() {
 
     cp -r "${SCRIPT_DIR}/skills/"* "${CLAUDE_DIR}/skills/"
 
+    # Remove deprecated skills that no longer exist in the repo
+    REMOVED_SKILLS="forge-deploy"
+    for skill in $REMOVED_SKILLS; do
+        if [ -d "${CLAUDE_DIR}/skills/${skill}" ]; then
+            rm -rf "${CLAUDE_DIR}/skills/${skill}"
+            warn "Removed deprecated skill: ${skill}"
+        fi
+    done
+
     # Verify core skill exists
     if [ ! -f "${CLAUDE_DIR}/skills/forge/SKILL.md" ]; then
         error "Core skill forge/SKILL.md not found after copy. Installation failed."

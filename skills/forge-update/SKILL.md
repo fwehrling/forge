@@ -54,6 +54,16 @@ description: >
    - Only FORGE skills (`forge` and `forge-*`) are managed by this updater
    - Non-FORGE skills in `~/.claude/skills/` MUST be preserved (they belong to the user)
    - Le `README.md` du repo reste uniquement sur GitHub (pas copié dans les skills)
+   - **Remove deprecated skills** that no longer exist in the repo:
+   ```bash
+   REMOVED_SKILLS="forge-deploy"
+   for skill in $REMOVED_SKILLS; do
+     if [ -d ~/.claude/skills/"$skill" ]; then
+       rm -rf ~/.claude/skills/"$skill"
+       echo "Removed deprecated: $skill"
+     fi
+   done
+   ```
 
 6. **Install packs** (if `--pack` argument provided) :
    - Read `$TMPDIR/packs.yaml` to get the list of skills in the requested pack
