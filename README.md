@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.7.5-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.7.6-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-23%20core%20%2B%208%20business-orange)](#commands)
@@ -49,14 +49,13 @@ Want more control? Every step is a standalone command:
 
 11 specialized agents (Analyst, PM, Architect, UX, Scrum Master, Dev, Debug, QA, Reviewer, Orchestrator, Security) that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
 
-```mermaid
-flowchart LR
-    R["Requirements\nAnalyst + PM"]
-    D["Design\nArchitect + UX"]
-    DEV["Development\nSM + Dev"]
-    Q["Quality\nQA + Review + Deploy"]
-    R ==> D ==> DEV ==> Q
-```
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/pipeline.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/pipeline.svg">
+    <img alt="FORGE Pipeline: Requirements → Design → Development → Quality" src="assets/pipeline.svg" width="700">
+  </picture>
+</p>
 
 ### Memory That Persists
 
@@ -246,7 +245,9 @@ FORGE adjusts to your project's complexity:
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.7.5**: move `/forge-review` to pipeline section in README.
+**Latest -- v1.7.6**: replace Mermaid diagram with clean SVG pipeline, move `/forge-review` to pipeline section.
+
+**v1.7.5**: move `/forge-review` to pipeline section in README.
 
 **v1.7.4**: pipeline order documented in forge router.
 

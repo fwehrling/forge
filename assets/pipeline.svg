@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 100" fill="none">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif; }
+    .phase { font-size: 14px; font-weight: 600; }
+    .agents { font-size: 11px; opacity: 0.7; }
+    .box { rx: 8; ry: 8; }
+    @media (prefers-color-scheme: dark) {
+      .box { fill: #21262d; stroke: #30363d; }
+      .phase, .agents { fill: #e6edf3; }
+      .arrow { fill: #484f58; }
+    }
+    @media (prefers-color-scheme: light) {
+      .box { fill: #f6f8fa; stroke: #d0d7de; }
+      .phase, .agents { fill: #1f2328; }
+      .arrow { fill: #656d76; }
+    }
+  </style>
+
+  <!-- Requirements -->
+  <rect class="box" x="0" y="10" width="170" height="64" stroke-width="1.5"/>
+  <text class="phase" x="85" y="38" text-anchor="middle">Requirements</text>
+  <text class="agents" x="85" y="56" text-anchor="middle">Analyst + PM</text>
+
+  <!-- Arrow 1 -->
+  <polygon class="arrow" points="182,39 194,39 194,36 206,42 194,48 194,45 182,45"/>
+
+  <!-- Design -->
+  <rect class="box" x="218" y="10" width="170" height="64" stroke-width="1.5"/>
+  <text class="phase" x="303" y="38" text-anchor="middle">Design</text>
+  <text class="agents" x="303" y="56" text-anchor="middle">Architect + UX</text>
+
+  <!-- Arrow 2 -->
+  <polygon class="arrow" points="400,39 412,39 412,36 424,42 412,48 412,45 400,45"/>
+
+  <!-- Development -->
+  <rect class="box" x="436" y="10" width="170" height="64" stroke-width="1.5"/>
+  <text class="phase" x="521" y="38" text-anchor="middle">Development</text>
+  <text class="agents" x="521" y="56" text-anchor="middle">SM + Dev</text>
+
+  <!-- Arrow 3 -->
+  <polygon class="arrow" points="618,39 630,39 630,36 642,42 630,48 630,45 618,45"/>
+
+  <!-- Quality -->
+  <rect class="box" x="654" y="10" width="170" height="64" stroke-width="1.5"/>
+  <text class="phase" x="739" y="38" text-anchor="middle">Quality</text>
+  <text class="agents" x="739" y="56" text-anchor="middle">QA + Review</text>
+</svg>
