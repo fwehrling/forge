@@ -97,6 +97,17 @@ install_skills() {
 
     cp -r "${SCRIPT_DIR}/skills/"* "${CLAUDE_DIR}/skills/"
 
+    # Update previously installed Business Pack skills (if any)
+    if [ -d "${SCRIPT_DIR}/packs/business" ]; then
+        for dir in "${SCRIPT_DIR}/packs/business/"forge-*/; do
+            local bp_skill
+            bp_skill="$(basename "$dir")"
+            if [ -d "${CLAUDE_DIR}/skills/${bp_skill}" ]; then
+                cp -r "$dir" "${CLAUDE_DIR}/skills/${bp_skill}"
+            fi
+        done
+    fi
+
     # Remove deprecated skills that no longer exist in the repo
     REMOVED_SKILLS="forge-deploy"
     for skill in $REMOVED_SKILLS; do
