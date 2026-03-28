@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.7.4-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.7.5-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-23%20core%20%2B%208%20business-orange)](#commands)
@@ -132,6 +132,7 @@ Install with: `/forge-update --pack business`
 | `/forge-build` | Dev | Source + tests (TDD) |
 | `/forge-debug` | Debug | Root cause + fix |
 | `/forge-verify` | QA | Verdict (PASS/FAIL) |
+| `/forge-review` | Reviewer | Adversarial code review |
 
 ### Tools
 
@@ -139,7 +140,6 @@ Install with: `/forge-update --pack business`
 |---------|---------|
 | `/forge-quick-spec` | Bug fix or small change (skip PRD) |
 | `/forge-quick-test` | Run tests (auto-detects framework) |
-| `/forge-review` | Adversarial code review |
 | `/forge-audit` | Security audit (threat model, OWASP) |
 | `/forge-audit-skill` | Audit a third-party skill |
 | `/forge-party` | Multi-agent debate (2-3 perspectives) |
@@ -246,7 +246,11 @@ FORGE adjusts to your project's complexity:
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.7.3**: install.sh updates Business Pack if already installed.
+**Latest -- v1.7.5**: move `/forge-review` to pipeline section in README.
+
+**v1.7.4**: pipeline order documented in forge router.
+
+**v1.7.3**: install.sh updates Business Pack if already installed.
 
 **v1.7.0**: RTK integration (60-90% output compression), `paths` frontmatter (skills load only in FORGE projects), descriptions reduced 61%, context cache, `forge-deploy` removed.
 
