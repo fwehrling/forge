@@ -22,7 +22,7 @@
   <text class="agents" x="85" y="56" text-anchor="middle">Analyst + PM</text>
 
   <!-- Arrow 1 -->
-  <polygon class="arrow" points="182,42 194,36 194,39 206,39 206,45 194,45 194,48"/>
+  <polygon class="arrow" points="182,39 194,39 194,36 206,42 194,48 194,45 182,45"/>
 
   <!-- Design -->
   <rect class="box" x="218" y="10" width="170" height="64" stroke-width="1.5"/>
@@ -30,7 +30,7 @@
   <text class="agents" x="303" y="56" text-anchor="middle">Architect + UX</text>
 
   <!-- Arrow 2 -->
-  <polygon class="arrow" points="400,42 412,36 412,39 424,39 424,45 412,45 412,48"/>
+  <polygon class="arrow" points="400,39 412,39 412,36 424,42 412,48 412,45 400,45"/>
 
   <!-- Development -->
   <rect class="box" x="436" y="10" width="170" height="64" stroke-width="1.5"/>
@@ -38,7 +38,7 @@
   <text class="agents" x="521" y="56" text-anchor="middle">SM + Dev</text>
 
   <!-- Arrow 3 -->
-  <polygon class="arrow" points="618,42 630,36 630,39 642,39 642,45 630,45 630,48"/>
+  <polygon class="arrow" points="618,39 630,39 630,36 642,42 630,48 630,45 618,45"/>
 
   <!-- Quality -->
   <rect class="box" x="654" y="10" width="170" height="64" stroke-width="1.5"/>
