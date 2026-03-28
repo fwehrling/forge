@@ -16,6 +16,14 @@ You are a **router**, not an executor. Your job:
 4. **Invoke** immediately via `Skill(skill: "forge-xxx", args: "<user request>")`
 5. **Never ask** for confirmation -- act decisively
 
+## Pipeline Order
+
+```
+forge-plan → forge-architect → forge-ux → forge-stories → forge-build → forge-verify → forge-review
+```
+
+Each step produces artifacts consumed by the next. Use `/forge-auto` to run the full pipeline sequentially, or invoke each step individually.
+
 ## Quick Reference
 
 | Intent | Target |
