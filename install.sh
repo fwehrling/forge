@@ -331,25 +331,25 @@ print_summary() {
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo "  Installed:"
-    echo "    ${GREEN}✓${NC} ${SKILL_COUNT} skills → ${CLAUDE_DIR}/skills/"
+    echo -e "    ${GREEN}✓${NC} ${SKILL_COUNT} skills → ${CLAUDE_DIR}/skills/"
     if [ "$VECTOR_MEMORY_INSTALLED" = true ]; then
-        echo "    ${GREEN}✓${NC} Vector memory (forge-memory CLI)"
+        echo -e "    ${GREEN}✓${NC} Vector memory (forge-memory CLI)"
     else
-        echo "    ${YELLOW}–${NC} Vector memory (not installed)"
+        echo -e "    ${YELLOW}--${NC} Vector memory (not installed)"
     fi
     if [ "${FORGE_HOOKS_INSTALLED:-false}" = true ]; then
         local sl_status=""
         if [ -f "${HOME}/.claude/hooks/statusline.sh" ]; then
             sl_status=", status line"
         fi
-        echo "    ${GREEN}✓${NC} FORGE Hooks (bash-interceptor, token-saver, update-check, memory-sync${sl_status})"
+        echo -e "    ${GREEN}✓${NC} FORGE Hooks (bash-interceptor, token-saver, update-check, memory-sync${sl_status})"
     else
-        echo "    ${YELLOW}--${NC} FORGE Hooks (not installed)"
+        echo -e "    ${YELLOW}--${NC} FORGE Hooks (not installed)"
     fi
     if [ "$RTK_INSTALLED" = true ]; then
-        echo "    ${GREEN}✓${NC} RTK token optimizer (60-90% output compression)"
+        echo -e "    ${GREEN}✓${NC} RTK token optimizer (60-90% output compression)"
     else
-        echo "    ${YELLOW}--${NC} RTK (not installed -- using built-in token-saver)"
+        echo -e "    ${YELLOW}--${NC} RTK (not installed -- using built-in token-saver)"
     fi
     # Suggest Business Pack if not installed
     local has_business_pack=false
