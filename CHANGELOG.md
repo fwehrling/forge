@@ -7,9 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.21] - 2026-03-29
 
-### Fixed
+### Changed
 
-- **Status line dedup**: avoid showing "FORGE v1.x.x forge" when the project name is "forge" -- now shows "FORGE v1.x.x" only
+- **Status line format**: FORGE marker now in brackets `[FORGE v1.x.x]` after the model, always followed by project name
 
 ## [1.7.20] - 2026-03-29
 
