@@ -13,6 +13,8 @@ Analyze requests along 4 dimensions:
 | `business` | Strategy, competition, market analysis, business model, pricing, positioning |
 | `marketing` | Social media, LinkedIn, content, copywriting, landing page, email funnel |
 | `seo` | SEO, keywords, analytics, Core Web Vitals, GEO, AI search, LLMO |
+| `permissions` | Permissions, RBAC, ACL, authorization, roles, access control, droits |
+| `reasoning` | Think, reason, approach, best way, how should I, design decision, stuck |
 | `security` | OWASP, vulnerabilities, threat model, hardening |
 | `legal` | RGPD, CGV, mentions legales, auto-entrepreneur, e-commerce |
 | `specialist` | Framework-specific (Angular, Next.js, etc.) — dynamic agent creation |
@@ -53,6 +55,8 @@ Analyze requests along 4 dimensions:
 | Code review, critique | `forge-review` |
 | Security audit (FORGE project) | `forge-audit` |
 | Audit third-party skill | `forge-audit-skill` |
+| Permissions, RBAC, access control | `forge-permissions` |
+| Deep reasoning, best approach, design decision | `forge-think` |
 | Full pipeline, autopilot | `forge-auto` |
 | Autonomous loop | `forge-loop` |
 | Multi-perspective (2-3 agents) | `forge-party` |
@@ -93,6 +97,9 @@ Analyze requests along 4 dimensions:
 | "run the tests" | `forge-quick-test` |
 | "build stories in parallel" | `forge-team` |
 | "compare approaches" | `forge-party` |
+| "refactor permissions" / "role-based access" | `forge-permissions` |
+| "how should I" / "best approach" / "think about" | `forge-think` |
+| "what's the right way" / "I'm stuck on design" | `forge-think` |
 | Specialist/framework question | Dynamic agent creation |
 
 ## Chaining Rules

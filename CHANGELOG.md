@@ -5,6 +5,15 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.22] - 2026-03-29
+
+### Added
+
+- **forge-think skill**: deep reasoning agent that analyzes any problem, explores multiple approaches, evaluates with 5 quality filters (band-aid, coupling, surprise, scope, rewrite), and recommends the clean solution before implementation
+- **forge-permissions skill**: permission/access control refactoring agent that identifies anti-patterns (hardcoded role mappings, overly permissive fallbacks), proposes selectable permission categories decoupled from roles, and implements the full refactoring (backend + frontend + tests)
+- New routing domain `permissions` and `reasoning` in the FORGE router
+- Core skills count: 23 -> 25
+
 ## [1.7.21] - 2026-03-29
 
 ### Changed

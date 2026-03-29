@@ -49,6 +49,8 @@ Only read `references/routing.md` when the intent is truly ambiguous (no clear m
 | GEO / AI search | `forge-geo` |
 | Legal / RGPD / CGV | `forge-legal` |
 | Deep security / OWASP | `forge-security-pro` |
+| Permissions / RBAC / access control | `forge-permissions` |
+| Think / reason / best approach | `forge-think` |
 
 ## Disambiguation
 
@@ -60,6 +62,9 @@ Only read `references/routing.md` when the intent is truly ambiguous (no clear m
 | "security audit" without FORGE context | `forge-security-pro` |
 | "build stories in parallel" | `forge-team` |
 | "compare approaches" / brainstorm | `forge-party` |
+| "refactor permissions" / "role mapping" | `forge-permissions` |
+| "how should I" / "best approach" / "think about" | `forge-think` |
+| "what's the right way" / "I'm stuck" / "before I start" | `forge-think` |
 
 ## Pipeline Order
 
