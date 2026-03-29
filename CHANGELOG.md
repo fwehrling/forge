@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.19] - 2026-03-29
+
+### Fixed
+
+- **update.sh trailing slash bug**: glob patterns produce paths ending with `/`, causing `path//SKILL.md` (double slash) in file comparison. The pattern never matched, so every file was reported as "new" and every skill as "modified". Fix: strip trailing slash with `${1%/}`
+
 ## [1.7.18] - 2026-03-29
 
 ### Added
