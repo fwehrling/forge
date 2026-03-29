@@ -3,9 +3,6 @@ name: forge-build
 description: >
   Dev Agent -- implements a user story with TDD (unit + functional tests).
   Requires a story file in docs/stories/.
-paths:
-  - ".forge/**"
-  - "docs/stories/**"
 ---
 
 # /forge-build — FORGE Dev Agent

@@ -3,9 +3,6 @@ name: forge-verify
 description: >
   QA Agent -- audits tests, fills gaps, certifies story production-ready (PASS/FAIL).
   Requires a story file in docs/stories/.
-paths:
-  - ".forge/**"
-  - "docs/stories/**"
 ---
 
 # /forge-verify — FORGE QA Agent

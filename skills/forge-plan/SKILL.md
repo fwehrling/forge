@@ -2,8 +2,6 @@
 name: forge-plan
 description: >
   PM Agent -- generates or validates the PRD. Produces docs/prd.md.
-paths:
-  - ".forge/**"
 ---
 
 # /forge-plan — FORGE PM Agent

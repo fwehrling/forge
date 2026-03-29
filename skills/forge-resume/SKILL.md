@@ -2,8 +2,6 @@
 name: forge-resume
 description: >
   Resume a FORGE project -- analyzes current state, proposes next steps.
-paths:
-  - ".forge/**"
 ---
 
 # /forge-resume — Resume a FORGE Project
