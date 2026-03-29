@@ -531,7 +531,7 @@ if [ -d "$CWD/.forge" ]; then
     if [ -f "$HOME/.claude/skills/forge/.forge-version" ]; then
         FORGE_VER=" v$(cat "$HOME/.claude/skills/forge/.forge-version" | tr -d '[:space:]')"
     fi
-    FORGE_MARKER=" FORGE${FORGE_VER}"
+    FORGE_MARKER=" [FORGE${FORGE_VER}]"
 fi
 
 PARTS="${CTX}"
@@ -539,12 +539,7 @@ if [ -n "$RATE_PARTS" ]; then
     PARTS="${CTX} | ${RATE_PARTS}"
 fi
 
-# Avoid "FORGE v1.x.x forge" when project name is "forge"
-if [ -n "$FORGE_MARKER" ] && [ "$PROJECT" = "forge" ]; then
-    echo "[${MODEL}]${FORGE_MARKER} | ${PARTS}"
-else
-    echo "[${MODEL}]${FORGE_MARKER} ${PROJECT} | ${PARTS}"
-fi
+echo "[${MODEL}]${FORGE_MARKER} ${PROJECT} | ${PARTS}"
 STATUSLINEEOF
 chmod +x "$HOOKS_DIR/statusline.sh"
 echo "    Created statusline.sh"
