@@ -539,7 +539,12 @@ if [ -n "$RATE_PARTS" ]; then
     PARTS="${CTX} | ${RATE_PARTS}"
 fi
 
-echo "[${MODEL}]${FORGE_MARKER} ${PROJECT} | ${PARTS}"
+# Avoid "FORGE v1.x.x forge" when project name is "forge"
+if [ -n "$FORGE_MARKER" ] && [ "$PROJECT" = "forge" ]; then
+    echo "[${MODEL}]${FORGE_MARKER} | ${PARTS}"
+else
+    echo "[${MODEL}]${FORGE_MARKER} ${PROJECT} | ${PARTS}"
+fi
 STATUSLINEEOF
 chmod +x "$HOOKS_DIR/statusline.sh"
 echo "    Created statusline.sh"
