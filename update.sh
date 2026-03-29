@@ -216,6 +216,8 @@ if [ "$PACK_ONLY" = false ]; then
     for dir in "${TMPDIR}/skills/"*/; do
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
+        # Remove target first to avoid nested directories from cp -r behavior on Linux
+        rm -rf "${CLAUDE_DIR}/skills/${skill_name}"
         \cp -rf "$dir" "${CLAUDE_DIR}/skills/${skill_name}"
     done
 
@@ -238,6 +240,7 @@ if [ -n "$INSTALL_PACK" ] && [ -d "${TMPDIR}/packs/${INSTALL_PACK}" ]; then
     for dir in "${TMPDIR}/packs/${INSTALL_PACK}/"forge-*/; do
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
+        rm -rf "${CLAUDE_DIR}/skills/${skill_name}"
         \cp -rf "$dir" "${CLAUDE_DIR}/skills/${skill_name}"
     done
     ok "Business pack installed"
@@ -248,6 +251,7 @@ elif [ -d "${TMPDIR}/packs/business" ]; then
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
         if [ -d "${CLAUDE_DIR}/skills/${skill_name}" ]; then
+            rm -rf "${CLAUDE_DIR}/skills/${skill_name}"
             \cp -rf "$dir" "${CLAUDE_DIR}/skills/${skill_name}"
             local_updated=$((local_updated + 1))
         fi

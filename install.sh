@@ -116,6 +116,7 @@ install_skills() {
             local bp_skill
             bp_skill="$(basename "$dir")"
             if [ -d "${CLAUDE_DIR}/skills/${bp_skill}" ]; then
+                rm -rf "${CLAUDE_DIR}/skills/${bp_skill}"
                 cp -r "$dir" "${CLAUDE_DIR}/skills/${bp_skill}"
             fi
         done
