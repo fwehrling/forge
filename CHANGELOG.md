@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.16] - 2026-03-29
+
+### Fixed
+
+- **update.sh change detection**: compare all tracked files (not just SKILL.md) using a portable `find + diff -q` loop instead of process substitution. Excludes generated artifacts (`.venv`, `__pycache__`, `.forge-version`, `.DS_Store`, `forge-memory`). Works reliably on both macOS and Linux
+
 ## [1.7.15] - 2026-03-29
 
 ### Fixed
