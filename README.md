@@ -165,7 +165,8 @@ Install with: `/forge-update --pack business`
 
 ```bash
 git clone https://github.com/fwehrling/forge.git /tmp/forge
-bash /tmp/forge/install.sh
+bash /tmp/forge/install.sh            # Interactive (prompts for RTK, status line, etc.)
+bash /tmp/forge/install.sh -y         # Non-interactive (accept all defaults)
 ```
 
 The installer copies skills, configures hooks, and sets up vector memory automatically. Then in your project:
@@ -186,6 +187,7 @@ From terminal (without Claude Code):
 ```bash
 bash /tmp/forge/update.sh                    # Core skills
 bash /tmp/forge/update.sh --pack business    # + Business Pack
+bash /tmp/forge/update.sh -y                 # Accept all prompts
 ```
 
 FORGE checks for updates automatically at session startup (1x/24h).
