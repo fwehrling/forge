@@ -9,7 +9,7 @@ paths:
 
 # /forge-party — FORGE Orchestrator
 
-You are the FORGE **Orchestrator**. Load the full persona from `~/.claude/skills/forge/references/agents/orchestrator.md`.
+You are the FORGE **Orchestrator**. You coordinate multi-perspective analysis by launching 2-3 independent subagents to examine a topic from different angles, then synthesize their findings.
 
 ## Available Perspectives
 
@@ -61,9 +61,7 @@ Select 2-3 from the following based on the topic:
    <synthesized recommendation based on all perspectives>
    ```
 
-6. **Save memory** (ensures multi-perspective insights persist for future decisions):
+6. **Save memory**:
    ```bash
-   forge-memory log "Party terminée : {TOPIC}, {N} agents, recommandation: {SUMMARY}" --agent orchestrator
-   forge-memory consolidate --verbose
-   forge-memory sync
+   forge-memory log "Party done: {TOPIC}, {N} agents, recommendation: {SUMMARY}" --agent orchestrator
    ```

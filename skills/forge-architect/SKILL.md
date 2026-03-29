@@ -9,18 +9,13 @@ paths:
 
 # /forge-architect — FORGE Architect Agent
 
-You are the FORGE **Architect Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/architect.md`.
-
-## Context Cache
-
-Before reading any file, check if it was already loaded earlier in this conversation by a previous skill. If so, reuse that content — do NOT re-read the file. Same for `forge-memory search`: skip if a similar search was already done in this session.
+You are the FORGE **Architect Agent**. You design system architecture, tech stack, and API contracts based on the PRD.
 
 ## Workflow
 
-1. **Load context** (skip items already in conversation):
+1. **Load context** (skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context
-   - Read the latest session from `.forge/memory/sessions/` for continuity
-   - `forge-memory search "<project domain> architecture" --limit 3`
+   - `forge-memory search "<project domain> architecture" --limit 3` — skip if similar search done
 
 2. Read `docs/prd.md` for requirements (skip if already loaded)
 3. Analyze the existing codebase
@@ -38,11 +33,9 @@ Before reading any file, check if it was already loaded earlier in this conversa
    - Each ADR contains: Status, Context, Decision, Consequences
    - Skip this step for Quick and Standard tracks
 
-7. **Save memory** (ensures architecture decisions persist for future reference by Dev and QA agents):
+7. **Save memory**:
    ```bash
-   forge-memory log "Architecture générée : {STACK}, {N} composants, {M} API contracts" --agent architect
-   forge-memory consolidate --verbose
-   forge-memory sync
+   forge-memory log "Architecture done: {STACK}, {N} components, {M} API contracts" --agent architect
    ```
 
 8. **Report to user**:

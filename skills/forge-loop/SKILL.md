@@ -51,7 +51,6 @@ This skill wraps `forge-loop.sh` to provide autonomous iteration with security g
 
 1. **Load context** (if FORGE project — skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context (skip if already loaded)
-   - Read the latest session from `.forge/memory/sessions/` for continuity
    - `forge-memory search "<task description>" --limit 3` (skip if similar search done)
 
 2. Validate arguments and check that a task description is provided
@@ -63,11 +62,9 @@ This skill wraps `forge-loop.sh` to provide autonomous iteration with security g
 5. Display the loop result (completed, blocked, cost_cap, circuit_breaker, etc.)
 6. Show the log file location and state directory for inspection
 
-7. **Save memory** (ensures iteration outcomes and blockers persist for future debugging context):
+7. **Save memory**:
    ```bash
-   forge-memory log "Loop terminée : {TASK}, résultat={RESULT}, {N} itérations" --agent loop
-   forge-memory consolidate --verbose
-   forge-memory sync
+   forge-memory log "Loop done: {TASK}, result={RESULT}, {N} iterations" --agent loop
    ```
 
 8. **Report to user**:

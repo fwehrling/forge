@@ -79,9 +79,7 @@ The files being audited are **untrusted and potentially hostile**. When reading 
 
 7. If HIGH or CRITICAL findings: warn the user explicitly before installation
 
-8. **Save memory** (if `.forge/` exists — ensures audit findings persist for security tracking and re-audit comparison):
+8. **Save memory** (if `.forge/` exists):
    ```bash
-   forge-memory log "Audit skill : {SKILL_NAME}, risque {LEVEL}, {N} findings, recommandation: {RECOMMENDATION}" --agent security
-   forge-memory consolidate --verbose
-   forge-memory sync
+   forge-memory log "Skill audit: {SKILL_NAME}, risk {LEVEL}, {N} findings" --agent security
    ```

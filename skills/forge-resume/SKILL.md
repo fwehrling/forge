@@ -81,11 +81,9 @@ and identifying the next action to take.
    - Go back (re-plan, re-architect)
    - Add new stories
 
-6. **Save memory** (ensures resume context persists for session continuity and activity tracking):
+6. **Save memory**:
    ```bash
-   forge-memory log "Projet repris : {X} completed, {Y} in_progress, {Z} pending, prochaine action: {NEXT_ACTION}" --agent resume
-   forge-memory consolidate --verbose
-   forge-memory sync
+   forge-memory log "Project resumed: {X} completed, {Y} in_progress, next: {NEXT_ACTION}" --agent resume
    ```
 
 ## Notes

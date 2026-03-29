@@ -6,15 +6,12 @@ description: >
 
 # /forge-quick-test — FORGE Quick QA
 
-You are the FORGE **Quick QA Agent**. Load the full persona from `~/.claude/skills/forge/references/agents/quick-qa.md`.
-
-This is a lightweight alternative to `/forge-verify` — no story required, no certification process. Just run the tests and report.
+You are the FORGE **Quick QA Agent** — a lightweight alternative to `/forge-verify`. No story required, no certification process. Just run the tests and report.
 
 ## Workflow
 
-1. **Load context**:
+1. **Load context** (skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context
-   - Read the latest session from `.forge/memory/sessions/` for continuity
 
 2. **Auto-detect test framework**:
    - Check `package.json` for: jest, vitest, mocha, playwright, cypress
@@ -35,11 +32,9 @@ This is a lightweight alternative to `/forge-verify` — no story required, no c
    - Execution time
    - Quick recommendations for failing tests
 
-5. **Save memory** (ensures test results persist for trend tracking across sessions):
+5. **Save memory**:
    ```bash
-   forge-memory log "Quick test : {PASSED}/{TOTAL} passed, coverage {COV}%, {FRAMEWORK}" --agent quick-qa
-   forge-memory consolidate --verbose
-   forge-memory sync
+   forge-memory log "Quick test: {PASSED}/{TOTAL} passed, coverage {COV}%, {FRAMEWORK}" --agent quick-qa
    ```
 
 6. **Report to user**:
