@@ -23,9 +23,7 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
 
 1. **Load memory** (skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context
-   - Read the latest session from `.forge/memory/sessions/` for continuity
    - Read `.forge/sprint-status.yaml` for the current state
-   - Read `.forge/config.yml` for configuration
    - `forge-memory search "<current objective>" --limit 3` — skip if similar search done
 
 2. **Analyze state and determine the phase**:
@@ -50,7 +48,6 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
 
 3. **Execute with the appropriate agents**:
    - Each phase invokes the corresponding agent (PM, Architect, UX, SM, Dev, QA)
-   - The agent loads its persona from `~/.claude/skills/forge/references/agents/`
    - The agent produces its artifacts in `docs/` or `src/`
    - **Agent Teams acceleration**: when entering the build phase with 2+ unblocked stories,
      and `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` is set, autopilot delegates to
@@ -70,22 +67,9 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
      → pause + report to user
 
 5. **Save memory**:
-   - `forge-memory log` for each story completed during this session:
-     ```bash
-     forge-memory log "{STORY_ID} terminée : {N} tests, couverture {X}%" --agent dev --story {STORY_ID}
-     ```
-   - `forge-memory log` for the session summary:
-     ```bash
-     forge-memory log "Session autopilot terminée : {completed}/{total} stories, phase {PHASE}"
-     ```
-   - Consolidate session logs into MEMORY.md:
-     ```bash
-     forge-memory consolidate --verbose
-     ```
-   - Sync the full memory index:
-     ```bash
-     forge-memory sync
-     ```
+   ```bash
+   forge-memory log "Autopilot session: {completed}/{total} stories, phase {PHASE}" --agent autopilot
+   ```
    - Update `.forge/sprint-status.yaml`
 
 6. **Human checkpoints** (configurable):

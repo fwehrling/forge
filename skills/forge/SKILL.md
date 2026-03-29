@@ -8,23 +8,16 @@ description: >
 
 # FORGE -- Intelligent Router
 
-You are a **router**, not an executor. Your job:
+You are a **router**, not an executor. Classify the user's intent and invoke the matching skill immediately. Do not read any reference files for straightforward routing -- the table below has everything you need.
 
-1. **Classify** the user's intent (what domain, what action)
+1. **Match** the intent against the routing table below
 2. **Check context** -- if routing to a dev-pipeline skill, verify `.forge/` exists. If missing, suggest `/forge-init`
-3. **Resolve** the best target using the quick-reference below
-4. **Invoke** immediately via `Skill(skill: "forge-xxx", args: "<user request>")`
-5. **Never ask** for confirmation -- act decisively
+3. **Invoke** via `Skill(skill: "forge-xxx", args: "<user request>")`
+4. **Never ask** for confirmation -- act decisively
 
-## Pipeline Order
+Only read `references/routing.md` when the intent is truly ambiguous (no clear match) or when you need dynamic agent creation rules.
 
-```
-forge-plan → forge-architect → forge-ux → forge-stories → forge-build → forge-verify → forge-review
-```
-
-Each step produces artifacts consumed by the next. Use `/forge-auto` to run the full pipeline sequentially, or invoke each step individually.
-
-## Quick Reference
+## Routing Table
 
 | Intent | Target |
 |--------|--------|
@@ -36,12 +29,10 @@ Each step produces artifacts consumed by the next. Use `/forge-auto` to run the 
 | Stories / sprint planning | `forge-stories` |
 | Implement / code / TDD | `forge-build` |
 | QA / verify story | `forge-verify` |
-| Debug (cause unknown) | `forge-debug` |
-| Quick fix (cause known) | `forge-quick-spec` |
+| Code review / critique | `forge-review` |
 | Run tests | `forge-quick-test` |
-| Code review | `forge-review` |
 | Security audit (FORGE project) | `forge-audit` |
-| Audit a skill | `forge-audit-skill` |
+| Audit a third-party skill | `forge-audit-skill` |
 | Full pipeline / autopilot | `forge-auto` |
 | Autonomous loop | `forge-loop` |
 | Multi-perspective (2-3 agents) | `forge-party` |
@@ -59,18 +50,33 @@ Each step produces artifacts consumed by the next. Use `/forge-auto` to run the 
 | Legal / RGPD / CGV | `forge-legal` |
 | Deep security / OWASP | `forge-security-pro` |
 
+## Disambiguation
+
+| Ambiguous Request | Resolution |
+|-------------------|------------|
+| Bug, cause **known** ("fix this") | `forge-quick-spec` |
+| Bug, cause **unknown** ("why is this failing", "aucune idée") | `forge-debug` |
+| "security audit" + `.forge/` exists | `forge-audit` |
+| "security audit" without FORGE context | `forge-security-pro` |
+| "build stories in parallel" | `forge-team` |
+| "compare approaches" / brainstorm | `forge-party` |
+
+## Pipeline Order
+
+```
+forge-plan → forge-architect → forge-ux → forge-stories → forge-build → forge-verify → forge-review
+```
+
 ## Rules
 
 - **2 domains** → chain sequentially (first, then second)
 - **3+ domains or "do everything"** → delegate to `forge-auto`
-- **No match found** → create a dynamic agent (read `references/dynamic-creation.md`)
+- **No match found** → read `references/dynamic-creation.md` for dynamic agent creation
 - **Business Pack skill not installed** → suggest `/forge-update --pack business`
-
-For detailed classification dimensions, disambiguation, and the full routing table, read `references/routing.md`.
 
 ## French Language Rule
 
-All generated content in French MUST use proper accents (e, e, e, a, u, c, o, i).
+All generated content in French must use proper accents (é, è, ê, à, ù, ç, ô, î).
 
 ## Memory
 

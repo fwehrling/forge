@@ -38,7 +38,7 @@ Skips the planning and architecture phases.
 
 6. **Implement the fix**
 
-7. **Validate**:
+7. **Validate** (check `package.json`, `Makefile`, or `pyproject.toml` for the right commands):
    - Regression test now passes
    - All pre-existing tests still pass (non-regression)
    - Lint + typecheck clean
@@ -52,16 +52,14 @@ Skips the planning and architecture phases.
 4. **Generate a quick spec** (in-memory, no artifact)
 5. **Write tests** (unit + functional for the change)
 6. **Implement the change**
-7. **Validate** (lint + typecheck + tests)
+7. **Validate** (check project config for lint/typecheck commands, run tests)
 8. **Propose the commit**
 
 ### Save Memory
 
 9. **Save memory** (ensures fix context persists for avoiding repeated issues):
    ```bash
-   forge-memory log "Quick-spec terminé : {DESCRIPTION}, {N} tests" --agent dev
-   forge-memory consolidate --verbose
-   forge-memory sync
+   forge-memory log "Quick-spec done: {DESCRIPTION}, {N} tests" --agent dev
    ```
 
 10. **Report to user**:
