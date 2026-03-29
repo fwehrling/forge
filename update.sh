@@ -113,7 +113,7 @@ skill_has_changes() {
     # Compare all tracked files between source and target skill directories.
     # Excludes generated artifacts. Uses a simple for loop (no process substitution)
     # for maximum portability across shells and platforms.
-    local src="$1" dst="$2"
+    local src="${1%/}" dst="${2%/}"
     local f rel
 
     # Check each source file against target (excluding generated artifacts)
