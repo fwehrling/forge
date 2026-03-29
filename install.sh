@@ -123,7 +123,7 @@ install_skills() {
         exit 1
     fi
 
-    SKILL_COUNT=$(find "${CLAUDE_DIR}/skills" -name "SKILL.md" -maxdepth 2 | wc -l | tr -d ' ')
+    SKILL_COUNT=$(find "${CLAUDE_DIR}/skills" -maxdepth 2 -name "SKILL.md" | wc -l | tr -d ' ')
     ok "Installed ${SKILL_COUNT} skills to ${CLAUDE_DIR}/skills/"
 
     # Write version file
