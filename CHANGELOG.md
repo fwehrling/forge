@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.23] - 2026-03-29
+
+### Changed
+
+- **Remove `paths` from 13 core pipeline skills**: `paths` frontmatter prevented skills from loading unless actively working on matching files, breaking the pipeline even in FORGE-initialized projects. Core skills (plan, architect, stories, build, verify, status, resume, debug, auto, analyze, audit, team, memory) are now always available. Niche skills (party, ux, business pack) keep `paths` to save tokens
+
 ## [1.7.22] - 2026-03-29
 
 ### Added

@@ -2,8 +2,6 @@
 name: forge-audit
 description: >
   Threat modeling, OWASP audit, compliance checks. Produces docs/security.md.
-paths:
-  - ".forge/**"
 ---
 
 # /forge-audit — FORGE Security Agent

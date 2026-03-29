@@ -3,8 +3,6 @@ name: forge-team
 description: >
   Agent Teams -- true parallel execution (real Claude Code processes).
   3 patterns: pipeline, party, build. Requires Agent Teams enabled.
-paths:
-  - ".forge/**"
 ---
 
 # /forge-team — FORGE + Agent Teams Bridge

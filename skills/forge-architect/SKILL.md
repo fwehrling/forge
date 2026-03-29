@@ -3,8 +3,6 @@ name: forge-architect
 description: >
   Architect Agent -- generates technical architecture, tech stack, API design.
   Produces docs/architecture.md. Requires docs/prd.md.
-paths:
-  - ".forge/**"
 ---
 
 # /forge-architect — FORGE Architect Agent

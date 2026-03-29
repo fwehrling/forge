@@ -2,8 +2,6 @@
 name: forge-memory
 description: >
   Vector memory diagnostic -- sync, search, status, reset, log, consolidate.
-paths:
-  - ".forge/**"
 ---
 
 # /forge-memory — FORGE Vector Memory

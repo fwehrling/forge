@@ -2,8 +2,6 @@
 name: forge-status
 description: >
   Sprint dashboard -- stories, metrics, progress. Reads .forge/sprint-status.yaml.
-paths:
-  - ".forge/**"
 ---
 
 # /forge-status — FORGE Sprint Status

@@ -3,8 +3,6 @@ name: forge-auto
 description: >
   Autopilot -- orchestrates all agents sequentially with checkpoints.
   Full pipeline, autonomous mode, end-to-end build.
-paths:
-  - ".forge/**"
 ---
 
 # /forge-auto — FORGE Autopilot Mode

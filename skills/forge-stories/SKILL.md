@@ -3,8 +3,6 @@ name: forge-stories
 description: >
   Scrum Master -- decomposes requirements into user stories with acceptance criteria.
   Produces docs/stories/STORY-XXX-*.md. Requires docs/prd.md + docs/architecture.md.
-paths:
-  - ".forge/**"
 ---
 
 # /forge-stories — FORGE Scrum Master Agent

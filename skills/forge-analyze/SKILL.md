@@ -3,8 +3,6 @@ name: forge-analyze
 description: >
   Domain research, market/competitive analysis, requirements elicitation.
   First pipeline step, upstream of /forge-plan. Produces docs/analysis.md.
-paths:
-  - ".forge/**"
 ---
 
 # /forge-analyze — FORGE Analyst Agent
