@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.18] - 2026-03-29
+
+### Added
+
+- **update.sh self-update**: after cloning the latest repo, update.sh detects if its own code has changed and re-executes with the fresh version. No more stale script running old comparison logic from an outdated `/tmp/forge` clone
+
 ## [1.7.17] - 2026-03-29
 
 ### Fixed

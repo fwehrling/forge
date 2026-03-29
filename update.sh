@@ -25,6 +25,7 @@ TMPDIR="/tmp/forge-update-$(date +%Y%m%d-%H%M%S)"
 INSTALL_PACK=""
 PACK_ONLY=false
 AUTO_YES=false
+ORIGINAL_ARGS=("$@")
 
 # ---- Parse arguments --------------------------------------------------------
 
@@ -86,6 +87,15 @@ git clone --depth 1 --quiet https://github.com/fwehrling/forge.git "$TMPDIR"
 NEW_VERSION="unknown"
 if [ -f "${TMPDIR}/VERSION" ]; then
     NEW_VERSION="$(cat "${TMPDIR}/VERSION" | tr -d '[:space:]')"
+fi
+
+# Self-update: if the fetched update.sh is newer, re-exec with it
+if [ "${FORGE_SELF_UPDATED:-}" != "true" ] && [ -f "${TMPDIR}/update.sh" ]; then
+    if ! diff -q "$0" "${TMPDIR}/update.sh" &>/dev/null; then
+        info "Newer update.sh detected, restarting with latest version..."
+        export FORGE_SELF_UPDATED=true
+        exec bash "${TMPDIR}/update.sh" "${ORIGINAL_ARGS[@]}"
+    fi
 fi
 
 SAME_VERSION=false
