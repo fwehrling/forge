@@ -420,7 +420,7 @@ fi
 echo ""
 echo "  FORGE Status Line (optional):"
 echo "    Adds a persistent indicator in the Claude Code terminal bar:"
-echo "    [Model] FORGE project-name | CTX:42% | 5h:67% (reset 2h30m) | 7d:12% (reset 5d3h)"
+echo "    [Model] FORGE v1.x.x project-name | CTX:42% | 5h:67% (reset 2h30m) | 7d:12% (reset 5d3h)"
 echo "    - Model name and project detection"
 echo "    - FORGE marker when .forge/ is detected"
 echo "    - Context window usage (with warning at 30%/50%)"
@@ -527,7 +527,11 @@ fi
 # Build final status line
 FORGE_MARKER=""
 if [ -d "$CWD/.forge" ]; then
-    FORGE_MARKER=" FORGE"
+    FORGE_VER=""
+    if [ -f "$HOME/.claude/skills/forge/.forge-version" ]; then
+        FORGE_VER=" v$(cat "$HOME/.claude/skills/forge/.forge-version" | tr -d '[:space:]')"
+    fi
+    FORGE_MARKER=" FORGE${FORGE_VER}"
 fi
 
 PARTS="${CTX}"
