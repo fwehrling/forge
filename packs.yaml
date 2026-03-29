@@ -24,6 +24,8 @@ core:
   - forge-status
   - forge-resume
   - forge-memory
+  - forge-permissions
+  - forge-think
   - forge-update
 
 business:
