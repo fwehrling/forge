@@ -24,11 +24,16 @@ CLAUDE_DIR="${HOME}/.claude"
 TMPDIR="/tmp/forge-update-$(date +%Y%m%d-%H%M%S)"
 INSTALL_PACK=""
 PACK_ONLY=false
+AUTO_YES=false
 
 # ---- Parse arguments --------------------------------------------------------
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
+        -y|--yes)
+            AUTO_YES=true
+            shift
+            ;;
         --pack)
             INSTALL_PACK="${2:-}"
             shift 2
@@ -38,8 +43,9 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -h|--help)
-            echo "Usage: bash update.sh [--pack business] [--only]"
+            echo "Usage: bash update.sh [-y] [--pack business] [--only]"
             echo ""
+            echo "  -y, --yes         Accept all prompts automatically"
             echo "  --pack business   Install/update the Business Pack"
             echo "  --only            Only update the pack, skip core skills"
             exit 0
@@ -220,7 +226,7 @@ rm -f "${CLAUDE_DIR}/skills/forge/.forge-update-cache"
 # ---- Update hooks ------------------------------------------------------------
 
 if [ -f "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh" ]; then
-    if bash "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh"; then
+    if FORGE_AUTO="$AUTO_YES" bash "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh"; then
         ok "Hooks updated"
     else
         warn "Hook setup failed (non-blocking)"
@@ -230,7 +236,7 @@ fi
 # ---- Update CLAUDE.md --------------------------------------------------------
 
 if [ -f "${TMPDIR}/scripts/inject-claude-md.sh" ]; then
-    bash "${TMPDIR}/scripts/inject-claude-md.sh"
+    FORGE_YES="$AUTO_YES" bash "${TMPDIR}/scripts/inject-claude-md.sh"
 fi
 
 # ---- Cleanup -----------------------------------------------------------------
