@@ -14,11 +14,11 @@ else
     GREEN='' YELLOW='' BLUE='' RED='' BOLD='' NC=''
 fi
 
-info()  { echo -e "${BLUE}→${NC} $1"; }
-ok()    { echo -e "${GREEN}✓${NC} $1"; }
-warn()  { echo -e "${YELLOW}!${NC} $1"; }
-error() { echo -e "${RED}✗${NC} $1" >&2; }
-step()  { echo -e "\n${BOLD}[$1/$TOTAL_STEPS] $2${NC}"; }
+info()  { printf '%b\n' "${BLUE}→${NC} $1"; }
+ok()    { printf '%b\n' "${GREEN}✓${NC} $1"; }
+warn()  { printf '%b\n' "${YELLOW}!${NC} $1"; }
+error() { printf '%b\n' "${RED}✗${NC} $1" >&2; }
+step()  { printf '\n%b\n' "${BOLD}[$1/$TOTAL_STEPS] $2${NC}"; }
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CLAUDE_DIR="${HOME}/.claude"
@@ -29,7 +29,7 @@ RTK_INSTALLED=false
 # ─── Banner ──────────────────────────────────────────────────────────────────
 
 echo ""
-echo -e "${GREEN}FORGE${NC} — Framework for Orchestrated Resilient Generative Engineering"
+printf '%b\n' "${GREEN}FORGE${NC} -- Framework for Orchestrated Resilient Generative Engineering"
 echo ""
 
 # ─── [1/6] Detect OS ────────────────────────────────────────────────────────
@@ -53,7 +53,7 @@ detect_os() {
             warn "Some features (vector memory, autonomous loops) will not work."
             warn "Recommended: use WSL instead — https://learn.microsoft.com/en-us/windows/wsl/install"
             echo ""
-            read -p "$(echo -e "${YELLOW}?${NC}") Continue anyway? [y/N] " answer
+            read -p "$(printf '%b' "${YELLOW}?${NC}") Continue anyway? [y/N] " answer
             if [[ ! "${answer}" =~ ^[Yy]$ ]]; then
                 info "Installation cancelled. Install WSL and try again."
                 exit 0
@@ -346,30 +346,30 @@ verify_installation() {
 
 print_summary() {
     echo ""
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-    echo -e "${GREEN}  FORGE installed successfully${NC}"
-    echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    printf '%b\n' "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    printf '%b\n' "${GREEN}  FORGE installed successfully${NC}"
+    printf '%b\n' "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo "  Installed:"
-    echo -e "    ${GREEN}✓${NC} ${SKILL_COUNT} skills → ${CLAUDE_DIR}/skills/"
+    printf '%b\n' "    ${GREEN}✓${NC} ${SKILL_COUNT} skills → ${CLAUDE_DIR}/skills/"
     if [ "$VECTOR_MEMORY_INSTALLED" = true ]; then
-        echo -e "    ${GREEN}✓${NC} Vector memory (forge-memory CLI)"
+        printf '%b\n' "    ${GREEN}✓${NC} Vector memory (forge-memory CLI)"
     else
-        echo -e "    ${YELLOW}--${NC} Vector memory (not installed)"
+        printf '%b\n' "    ${YELLOW}--${NC} Vector memory (not installed)"
     fi
     if [ "${FORGE_HOOKS_INSTALLED:-false}" = true ]; then
         local sl_status=""
         if [ -f "${HOME}/.claude/hooks/statusline.sh" ]; then
             sl_status=", status line"
         fi
-        echo -e "    ${GREEN}✓${NC} FORGE Hooks (bash-interceptor, token-saver, update-check, memory-sync${sl_status})"
+        printf '%b\n' "    ${GREEN}✓${NC} FORGE Hooks (bash-interceptor, token-saver, update-check, memory-sync${sl_status})"
     else
-        echo -e "    ${YELLOW}--${NC} FORGE Hooks (not installed)"
+        printf '%b\n' "    ${YELLOW}--${NC} FORGE Hooks (not installed)"
     fi
     if [ "$RTK_INSTALLED" = true ]; then
-        echo -e "    ${GREEN}✓${NC} RTK token optimizer (60-90% output compression)"
+        printf '%b\n' "    ${GREEN}✓${NC} RTK token optimizer (60-90% output compression)"
     else
-        echo -e "    ${YELLOW}--${NC} RTK (not installed -- using built-in token-saver)"
+        printf '%b\n' "    ${YELLOW}--${NC} RTK (not installed -- using built-in token-saver)"
     fi
     # Suggest Business Pack if not installed
     local has_business_pack=false
@@ -382,7 +382,7 @@ print_summary() {
 
     if [ "$has_business_pack" = false ] && [ -d "${SCRIPT_DIR}/packs/business" ]; then
         echo ""
-        echo -e "  ${YELLOW}Tip:${NC} FORGE Business Pack available (marketing, SEO, legal, security, strategy)."
+        printf '%b\n' "  ${YELLOW}Tip:${NC} FORGE Business Pack available (marketing, SEO, legal, security, strategy)."
         echo "        Install with: /forge-update --pack business"
     fi
 
