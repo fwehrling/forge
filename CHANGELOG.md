@@ -5,6 +5,13 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.12] - 2026-03-29
+
+### Fixed
+
+- **update.sh false positives**: exclude generated files (`.forge-version`, `.venv`, `forge-memory`, `.DS_Store`, `__pycache__`) from diff comparison so update reports no changes when files are truly in sync
+- **find argument order**: move `-maxdepth` before `-name` in `install.sh` and `update.sh` to fix warning on Linux
+
 ## [1.7.11] - 2026-03-29
 
 ### Fixed

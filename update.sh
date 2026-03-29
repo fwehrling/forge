@@ -106,7 +106,7 @@ compare_skill() {
         return
     fi
 
-    if ! diff -rq "$source_dir" "$target_dir" &>/dev/null; then
+    if ! diff -rq --exclude='.forge-version' --exclude='.forge-update-cache' --exclude='.venv' --exclude='forge-memory' --exclude='.DS_Store' --exclude='__pycache__' "$source_dir" "$target_dir" &>/dev/null; then
         MODIFIED=$((MODIFIED + 1))
         MODIFIED_LIST="${MODIFIED_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name}"
     fi
@@ -131,7 +131,7 @@ if [ -n "$INSTALL_PACK" ] && [ -d "${TMPDIR}/packs/${INSTALL_PACK}" ]; then
         if [ ! -d "$local_dir" ]; then
             PACK_MODIFIED=$((PACK_MODIFIED + 1))
             PACK_LIST="${PACK_LIST}\n  ${GREEN}+ new${NC}  ${skill_name}"
-        elif ! diff -rq "$dir" "$local_dir" &>/dev/null; then
+        elif ! diff -rq --exclude='.DS_Store' --exclude='__pycache__' "$dir" "$local_dir" &>/dev/null; then
             PACK_MODIFIED=$((PACK_MODIFIED + 1))
             PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name}"
         fi
@@ -142,7 +142,7 @@ elif [ -d "${TMPDIR}/packs/business" ]; then
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
         if [ -d "${CLAUDE_DIR}/skills/${skill_name}" ]; then
-            if ! diff -rq "$dir" "${CLAUDE_DIR}/skills/${skill_name}" &>/dev/null; then
+            if ! diff -rq --exclude='.DS_Store' --exclude='__pycache__' "$dir" "${CLAUDE_DIR}/skills/${skill_name}" &>/dev/null; then
                 PACK_MODIFIED=$((PACK_MODIFIED + 1))
                 PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name} (business)"
             fi
@@ -239,7 +239,7 @@ rm -rf "$TMPDIR"
 
 # ---- Summary -----------------------------------------------------------------
 
-SKILL_COUNT=$(find "${CLAUDE_DIR}/skills" -name "SKILL.md" -maxdepth 2 | wc -l | tr -d ' ')
+SKILL_COUNT=$(find "${CLAUDE_DIR}/skills" -maxdepth 2 -name "SKILL.md" | wc -l | tr -d ' ')
 
 echo ""
 printf '%b\n' "${GREEN}---------------------------------------------${NC}"
