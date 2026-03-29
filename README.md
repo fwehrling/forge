@@ -176,9 +176,16 @@ The installer copies skills, configures hooks, and sets up vector memory automat
 
 ### Updating
 
+From Claude Code:
 ```bash
 /forge-update                    # Core skills
 /forge-update --pack business    # + Business Pack
+```
+
+From terminal (without Claude Code):
+```bash
+bash /tmp/forge/update.sh                    # Core skills
+bash /tmp/forge/update.sh --pack business    # + Business Pack
 ```
 
 FORGE checks for updates automatically at session startup (1x/24h).
@@ -245,7 +252,11 @@ FORGE adjusts to your project's complexity:
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.7.8**: fix VERSION file not updated since v1.7.3.
+**Latest -- v1.7.10**: standalone `update.sh` script, fix memory setup banner.
+
+**v1.7.9**: streamline 19 skill prompts (-240 lines), add router disambiguation table, add `.gitignore`.
+
+**v1.7.8**: fix VERSION file not updated since v1.7.3.
 
 **v1.7.7**: quick-spec now suggests verify + review as next steps.
 
