@@ -15,10 +15,10 @@ else
     GREEN='' YELLOW='' BLUE='' RED='' BOLD='' NC=''
 fi
 
-info()  { echo -e "${BLUE}->${NC} $1"; }
-ok()    { echo -e "${GREEN}ok${NC} $1"; }
-warn()  { echo -e "${YELLOW}!${NC} $1"; }
-error() { echo -e "${RED}x${NC} $1" >&2; }
+info()  { printf '%b\n' "${BLUE}->${NC} $1"; }
+ok()    { printf '%b\n' "${GREEN}ok${NC} $1"; }
+warn()  { printf '%b\n' "${YELLOW}!${NC} $1"; }
+error() { printf '%b\n' "${RED}x${NC} $1" >&2; }
 
 CLAUDE_DIR="${HOME}/.claude"
 TMPDIR="/tmp/forge-update-$(date +%Y%m%d-%H%M%S)"
@@ -54,7 +54,7 @@ done
 # ---- Banner -----------------------------------------------------------------
 
 echo ""
-echo -e "${GREEN}FORGE${NC} — Update"
+printf '%b\n' "${GREEN}FORGE${NC} -- Update"
 echo ""
 
 # ---- Pre-checks -------------------------------------------------------------
@@ -153,9 +153,9 @@ fi
 # Display summary
 TOTAL_CHANGES=$((MODIFIED + NEW_SKILLS + PACK_MODIFIED))
 if [ "$TOTAL_CHANGES" -gt 0 ]; then
-    echo -e "${BOLD}Changes detected:${NC}"
-    [ -n "$MODIFIED_LIST" ] && echo -e "$MODIFIED_LIST"
-    [ -n "$PACK_LIST" ] && echo -e "$PACK_LIST"
+    printf '%b\n' "${BOLD}Changes detected:${NC}"
+    [ -n "$MODIFIED_LIST" ] && printf '%b\n' "$MODIFIED_LIST"
+    [ -n "$PACK_LIST" ] && printf '%b\n' "$PACK_LIST"
     echo ""
 else
     ok "All skills are identical to the repo"
@@ -242,9 +242,9 @@ rm -rf "$TMPDIR"
 SKILL_COUNT=$(find "${CLAUDE_DIR}/skills" -name "SKILL.md" -maxdepth 2 | wc -l | tr -d ' ')
 
 echo ""
-echo -e "${GREEN}---------------------------------------------${NC}"
-echo -e "${GREEN}  FORGE updated successfully${NC}"
-echo -e "${GREEN}---------------------------------------------${NC}"
+printf '%b\n' "${GREEN}---------------------------------------------${NC}"
+printf '%b\n' "${GREEN}  FORGE updated successfully${NC}"
+printf '%b\n' "${GREEN}---------------------------------------------${NC}"
 echo ""
 echo "  Version : v${OLD_VERSION} -> v${NEW_VERSION}"
 echo "  Skills  : ${SKILL_COUNT} installed"
@@ -266,7 +266,7 @@ done
 
 if [ "$HAS_BUSINESS" = false ] && [ -z "$INSTALL_PACK" ]; then
     echo ""
-    echo -e "  ${YELLOW}Tip:${NC} Business Pack available (marketing, SEO, legal, security, strategy)."
+    printf '%b\n' "  ${YELLOW}Tip:${NC} Business Pack available (marketing, SEO, legal, security, strategy)."
     echo "        Run: bash update.sh --pack business"
 fi
 
