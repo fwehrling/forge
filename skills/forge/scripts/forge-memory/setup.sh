@@ -18,10 +18,20 @@ if [ ! -d "${VENV_DIR}" ]; then
     python3 -m venv "${VENV_DIR}"
 fi
 
+# Use a disk-backed temp directory for pip downloads (avoids filling tmpfs on
+# servers where /tmp is a small RAM-backed mount, e.g. 512 Mo on Hostinger VPS)
+PIP_TMPDIR="${HOME}/tmp/pip-build"
+mkdir -p "${PIP_TMPDIR}"
+export TMPDIR="${PIP_TMPDIR}"
+
 # Activate and install deps
 echo "→ Installing dependencies..."
 "${VENV_DIR}/bin/pip" install --quiet --upgrade pip
 "${VENV_DIR}/bin/pip" install --quiet -r "${SCRIPT_DIR}/requirements.txt"
+
+# Clean up pip temp directory
+rm -rf "${PIP_TMPDIR}"
+unset TMPDIR
 
 # Pre-download model (suppress harmless HF/transformers warnings)
 echo "→ Pre-downloading embedding model (all-MiniLM-L6-v2)..."
