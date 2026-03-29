@@ -5,6 +5,16 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.10] - 2026-03-29
+
+### Added
+
+- **update.sh**: standalone terminal script for updating FORGE without Claude Code (`bash update.sh`, `bash update.sh --pack business`)
+
+### Fixed
+
+- **Vector memory setup banner**: replaced brain emoji with arrow for consistent terminal styling
+
 ## [1.7.9] - 2026-03-29
 
 ### Changed

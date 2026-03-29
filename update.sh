@@ -1,0 +1,273 @@
+#!/usr/bin/env bash
+# FORGE Updater — Standalone terminal script
+# Equivalent to /forge-update but runs outside Claude Code.
+set -euo pipefail
+
+# Colors (disabled if not a terminal)
+if [ -t 1 ]; then
+    GREEN='\033[0;32m'
+    YELLOW='\033[1;33m'
+    BLUE='\033[0;34m'
+    RED='\033[0;31m'
+    BOLD='\033[1m'
+    NC='\033[0m'
+else
+    GREEN='' YELLOW='' BLUE='' RED='' BOLD='' NC=''
+fi
+
+info()  { echo -e "${BLUE}->${NC} $1"; }
+ok()    { echo -e "${GREEN}ok${NC} $1"; }
+warn()  { echo -e "${YELLOW}!${NC} $1"; }
+error() { echo -e "${RED}x${NC} $1" >&2; }
+
+CLAUDE_DIR="${HOME}/.claude"
+TMPDIR="/tmp/forge-update-$(date +%Y%m%d-%H%M%S)"
+INSTALL_PACK=""
+PACK_ONLY=false
+
+# ---- Parse arguments --------------------------------------------------------
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --pack)
+            INSTALL_PACK="${2:-}"
+            shift 2
+            ;;
+        --only)
+            PACK_ONLY=true
+            shift
+            ;;
+        -h|--help)
+            echo "Usage: bash update.sh [--pack business] [--only]"
+            echo ""
+            echo "  --pack business   Install/update the Business Pack"
+            echo "  --only            Only update the pack, skip core skills"
+            exit 0
+            ;;
+        *)
+            error "Unknown argument: $1"
+            exit 1
+            ;;
+    esac
+done
+
+# ---- Banner -----------------------------------------------------------------
+
+echo ""
+echo -e "${GREEN}FORGE${NC} — Update"
+echo ""
+
+# ---- Pre-checks -------------------------------------------------------------
+
+if [ ! -f "${CLAUDE_DIR}/skills/forge/SKILL.md" ]; then
+    error "FORGE is not installed. Run install.sh first:"
+    error "  git clone https://github.com/fwehrling/forge.git /tmp/forge && bash /tmp/forge/install.sh"
+    exit 1
+fi
+
+OLD_VERSION="unknown"
+if [ -f "${CLAUDE_DIR}/skills/forge/.forge-version" ]; then
+    OLD_VERSION="$(cat "${CLAUDE_DIR}/skills/forge/.forge-version" | tr -d '[:space:]')"
+fi
+info "Current version: v${OLD_VERSION}"
+
+# ---- Clone repo --------------------------------------------------------------
+
+info "Fetching latest version..."
+rm -rf "$TMPDIR"
+git clone --depth 1 --quiet https://github.com/fwehrling/forge.git "$TMPDIR"
+
+NEW_VERSION="unknown"
+if [ -f "${TMPDIR}/VERSION" ]; then
+    NEW_VERSION="$(cat "${TMPDIR}/VERSION" | tr -d '[:space:]')"
+fi
+
+if [ "$OLD_VERSION" = "$NEW_VERSION" ]; then
+    ok "Already up to date (v${NEW_VERSION})"
+    echo ""
+    info "Continuing anyway to ensure all files are in sync..."
+    echo ""
+fi
+
+# ---- Compare skills ----------------------------------------------------------
+
+MODIFIED=0
+NEW_SKILLS=0
+MODIFIED_LIST=""
+
+compare_skill() {
+    local skill_name="$1"
+    local source_dir="$2"
+    local target_dir="${CLAUDE_DIR}/skills/${skill_name}"
+
+    if [ ! -d "$target_dir" ]; then
+        NEW_SKILLS=$((NEW_SKILLS + 1))
+        MODIFIED_LIST="${MODIFIED_LIST}\n  ${GREEN}+ new${NC}  ${skill_name}"
+        return
+    fi
+
+    if ! diff -rq "$source_dir" "$target_dir" &>/dev/null; then
+        MODIFIED=$((MODIFIED + 1))
+        MODIFIED_LIST="${MODIFIED_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name}"
+    fi
+}
+
+if [ "$PACK_ONLY" = false ]; then
+    for dir in "${TMPDIR}/skills/"*/; do
+        [ -d "$dir" ] || continue
+        skill_name="$(basename "$dir")"
+        compare_skill "$skill_name" "$dir"
+    done
+fi
+
+# Compare pack skills if requested or already installed
+PACK_MODIFIED=0
+PACK_LIST=""
+if [ -n "$INSTALL_PACK" ] && [ -d "${TMPDIR}/packs/${INSTALL_PACK}" ]; then
+    for dir in "${TMPDIR}/packs/${INSTALL_PACK}/"forge-*/; do
+        [ -d "$dir" ] || continue
+        skill_name="$(basename "$dir")"
+        local_dir="${CLAUDE_DIR}/skills/${skill_name}"
+        if [ ! -d "$local_dir" ]; then
+            PACK_MODIFIED=$((PACK_MODIFIED + 1))
+            PACK_LIST="${PACK_LIST}\n  ${GREEN}+ new${NC}  ${skill_name}"
+        elif ! diff -rq "$dir" "$local_dir" &>/dev/null; then
+            PACK_MODIFIED=$((PACK_MODIFIED + 1))
+            PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name}"
+        fi
+    done
+elif [ -d "${TMPDIR}/packs/business" ]; then
+    # Auto-update previously installed business pack skills
+    for dir in "${TMPDIR}/packs/business/"forge-*/; do
+        [ -d "$dir" ] || continue
+        skill_name="$(basename "$dir")"
+        if [ -d "${CLAUDE_DIR}/skills/${skill_name}" ]; then
+            if ! diff -rq "$dir" "${CLAUDE_DIR}/skills/${skill_name}" &>/dev/null; then
+                PACK_MODIFIED=$((PACK_MODIFIED + 1))
+                PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name} (business)"
+            fi
+        fi
+    done
+fi
+
+# Display summary
+TOTAL_CHANGES=$((MODIFIED + NEW_SKILLS + PACK_MODIFIED))
+if [ "$TOTAL_CHANGES" -gt 0 ]; then
+    echo -e "${BOLD}Changes detected:${NC}"
+    [ -n "$MODIFIED_LIST" ] && echo -e "$MODIFIED_LIST"
+    [ -n "$PACK_LIST" ] && echo -e "$PACK_LIST"
+    echo ""
+else
+    ok "All skills are identical to the repo"
+fi
+
+# ---- Copy core skills --------------------------------------------------------
+
+if [ "$PACK_ONLY" = false ]; then
+    info "Updating core skills..."
+
+    for dir in "${TMPDIR}/skills/"*/; do
+        [ -d "$dir" ] || continue
+        skill_name="$(basename "$dir")"
+        \cp -rf "$dir" "${CLAUDE_DIR}/skills/${skill_name}"
+    done
+
+    # Remove deprecated skills
+    REMOVED_SKILLS="forge-deploy"
+    for skill in $REMOVED_SKILLS; do
+        if [ -d "${CLAUDE_DIR}/skills/${skill}" ]; then
+            rm -rf "${CLAUDE_DIR}/skills/${skill}"
+            warn "Removed deprecated skill: ${skill}"
+        fi
+    done
+
+    ok "Core skills updated"
+fi
+
+# ---- Copy pack skills --------------------------------------------------------
+
+if [ -n "$INSTALL_PACK" ] && [ -d "${TMPDIR}/packs/${INSTALL_PACK}" ]; then
+    info "Installing ${INSTALL_PACK} pack..."
+    for dir in "${TMPDIR}/packs/${INSTALL_PACK}/"forge-*/; do
+        [ -d "$dir" ] || continue
+        skill_name="$(basename "$dir")"
+        \cp -rf "$dir" "${CLAUDE_DIR}/skills/${skill_name}"
+    done
+    ok "Business pack installed"
+elif [ -d "${TMPDIR}/packs/business" ]; then
+    # Auto-update previously installed business pack skills
+    local_updated=0
+    for dir in "${TMPDIR}/packs/business/"forge-*/; do
+        [ -d "$dir" ] || continue
+        skill_name="$(basename "$dir")"
+        if [ -d "${CLAUDE_DIR}/skills/${skill_name}" ]; then
+            \cp -rf "$dir" "${CLAUDE_DIR}/skills/${skill_name}"
+            local_updated=$((local_updated + 1))
+        fi
+    done
+    if [ "$local_updated" -gt 0 ]; then
+        ok "Business pack updated (${local_updated} skills)"
+    fi
+fi
+
+# ---- Update version and cache ------------------------------------------------
+
+info "Updating version and hooks..."
+
+\cp -f "${TMPDIR}/VERSION" "${CLAUDE_DIR}/skills/forge/.forge-version"
+rm -f "${CLAUDE_DIR}/skills/forge/.forge-update-cache"
+
+# ---- Update hooks ------------------------------------------------------------
+
+if [ -f "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh" ]; then
+    if bash "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh"; then
+        ok "Hooks updated"
+    else
+        warn "Hook setup failed (non-blocking)"
+    fi
+fi
+
+# ---- Update CLAUDE.md --------------------------------------------------------
+
+if [ -f "${TMPDIR}/scripts/inject-claude-md.sh" ]; then
+    bash "${TMPDIR}/scripts/inject-claude-md.sh"
+fi
+
+# ---- Cleanup -----------------------------------------------------------------
+
+rm -rf "$TMPDIR"
+
+# ---- Summary -----------------------------------------------------------------
+
+SKILL_COUNT=$(find "${CLAUDE_DIR}/skills" -name "SKILL.md" -maxdepth 2 | wc -l | tr -d ' ')
+
+echo ""
+echo -e "${GREEN}---------------------------------------------${NC}"
+echo -e "${GREEN}  FORGE updated successfully${NC}"
+echo -e "${GREEN}---------------------------------------------${NC}"
+echo ""
+echo "  Version : v${OLD_VERSION} -> v${NEW_VERSION}"
+echo "  Skills  : ${SKILL_COUNT} installed"
+if [ "$MODIFIED" -gt 0 ] || [ "$NEW_SKILLS" -gt 0 ]; then
+    echo "  Core    : ${MODIFIED} updated, ${NEW_SKILLS} new"
+fi
+if [ "$PACK_MODIFIED" -gt 0 ]; then
+    echo "  Pack    : ${PACK_MODIFIED} updated"
+fi
+
+# Suggest business pack if not installed
+HAS_BUSINESS=false
+for bp_skill in forge-marketing forge-copywriting forge-seo forge-geo forge-legal forge-security-pro forge-business-strategy forge-strategy-panel; do
+    if [ -d "${CLAUDE_DIR}/skills/${bp_skill}" ]; then
+        HAS_BUSINESS=true
+        break
+    fi
+done
+
+if [ "$HAS_BUSINESS" = false ] && [ -z "$INSTALL_PACK" ]; then
+    echo ""
+    echo -e "  ${YELLOW}Tip:${NC} Business Pack available (marketing, SEO, legal, security, strategy)."
+    echo "        Run: bash update.sh --pack business"
+fi
+
+echo ""
