@@ -88,11 +88,9 @@ if [ -f "${TMPDIR}/VERSION" ]; then
     NEW_VERSION="$(cat "${TMPDIR}/VERSION" | tr -d '[:space:]')"
 fi
 
+SAME_VERSION=false
 if [ "$OLD_VERSION" = "$NEW_VERSION" ]; then
-    ok "Already up to date (v${NEW_VERSION})"
-    echo ""
-    info "Continuing anyway to ensure all files are in sync..."
-    echo ""
+    SAME_VERSION=true
 fi
 
 # ---- Compare skills ----------------------------------------------------------
@@ -100,6 +98,29 @@ fi
 MODIFIED=0
 NEW_SKILLS=0
 MODIFIED_LIST=""
+
+diff_source_files() {
+    # Compare only source files (md, sh, js, yaml, py) between two directories
+    # Ignores generated files, caches, venvs, and OS artifacts
+    local src="$1"
+    local dst="$2"
+    local has_diff=false
+
+    while IFS= read -r -d '' file; do
+        local rel="${file#$src/}"
+        if [ -f "$dst/$rel" ]; then
+            if ! diff -q "$file" "$dst/$rel" &>/dev/null; then
+                has_diff=true
+                break
+            fi
+        else
+            has_diff=true
+            break
+        fi
+    done < <(find "$src" -type f \( -name "*.md" -o -name "*.sh" -o -name "*.js" -o -name "*.yaml" -o -name "*.yml" -o -name "*.py" -o -name "*.json" \) -print0 2>/dev/null)
+
+    $has_diff
+}
 
 compare_skill() {
     local skill_name="$1"
@@ -112,7 +133,7 @@ compare_skill() {
         return
     fi
 
-    if ! diff -rq --exclude='.forge-version' --exclude='.forge-update-cache' --exclude='.venv' --exclude='forge-memory' --exclude='.DS_Store' --exclude='__pycache__' "$source_dir" "$target_dir" &>/dev/null; then
+    if diff_source_files "$source_dir" "$target_dir"; then
         MODIFIED=$((MODIFIED + 1))
         MODIFIED_LIST="${MODIFIED_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name}"
     fi
@@ -137,7 +158,7 @@ if [ -n "$INSTALL_PACK" ] && [ -d "${TMPDIR}/packs/${INSTALL_PACK}" ]; then
         if [ ! -d "$local_dir" ]; then
             PACK_MODIFIED=$((PACK_MODIFIED + 1))
             PACK_LIST="${PACK_LIST}\n  ${GREEN}+ new${NC}  ${skill_name}"
-        elif ! diff -rq --exclude='.DS_Store' --exclude='__pycache__' "$dir" "$local_dir" &>/dev/null; then
+        elif diff_source_files "$dir" "$local_dir"; then
             PACK_MODIFIED=$((PACK_MODIFIED + 1))
             PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name}"
         fi
@@ -148,7 +169,7 @@ elif [ -d "${TMPDIR}/packs/business" ]; then
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
         if [ -d "${CLAUDE_DIR}/skills/${skill_name}" ]; then
-            if ! diff -rq --exclude='.DS_Store' --exclude='__pycache__' "$dir" "${CLAUDE_DIR}/skills/${skill_name}" &>/dev/null; then
+            if diff_source_files "$dir" "${CLAUDE_DIR}/skills/${skill_name}"; then
                 PACK_MODIFIED=$((PACK_MODIFIED + 1))
                 PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name} (business)"
             fi
@@ -156,15 +177,25 @@ elif [ -d "${TMPDIR}/packs/business" ]; then
     done
 fi
 
-# Display summary
+# Display comparison results
 TOTAL_CHANGES=$((MODIFIED + NEW_SKILLS + PACK_MODIFIED))
+if [ "$SAME_VERSION" = true ] && [ "$TOTAL_CHANGES" -eq 0 ]; then
+    ok "Already up to date (v${NEW_VERSION}) -- nothing to do"
+    rm -rf "$TMPDIR"
+    echo ""
+    exit 0
+fi
+
+if [ "$SAME_VERSION" = true ] && [ "$TOTAL_CHANGES" -gt 0 ]; then
+    info "Version is v${NEW_VERSION} but some files differ:"
+elif [ "$SAME_VERSION" = false ]; then
+    info "Updating v${OLD_VERSION} -> v${NEW_VERSION}"
+fi
+
 if [ "$TOTAL_CHANGES" -gt 0 ]; then
-    printf '%b\n' "${BOLD}Changes detected:${NC}"
     [ -n "$MODIFIED_LIST" ] && printf '%b\n' "$MODIFIED_LIST"
     [ -n "$PACK_LIST" ] && printf '%b\n' "$PACK_LIST"
     echo ""
-else
-    ok "All skills are identical to the repo"
 fi
 
 # ---- Copy core skills --------------------------------------------------------
@@ -252,13 +283,16 @@ printf '%b\n' "${GREEN}---------------------------------------------${NC}"
 printf '%b\n' "${GREEN}  FORGE updated successfully${NC}"
 printf '%b\n' "${GREEN}---------------------------------------------${NC}"
 echo ""
-echo "  Version : v${OLD_VERSION} -> v${NEW_VERSION}"
-echo "  Skills  : ${SKILL_COUNT} installed"
-if [ "$MODIFIED" -gt 0 ] || [ "$NEW_SKILLS" -gt 0 ]; then
-    echo "  Core    : ${MODIFIED} updated, ${NEW_SKILLS} new"
+if [ "$SAME_VERSION" = true ]; then
+    echo "  Version : v${NEW_VERSION} (synced)"
+else
+    echo "  Version : v${OLD_VERSION} -> v${NEW_VERSION}"
 fi
-if [ "$PACK_MODIFIED" -gt 0 ]; then
-    echo "  Pack    : ${PACK_MODIFIED} updated"
+echo "  Skills  : ${SKILL_COUNT} installed"
+if [ "$TOTAL_CHANGES" -gt 0 ]; then
+    echo "  Changed : ${TOTAL_CHANGES} (${MODIFIED} core, ${NEW_SKILLS} new, ${PACK_MODIFIED} pack)"
+else
+    echo "  Changed : 0"
 fi
 
 # Suggest business pack if not installed
