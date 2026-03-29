@@ -9,7 +9,7 @@ if [[ "${1:-}" == "--auto" ]]; then
     AUTO_MODE=true
 fi
 
-echo "🧠 FORGE Vector Memory — Installation"
+echo "→ FORGE Vector Memory — Installation"
 echo ""
 
 # Create isolated venv
