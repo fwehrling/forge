@@ -13,9 +13,9 @@ else
     GREEN='' YELLOW='' BLUE='' NC=''
 fi
 
-info()  { echo -e "${BLUE}→${NC} $1"; }
-ok()    { echo -e "${GREEN}✓${NC} $1"; }
-warn()  { echo -e "${YELLOW}!${NC} $1"; }
+info()  { printf '%b\n' "${BLUE}→${NC} $1"; }
+ok()    { printf '%b\n' "${GREEN}✓${NC} $1"; }
+warn()  { printf '%b\n' "${YELLOW}!${NC} $1"; }
 
 CLAUDE_MD="${HOME}/.claude/CLAUDE.md"
 MARKER_BEGIN="<!-- FORGE:BEGIN -->"
@@ -62,7 +62,11 @@ if [ ! -f "$CLAUDE_MD" ]; then
     echo "$TEMPLATE_CONTENT"
     echo "---"
     echo ""
-    read -p "$(echo -e "${YELLOW}?${NC}") Create ~/.claude/CLAUDE.md with FORGE section? [y/N] " answer
+    if [ "${FORGE_YES:-false}" = "true" ]; then
+        answer="y"
+    else
+        read -p "$(printf '%b' "${YELLOW}?${NC}") Create ~/.claude/CLAUDE.md with FORGE section? [y/N] " answer
+    fi
     if [[ "${answer}" =~ ^[Yy]$ ]]; then
         printf '%s\n' "$FORGE_BLOCK" > "$CLAUDE_MD"
         ok "Created ~/.claude/CLAUDE.md with FORGE section"
@@ -101,7 +105,11 @@ echo "---"
 echo "$TEMPLATE_CONTENT"
 echo "---"
 echo ""
-read -p "$(echo -e "${YELLOW}?${NC}") Add FORGE section to ~/.claude/CLAUDE.md? [y/N] " answer
+if [ "${FORGE_YES:-false}" = "true" ]; then
+    answer="y"
+else
+    read -p "$(printf '%b' "${YELLOW}?${NC}") Add FORGE section to ~/.claude/CLAUDE.md? [y/N] " answer
+fi
 if [[ "${answer}" =~ ^[Yy]$ ]]; then
     backup_claude_md
     printf '\n%s\n' "$FORGE_BLOCK" >> "$CLAUDE_MD"

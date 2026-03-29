@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.7.12-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.7.13-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-23%20core%20%2B%208%20business-orange)](#commands)
@@ -252,7 +252,7 @@ FORGE adjusts to your project's complexity:
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.7.12**: fix false positives in update.sh diff and find argument order warning.
+**Latest -- v1.7.13**: add `-y`/`--yes` flag to install.sh and update.sh for non-interactive mode.
 
 **v1.7.10**: standalone `update.sh` script, fix memory setup banner.
 

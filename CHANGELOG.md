@@ -5,6 +5,16 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.13] - 2026-03-29
+
+### Added
+
+- **`-y`/`--yes` flag**: `install.sh -y` and `update.sh -y` accept all prompts automatically (RTK install, status line, CLAUDE.md injection). Propagated to sub-scripts via `FORGE_YES` and `FORGE_AUTO` environment variables
+
+### Fixed
+
+- **inject-claude-md.sh**: replace `echo -e` with `printf` for POSIX compatibility
+
 ## [1.7.12] - 2026-03-29
 
 ### Fixed

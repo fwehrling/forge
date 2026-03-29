@@ -434,8 +434,10 @@ if [ -n "$EXISTING_STATUSLINE" ]; then
   echo ""
 fi
 
-# Interactive prompt (skip if --auto flag or non-interactive)
-if [ -t 0 ] && [ "${FORGE_AUTO:-}" != "true" ]; then
+# Interactive prompt (auto-yes, skip if non-interactive)
+if [ "${FORGE_AUTO:-}" = "true" ]; then
+  INSTALL_STATUSLINE=true
+elif [ -t 0 ]; then
   printf "  Install FORGE status line? [y/N] "
   read -r REPLY < /dev/tty
   case "$REPLY" in

@@ -25,6 +25,15 @@ CLAUDE_DIR="${HOME}/.claude"
 TOTAL_STEPS=7
 VECTOR_MEMORY_INSTALLED=false
 RTK_INSTALLED=false
+AUTO_YES="${FORGE_YES:-false}"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -y|--yes) AUTO_YES=true; shift ;;
+        *) shift ;;
+    esac
+done
 
 # ─── Banner ──────────────────────────────────────────────────────────────────
 
@@ -53,10 +62,14 @@ detect_os() {
             warn "Some features (vector memory, autonomous loops) will not work."
             warn "Recommended: use WSL instead — https://learn.microsoft.com/en-us/windows/wsl/install"
             echo ""
-            read -p "$(printf '%b' "${YELLOW}?${NC}") Continue anyway? [y/N] " answer
-            if [[ ! "${answer}" =~ ^[Yy]$ ]]; then
-                info "Installation cancelled. Install WSL and try again."
-                exit 0
+            if [ "$AUTO_YES" = true ]; then
+                info "Auto-yes: continuing on Git Bash"
+            else
+                read -p "$(printf '%b' "${YELLOW}?${NC}") Continue anyway? [y/N] " answer
+                if [[ ! "${answer}" =~ ^[Yy]$ ]]; then
+                    info "Installation cancelled. Install WSL and try again."
+                    exit 0
+                fi
             fi
             OS="Git Bash"
             ;;
@@ -142,7 +155,7 @@ inject_claude_md() {
     step 3 "Configuring ~/.claude/CLAUDE.md..."
 
     if [ -f "${SCRIPT_DIR}/scripts/inject-claude-md.sh" ]; then
-        bash "${SCRIPT_DIR}/scripts/inject-claude-md.sh"
+        FORGE_YES="$AUTO_YES" bash "${SCRIPT_DIR}/scripts/inject-claude-md.sh"
     else
         warn "inject-claude-md.sh not found — skipping CLAUDE.md configuration."
     fi
@@ -215,7 +228,7 @@ check_python() {
 install_forge_hooks() {
     step 5 "Installing FORGE Hooks..."
 
-    if bash "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh"; then
+    if FORGE_AUTO="$AUTO_YES" bash "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh"; then
         FORGE_HOOKS_INSTALLED=true
         ok "FORGE Hooks installed"
     else
@@ -243,9 +256,13 @@ check_rtk() {
     info "More info: https://github.com/rtk-ai/rtk"
     echo ""
 
-    if [ -t 0 ]; then
-        printf "  Install RTK? [y/N] "
-        read -r REPLY < /dev/tty
+    if [ "$AUTO_YES" = true ] || [ -t 0 ]; then
+        if [ "$AUTO_YES" = true ]; then
+            REPLY="y"
+        else
+            printf "  Install RTK? [y/N] "
+            read -r REPLY < /dev/tty
+        fi
         case "$REPLY" in
             [yY]|[yY][eE][sS])
                 if command -v brew &>/dev/null; then
