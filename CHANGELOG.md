@@ -5,6 +5,13 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.14] - 2026-03-29
+
+### Fixed
+
+- **update.sh diff accuracy**: compare only source files (`.md`, `.sh`, `.js`, `.yaml`, `.py`, `.json`) instead of `diff -rq` on whole directories, eliminating false positives from OS artifacts and generated files
+- **update.sh summary clarity**: exit early with "nothing to do" when truly up to date; show clear "synced" vs upgrade message; unified change count instead of ambiguous separate lines
+
 ## [1.7.13] - 2026-03-29
 
 ### Added
