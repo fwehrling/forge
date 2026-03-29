@@ -99,29 +99,6 @@ MODIFIED=0
 NEW_SKILLS=0
 MODIFIED_LIST=""
 
-diff_source_files() {
-    # Compare only source files (md, sh, js, yaml, py) between two directories
-    # Ignores generated files, caches, venvs, and OS artifacts
-    local src="$1"
-    local dst="$2"
-    local has_diff=false
-
-    while IFS= read -r -d '' file; do
-        local rel="${file#$src/}"
-        if [ -f "$dst/$rel" ]; then
-            if ! diff -q "$file" "$dst/$rel" &>/dev/null; then
-                has_diff=true
-                break
-            fi
-        else
-            has_diff=true
-            break
-        fi
-    done < <(find "$src" -type f \( -name "*.md" -o -name "*.sh" -o -name "*.js" -o -name "*.yaml" -o -name "*.yml" -o -name "*.py" -o -name "*.json" \) -print0 2>/dev/null)
-
-    $has_diff
-}
-
 compare_skill() {
     local skill_name="$1"
     local source_dir="$2"
@@ -133,9 +110,18 @@ compare_skill() {
         return
     fi
 
-    if diff_source_files "$source_dir" "$target_dir"; then
-        MODIFIED=$((MODIFIED + 1))
-        MODIFIED_LIST="${MODIFIED_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name}"
+    # Compare only SKILL.md -- the single file that defines a skill
+    local src_skill="${source_dir}/SKILL.md"
+    local dst_skill="${target_dir}/SKILL.md"
+
+    if [ -f "$src_skill" ] && [ -f "$dst_skill" ]; then
+        if ! diff -q "$src_skill" "$dst_skill" &>/dev/null; then
+            MODIFIED=$((MODIFIED + 1))
+            MODIFIED_LIST="${MODIFIED_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name}"
+        fi
+    elif [ -f "$src_skill" ] && [ ! -f "$dst_skill" ]; then
+        NEW_SKILLS=$((NEW_SKILLS + 1))
+        MODIFIED_LIST="${MODIFIED_LIST}\n  ${GREEN}+ new${NC}  ${skill_name}"
     fi
 }
 
@@ -158,9 +144,11 @@ if [ -n "$INSTALL_PACK" ] && [ -d "${TMPDIR}/packs/${INSTALL_PACK}" ]; then
         if [ ! -d "$local_dir" ]; then
             PACK_MODIFIED=$((PACK_MODIFIED + 1))
             PACK_LIST="${PACK_LIST}\n  ${GREEN}+ new${NC}  ${skill_name}"
-        elif diff_source_files "$dir" "$local_dir"; then
-            PACK_MODIFIED=$((PACK_MODIFIED + 1))
-            PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name}"
+        elif [ -f "$dir/SKILL.md" ] && [ -f "$local_dir/SKILL.md" ]; then
+            if ! diff -q "$dir/SKILL.md" "$local_dir/SKILL.md" &>/dev/null; then
+                PACK_MODIFIED=$((PACK_MODIFIED + 1))
+                PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name}"
+            fi
         fi
     done
 elif [ -d "${TMPDIR}/packs/business" ]; then
@@ -169,9 +157,11 @@ elif [ -d "${TMPDIR}/packs/business" ]; then
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
         if [ -d "${CLAUDE_DIR}/skills/${skill_name}" ]; then
-            if diff_source_files "$dir" "${CLAUDE_DIR}/skills/${skill_name}"; then
-                PACK_MODIFIED=$((PACK_MODIFIED + 1))
-                PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name} (business)"
+            if [ -f "$dir/SKILL.md" ] && [ -f "${CLAUDE_DIR}/skills/${skill_name}/SKILL.md" ]; then
+                if ! diff -q "$dir/SKILL.md" "${CLAUDE_DIR}/skills/${skill_name}/SKILL.md" &>/dev/null; then
+                    PACK_MODIFIED=$((PACK_MODIFIED + 1))
+                    PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name} (business)"
+                fi
             fi
         fi
     done

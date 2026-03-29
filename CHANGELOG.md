@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.15] - 2026-03-29
+
+### Fixed
+
+- **update.sh change detection**: compare only `SKILL.md` files (the single file that defines each skill) instead of scanning all source files. Eliminates false positives caused by platform-specific file differences on Linux
+
 ## [1.7.14] - 2026-03-29
 
 ### Fixed
