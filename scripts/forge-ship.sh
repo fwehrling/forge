@@ -51,11 +51,13 @@ done
 
 info "Phase 1: Pre-checks..."
 
-# Verify working tree is clean
-if [ -n "$(git -C "${REPO_ROOT}" status --porcelain)" ]; then
-    die "Working tree is not clean. Commit or stash your changes first."
+# Verify working tree is clean (skip when finalizing -- files were modified by prior run)
+if [ "${FINALIZE}" = "false" ]; then
+    if [ -n "$(git -C "${REPO_ROOT}" status --porcelain)" ]; then
+        die "Working tree is not clean. Commit or stash your changes first."
+    fi
+    ok "Working tree is clean"
 fi
-ok "Working tree is clean"
 
 # Verify current branch is main
 CURRENT_BRANCH="$(git -C "${REPO_ROOT}" rev-parse --abbrev-ref HEAD)"
@@ -63,6 +65,11 @@ if [ "${CURRENT_BRANCH}" != "main" ]; then
     die "Must be on branch 'main', currently on '${CURRENT_BRANCH}'"
 fi
 ok "On branch main"
+
+# Verify python3 is available (used for CHANGELOG generation)
+if ! command -v python3 >/dev/null 2>&1; then
+    die "python3 is required but not found"
+fi
 
 # Verify gh CLI is authenticated
 if ! gh auth status >/dev/null 2>&1; then
@@ -193,12 +200,17 @@ ok "Updated VERSION: ${NEW_VERSION}"
 # ── CHANGELOG.md ─────────────────────────────────────────────────────────────
 # Header is 7 lines; new entry goes after line 7 (insert after the blank line at line 7)
 # Strategy: use Python for reliable multi-line insertion on both macOS and Linux
-python3 - <<PYEOF
-import sys
+# Pass data via env vars to avoid shell injection in heredoc
+FORGE_CHANGELOG="${CHANGELOG}" \
+FORGE_NEW_ENTRY="${NEW_ENTRY}" \
+FORGE_NEW_VERSION="${NEW_VERSION}" \
+python3 - <<'PYEOF'
+import os
 
-changelog_path = "${CHANGELOG}"
-new_entry = """${NEW_ENTRY}"""
-new_link = "[${NEW_VERSION}]: https://github.com/fwehrling/forge/releases/tag/v${NEW_VERSION}"
+changelog_path = os.environ["FORGE_CHANGELOG"]
+new_entry = os.environ["FORGE_NEW_ENTRY"]
+new_version = os.environ["FORGE_NEW_VERSION"]
+new_link = f"[{new_version}]: https://github.com/fwehrling/forge/releases/tag/v{new_version}"
 
 with open(changelog_path, 'r') as f:
     lines = f.readlines()
