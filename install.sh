@@ -337,7 +337,7 @@ verify_installation() {
     # Check FORGE Hooks
     if [ "${FORGE_HOOKS_INSTALLED:-false}" = true ]; then
         local hooks_ok=true
-        for hook_file in bash-interceptor.js token-saver.sh forge-update-check.sh forge-memory-sync.sh; do
+        for hook_file in bash-interceptor.js token-saver.sh forge-update-check.sh forge-memory-sync.sh forge-skill-tracker.sh forge-router-reminder.sh; do
             if [ -f "${HOME}/.claude/hooks/${hook_file}" ]; then
                 ok "Hook: ${hook_file}"
             else
