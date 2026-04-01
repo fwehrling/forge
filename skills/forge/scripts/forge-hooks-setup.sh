@@ -8,11 +8,12 @@
 #   3. forge-update-check.sh — SessionStart        — Notifies of FORGE updates (1x/24h)
 #   4. forge-memory-sync.sh — Stop                 — Auto-syncs vector memory on session end
 #   5. statusline.sh        — Status line          — Persistent FORGE indicator in terminal
+#   6. forge-skill-tracker.sh — Pre/PostToolUse[Skill] — Tracks active FORGE skill for status line
 #
 # Removed in v1.6.0:
 #   - command-validator.js + output-filter.js (merged into bash-interceptor.js)
 #   - forge-auto-router.js (UserPromptSubmit) — Claude Code native skill matching is sufficient
-#   - PreToolUse[Skill] notification — unnecessary token cost
+#   - PreToolUse[Skill] notification — unnecessary token cost (replaced by skill-tracker in v1.7.25)
 #
 # Idempotent: safe to run multiple times.
 # Called by: install.sh, /forge-update
@@ -401,7 +402,40 @@ chmod +x "$HOOKS_DIR/forge-memory-sync.sh"
 echo "    Created forge-memory-sync.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 5. statusline.sh — FORGE status line indicator
+# 5b. forge-skill-tracker.sh — Tracks active FORGE skill for status line
+# ═══════════════════════════════════════════════════════════════════════════════
+cat > "$HOOKS_DIR/forge-skill-tracker.sh" << 'SKILLTRACKEREOF'
+#!/bin/bash
+# FORGE Skill Tracker -- writes/clears active forge skill to temp file
+# Called by PreToolUse and PostToolUse hooks on Skill tool
+# Usage: forge-skill-tracker.sh pre|post
+
+input=$(cat)
+ACTION="$1"
+SKILL_FILE="/tmp/forge-active-skill"
+
+SKILL_NAME=$(echo "$input" | jq -r '.tool_input.skill // empty' 2>/dev/null)
+
+case "$ACTION" in
+  pre)
+    # Only track forge-* skills (not google-calendar, find-skills, etc.)
+    if [[ "$SKILL_NAME" == forge* ]]; then
+      echo "$SKILL_NAME" > "$SKILL_FILE"
+    fi
+    ;;
+  post)
+    # Clear on any Skill completion (the active one is done)
+    rm -f "$SKILL_FILE" 2>/dev/null
+    ;;
+esac
+
+echo '{"suppressOutput": true}'
+SKILLTRACKEREOF
+chmod +x "$HOOKS_DIR/forge-skill-tracker.sh"
+echo "    Created forge-skill-tracker.sh"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 6. statusline.sh — FORGE status line indicator
 # ═══════════════════════════════════════════════════════════════════════════════
 INSTALL_STATUSLINE=false
 
@@ -512,14 +546,20 @@ if [ -n "$WEEK_PCT" ] && [ -n "$WEEK_RESET" ]; then
     fi
 fi
 
-# Context window usage
+# ANSI color codes
+RED='\033[31m'
+ORANGE='\033[38;5;208m'
+GREEN='\033[32m'
+RESET='\033[0m'
+
+# Context window usage with colored icons
 USED_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null)
 USED_PCT=${USED_PCT%.*}  # truncate to integer
 
 if [ "$USED_PCT" -ge 50 ] 2>/dev/null; then
-    CTX="CTX:${USED_PCT}%!"
+    CTX="${RED}☠${RESET} CTX:${USED_PCT}%"
 elif [ "$USED_PCT" -ge 30 ] 2>/dev/null; then
-    CTX="CTX:${USED_PCT}%~"
+    CTX="${ORANGE}⚠${RESET} CTX:${USED_PCT}%"
 else
     CTX="CTX:${USED_PCT}%"
 fi
@@ -534,12 +574,21 @@ if [ -d "$CWD/.forge" ]; then
     FORGE_MARKER=" [FORGE${FORGE_VER}]"
 fi
 
+# Active FORGE skill indicator
+SKILL_INDICATOR=""
+if [ -f /tmp/forge-active-skill ]; then
+    ACTIVE_SKILL=$(cat /tmp/forge-active-skill 2>/dev/null)
+    if [ -n "$ACTIVE_SKILL" ]; then
+        SKILL_INDICATOR=" ${GREEN}●${RESET} ${ACTIVE_SKILL}"
+    fi
+fi
+
 PARTS="${CTX}"
 if [ -n "$RATE_PARTS" ]; then
     PARTS="${CTX} | ${RATE_PARTS}"
 fi
 
-echo "[${MODEL}]${FORGE_MARKER} ${PROJECT} | ${PARTS}"
+printf '%b\n' "[${MODEL}]${FORGE_MARKER}${SKILL_INDICATOR} ${PROJECT} | ${PARTS}"
 STATUSLINEEOF
 chmod +x "$HOOKS_DIR/statusline.sh"
 echo "    Created statusline.sh"
@@ -548,7 +597,7 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 6. Clean up legacy hooks from pre-v1.6.0
+# 7. Clean up legacy hooks from pre-v1.6.0
 # ═══════════════════════════════════════════════════════════════════════════════
 echo "  Cleaning up legacy hooks..."
 for legacy_file in command-validator.js output-filter.js forge-auto-router.js; do
@@ -559,7 +608,7 @@ for legacy_file in command-validator.js output-filter.js forge-auto-router.js; d
 done
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 7. Patch settings.json — Register hooks + permissions + status line
+# 8. Patch settings.json — Register hooks + permissions + status line
 # ═══════════════════════════════════════════════════════════════════════════════
 echo "  Patching settings.json..."
 
@@ -640,19 +689,19 @@ if (s.hooks.UserPromptSubmit) {
   }
 }
 
-// Remove old PreToolUse[Skill] notification hooks
+// Remove old PreToolUse[Skill] notification hooks (but keep skill-tracker)
 if (s.hooks.PreToolUse) {
-  s.hooks.PreToolUse = s.hooks.PreToolUse.filter(entry => {
-    if (entry.matcher === 'Skill') {
-      if (entry.hooks) {
-        entry.hooks = entry.hooks.filter(h =>
-          !h.command?.includes('forge') && !h.statusMessage?.includes('FORGE')
-        );
-      }
-      return entry.hooks && entry.hooks.length > 0;
+  for (const entry of s.hooks.PreToolUse) {
+    if (entry.matcher === 'Skill' && entry.hooks) {
+      entry.hooks = entry.hooks.filter(h =>
+        h.command?.includes('forge-skill-tracker.sh') ||
+        (!h.command?.includes('forge') && !h.statusMessage?.includes('FORGE'))
+      );
     }
-    return true;
-  });
+  }
+  s.hooks.PreToolUse = s.hooks.PreToolUse.filter(e =>
+    e.hooks && e.hooks.length > 0
+  );
 }
 
 // -- Add current hooks --
@@ -670,6 +719,12 @@ addCommandHook('SessionStart', '', 'bash ~/.claude/hooks/forge-update-check.sh')
 // Stop -- forge-memory-sync.sh
 addCommandHook('Stop', '', 'bash ~/.claude/hooks/forge-memory-sync.sh');
 
+// PreToolUse[Skill] -- forge-skill-tracker.sh (active skill indicator)
+addCommandHook('PreToolUse', 'Skill', 'bash ~/.claude/hooks/forge-skill-tracker.sh pre');
+
+// PostToolUse[Skill] -- forge-skill-tracker.sh (clear active skill)
+addCommandHook('PostToolUse', 'Skill', 'bash ~/.claude/hooks/forge-skill-tracker.sh post');
+
 // -- Status Line (only if user accepted) --
 if ('${INSTALL_STATUSLINE}' === 'true') {
   if (!s.statusLine || !s.statusLine.command?.includes('statusline.sh')) {
@@ -686,10 +741,10 @@ fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2) + '\n');
 echo ""
 echo "  FORGE Hooks -- Installation complete!"
 if [ "$INSTALL_STATUSLINE" = true ]; then
-  echo "     5 hook scripts in ~/.claude/hooks/"
-  echo "     3 hook events + status line in ~/.claude/settings.json"
+  echo "     6 hook scripts in ~/.claude/hooks/"
+  echo "     5 hook events + status line in ~/.claude/settings.json"
 else
-  echo "     4 hook scripts in ~/.claude/hooks/"
-  echo "     3 hook events in ~/.claude/settings.json"
+  echo "     5 hook scripts in ~/.claude/hooks/"
+  echo "     5 hook events in ~/.claude/settings.json"
 fi
-echo "     (PreToolUse[Bash], SessionStart, Stop)"
+echo "     (PreToolUse[Bash|Skill], PostToolUse[Skill], SessionStart, Stop)"
