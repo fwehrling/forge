@@ -1,6 +1,6 @@
 # forge:release -- Prepare and push a release to GitHub (no deployment)
 
-Run `bash scripts/forge-release.sh $ARGUMENTS` and show the output.
+Run `bash .claude/scripts/forge-release.sh $ARGUMENTS` and show the output.
 
 The script handles everything automatically:
 1. Detects bump level from Conventional Commits (or accepts major/minor/patch override)

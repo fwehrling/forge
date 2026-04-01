@@ -1,6 +1,6 @@
 # forge:ship -- Tag and deploy
 
-Run `bash scripts/forge-ship.sh` and show the output.
+Run `bash .claude/scripts/forge-ship.sh` and show the output.
 
 The script handles everything automatically:
 1. Verifies we're on main with a release commit
