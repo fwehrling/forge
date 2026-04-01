@@ -5,6 +5,11 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-04-01
+
+### Fixed
+
+- smarter version bump logic in release script (#59)
 ## [1.9.0] - 2026-04-01
 
 ### Added
@@ -496,6 +501,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[2.0.0]: https://github.com/fwehrling/forge/releases/tag/v2.0.0
 [1.9.0]: https://github.com/fwehrling/forge/releases/tag/v1.9.0
 [1.8.0]: https://github.com/fwehrling/forge/releases/tag/v1.8.0
 [1.6.2]: https://github.com/fwehrling/forge/releases/tag/v1.6.2
