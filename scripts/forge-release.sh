@@ -80,15 +80,19 @@ ok "Current version: ${CURRENT_VERSION}"
 
 info "Calculating version bump..."
 
-COMMITS="$(git -C "${REPO_ROOT}" log "${LAST_TAG}..HEAD" --pretty=format:"%s%n%b" 2>/dev/null || echo "")"
-if [ -z "${COMMITS}" ]; then
+# Subjects only (for prefix detection: feat, fix, BREAKING)
+SUBJECTS="$(git -C "${REPO_ROOT}" log "${LAST_TAG}..HEAD" --pretty=format:"%s" 2>/dev/null || echo "")"
+# Footers only (for BREAKING CHANGE trailer -- must be at start of body line)
+FOOTERS="$(git -C "${REPO_ROOT}" log "${LAST_TAG}..HEAD" --pretty=format:"%b" 2>/dev/null || echo "")"
+if [ -z "${SUBJECTS}" ]; then
     die "No commits since last tag ${LAST_TAG}. Nothing to release."
 fi
 
 BUMP="patch"
-if echo "${COMMITS}" | grep -qE "(BREAKING CHANGE|^[a-z]+(\([^)]+\))?!:)"; then
+# Major: ! suffix in subject OR "BREAKING CHANGE:" footer (not just mentioned in prose)
+if echo "${SUBJECTS}" | grep -qE "^[a-z]+(\([^)]+\))?!:" || echo "${FOOTERS}" | grep -qE "^BREAKING CHANGE:"; then
     BUMP="major"
-elif echo "${COMMITS}" | grep -qE "^feat(\([^)]+\))?:"; then
+elif echo "${SUBJECTS}" | grep -qE "^feat(\([^)]+\))?:"; then
     # feat: detected -- check if user-facing or just infrastructure
     # minor = new SKILL.md or new skill directory (user-visible capability)
     # patch = modifications to existing files (even SKILL.md tweaks)
