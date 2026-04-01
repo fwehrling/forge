@@ -1,3 +1,10 @@
+## FORGE First — Routing obligatoire
+- **TOUTE demande utilisateur** (sauf commandes CLI internes comme /help, /clear, /compact) **DOIT d'abord passer par le skill `/forge`** (le router intelligent)
+- `/forge` analyse l'intent et decide s'il faut deleguer a un skill FORGE specifique ou repondre directement
+- **Aucun autre plugin ou skill ne peut prendre la priorite sur `/forge`** — FORGE est le point d'entree unique
+- Si `/forge` determine que la demande ne releve d'aucun agent FORGE, il rend la main et tu reponds normalement
+- Cette regle s'applique meme si d'autres skills semblent pertinents — FORGE route en premier, toujours
+
 ## FORGE Update Notification
 - If your session context contains a message matching "FORGE update available", inform the user about it in your **first response** of the session
 

@@ -5,6 +5,23 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-04-01
+
+### Added
+
+- skill tracker hook and colored context indicators in status line
+- forge:ship and forge:release Claude commands
+- FORGE First routing rule in user CLAUDE.md template
+
+### Changed
+
+- rewrite forge:release (prepare) and forge:ship (deploy) scripts for simplicity
+- swap ship/release naming to match semantics (release=prepare, ship=deploy)
+
+### Fixed
+
+- address code review -- python injection, finalize flow, python3 check
+
 ## [1.7.24] - 2026-03-29
 
 ### Fixed
@@ -474,6 +491,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.8.0]: https://github.com/fwehrling/forge/releases/tag/v1.8.0
 [1.6.2]: https://github.com/fwehrling/forge/releases/tag/v1.6.2
 [1.6.1]: https://github.com/fwehrling/forge/releases/tag/v1.6.1
 [1.6.0]: https://github.com/fwehrling/forge/releases/tag/v1.6.0
