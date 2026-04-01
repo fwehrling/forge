@@ -85,7 +85,4 @@ All generated content in French must use proper accents (é, è, ê, à, ù, ç,
 
 ## Memory
 
-After routing, if `.forge/memory/` exists, log the decision:
-```bash
-forge-memory log "<action summary>" --agent router
-```
+Do NOT log routing decisions -- sub-skills handle their own memory. Skip `forge-memory log` to save tokens.
