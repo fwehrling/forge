@@ -54,10 +54,26 @@ ok "Created tag: ${TAG}"
 git -C "${REPO_ROOT}" push origin "${TAG}"
 ok "Pushed ${TAG} to origin"
 
+# ─── GitHub Release ──────────────────────────────────────────────────────
+
+CHANGELOG="${REPO_ROOT}/CHANGELOG.md"
+RELEASE_NOTES=""
+if [ -f "${CHANGELOG}" ]; then
+    # Extract the section for this version from CHANGELOG.md
+    RELEASE_NOTES="$(sed -n "/^## \[${VERSION}\]/,/^## \[/{ /^## \[${VERSION}\]/d; /^## \[/d; p; }" "${CHANGELOG}" | sed '/^$/N;/^\n$/d')"
+fi
+
+if [ -n "${RELEASE_NOTES}" ]; then
+    gh release create "${TAG}" --title "${TAG}" --notes "${RELEASE_NOTES}" --latest
+else
+    gh release create "${TAG}" --title "${TAG}" --generate-notes --latest
+fi
+ok "GitHub Release created: ${TAG}"
+
 # ─── Summary ─────────────────────────────────────────────────────────────────
 
 printf '\n'
 printf '%b\n' "${BOLD}=== FORGE Ship ===${NC}"
 printf '%b\n' "  Tag: ${GREEN}${TAG}${NC}"
-printf '%b\n' "  Deployment triggered via webhook"
+printf '%b\n' "  GitHub Release: ${TAG} (latest)"
 printf '\n'
