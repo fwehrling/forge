@@ -1,8 +1,8 @@
 # Skill optimization workspace artifacts
 *-workspace/
 
-# Local Claude scripts (release/ship tooling -- not distributed)
-.claude/scripts/
+# Claude Code local config (commands, scripts, settings)
+.claude/
 
 # Environment variables (never commit secrets)
 .env

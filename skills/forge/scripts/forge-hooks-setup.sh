@@ -9,13 +9,12 @@
 #   4. forge-memory-sync.sh   — Stop                   — Auto-syncs vector memory on session end
 #   5. statusline.sh          — Status line            — Persistent FORGE indicator in terminal
 #   6. forge-skill-tracker.sh — PreToolUse[Skill]+Stop — Tracks active FORGE skill for status line
-#   7. forge-router-reminder.sh — UserPromptSubmit     — Injects /forge routing reminder in FORGE projects
 #
 # Removed in v1.6.0:
 #   - command-validator.js + output-filter.js (merged into bash-interceptor.js)
 #   - PreToolUse[Skill] notification — unnecessary token cost (replaced by skill-tracker in v1.7.25)
-# Restored in v1.9.0:
-#   - UserPromptSubmit hook (forge-router-reminder.sh) — CLAUDE.md instructions alone are not sufficient
+# Removed in v1.9.3:
+#   - forge-router-reminder.sh (UserPromptSubmit) — excessive token cost, user invokes /forge explicitly
 #
 # Idempotent: safe to run multiple times.
 # Called by: install.sh, /forge-update
@@ -447,40 +446,8 @@ SKILLTRACKEREOF
 chmod +x "$HOOKS_DIR/forge-skill-tracker.sh"
 echo "    Created forge-skill-tracker.sh"
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# 5c. forge-router-reminder.sh — UserPromptSubmit — FORGE routing reminder
-# ═══════════════════════════════════════════════════════════════════════════════
-cat > "$HOOKS_DIR/forge-router-reminder.sh" << 'ROUTEREOF'
-#!/usr/bin/env bash
-# FORGE Router Reminder -- UserPromptSubmit hook
-# Injects a system reminder to route user requests through /forge skill.
-# Only fires when inside a FORGE project (.forge/ directory exists).
-# Always exits 0 (never blocks prompt submission).
-
-input=$(cat)
-
-# Extract CWD from hook input
-CWD=$(echo "$input" | jq -r '.cwd // ""' 2>/dev/null)
-[ -z "$CWD" ] && CWD="$PWD"
-
-# Only trigger in FORGE projects
-if [ ! -d "$CWD/.forge" ]; then
-    exit 0
-fi
-
-# Check if user is already explicitly invoking a forge skill (/forge-xxx or /forge)
-PROMPT=$(echo "$input" | jq -r '.prompt // ""' 2>/dev/null)
-if echo "$PROMPT" | grep -qE '^\s*/forge'; then
-    exit 0
-fi
-
-# Inject routing reminder
-echo "FORGE project detected. You MUST route this request through Skill(forge) FIRST before doing anything else. Call Skill(skill: \"forge\") immediately."
-
-exit 0
-ROUTEREOF
-chmod +x "$HOOKS_DIR/forge-router-reminder.sh"
-echo "    Created forge-router-reminder.sh"
+# Clean up old forge-router-reminder.sh if present
+rm -f "$HOOKS_DIR/forge-router-reminder.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 6. statusline.sh — FORGE status line indicator
@@ -719,22 +686,9 @@ if (s.hooks.PreToolUse) {
   }
 }
 
-// Remove old UserPromptSubmit hooks (forge-auto-router.js -- replaced by forge-router-reminder.sh)
+// Remove all UserPromptSubmit hooks (forge-router-reminder removed in v1.9.3)
 if (s.hooks.UserPromptSubmit) {
-  for (const entry of s.hooks.UserPromptSubmit) {
-    if (entry.hooks) {
-      entry.hooks = entry.hooks.filter(h =>
-        !h.command?.includes('forge-auto-router.js')
-      );
-    }
-  }
-  // Remove empty UserPromptSubmit entries
-  s.hooks.UserPromptSubmit = s.hooks.UserPromptSubmit.filter(e =>
-    e.hooks && e.hooks.length > 0
-  );
-  if (s.hooks.UserPromptSubmit.length === 0) {
-    delete s.hooks.UserPromptSubmit;
-  }
+  delete s.hooks.UserPromptSubmit;
 }
 
 // Remove old PreToolUse[Skill] notification hooks (but keep skill-tracker)
@@ -773,9 +727,6 @@ addCommandHook('PreToolUse', 'Skill', 'bash ~/.claude/hooks/forge-skill-tracker.
 // PostToolUse[Skill] -- forge-skill-tracker.sh (no-op, kept for future use)
 addCommandHook('PostToolUse', 'Skill', 'bash ~/.claude/hooks/forge-skill-tracker.sh post');
 
-// UserPromptSubmit -- forge-router-reminder.sh (FORGE routing reminder)
-addCommandHook('UserPromptSubmit', '', 'bash ~/.claude/hooks/forge-router-reminder.sh');
-
 // Stop -- forge-skill-tracker.sh clear (cleanup active skill indicator)
 addCommandHook('Stop', '', 'bash ~/.claude/hooks/forge-skill-tracker.sh clear');
 
@@ -795,10 +746,10 @@ fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2) + '\n');
 echo ""
 echo "  FORGE Hooks -- Installation complete!"
 if [ "$INSTALL_STATUSLINE" = true ]; then
-  echo "     7 hook scripts in ~/.claude/hooks/"
-  echo "     6 hook events + status line in ~/.claude/settings.json"
-else
   echo "     6 hook scripts in ~/.claude/hooks/"
-  echo "     6 hook events in ~/.claude/settings.json"
+  echo "     5 hook events + status line in ~/.claude/settings.json"
+else
+  echo "     5 hook scripts in ~/.claude/hooks/"
+  echo "     5 hook events in ~/.claude/settings.json"
 fi
-echo "     (PreToolUse[Bash|Skill], PostToolUse[Skill], UserPromptSubmit, SessionStart, Stop)"
+echo "     (PreToolUse[Bash|Skill], PostToolUse[Skill], SessionStart, Stop)"
