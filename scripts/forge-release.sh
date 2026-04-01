@@ -89,7 +89,24 @@ BUMP="patch"
 if echo "${COMMITS}" | grep -qE "(BREAKING CHANGE|^[a-z]+(\([^)]+\))?!:)"; then
     BUMP="major"
 elif echo "${COMMITS}" | grep -qE "^feat(\([^)]+\))?:"; then
-    BUMP="minor"
+    # feat: detected -- check if user-facing or just infrastructure
+    # minor = new SKILL.md or new skill directory (user-visible capability)
+    # patch = modifications to existing files (even SKILL.md tweaks)
+    DIFF_STATUS="$(git -C "${REPO_ROOT}" diff --name-status "${LAST_TAG}..HEAD" 2>/dev/null || echo "")"
+
+    # New SKILL.md = new skill = definitely minor
+    if echo "${DIFF_STATUS}" | grep -qE "^A\s+.*SKILL\.md$"; then
+        BUMP="minor"
+    # New skill directory = minor
+    elif echo "${DIFF_STATUS}" | grep -qE "^A\s+skills/[^/]+/"; then
+        BUMP="minor"
+    # New pack directory = minor
+    elif echo "${DIFF_STATUS}" | grep -qE "^A\s+packs/[^/]+/"; then
+        BUMP="minor"
+    else
+        BUMP="patch"
+        info "feat: detected but no new user-facing skills -- using patch"
+    fi
 fi
 
 if [ -n "${BUMP_OVERRIDE}" ]; then
