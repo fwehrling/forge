@@ -603,7 +603,15 @@ if [ -n "$RATE_PARTS" ]; then
     PARTS="${CTX} | ${RATE_PARTS}"
 fi
 
-printf '%b\n' "[${MODEL}]${FORGE_MARKER}${SKILL_INDICATOR} ${PROJECT} | ${PARTS}"
+# User customizations — sourced before output, survives FORGE updates
+# Available vars: MODEL, FORGE_MARKER, SKILL_INDICATOR, PROJECT, CTX, PARTS, RATE_PARTS
+# Add-on vars (init here so user script can set them): EFFORT_LABEL
+EFFORT_LABEL=""
+if [ -f "$HOME/.claude/hooks/statusline-custom.sh" ]; then
+    source "$HOME/.claude/hooks/statusline-custom.sh"
+fi
+
+printf '%b\n' "[${MODEL}${EFFORT_LABEL}]${FORGE_MARKER}${SKILL_INDICATOR} ${PROJECT} | ${PARTS}"
 STATUSLINEEOF
 chmod +x "$HOOKS_DIR/statusline.sh"
 echo "    Created statusline.sh"
