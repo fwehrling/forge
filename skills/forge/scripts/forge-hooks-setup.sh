@@ -567,14 +567,19 @@ ORANGE='\033[38;5;208m'
 GREEN='\033[32m'
 RESET='\033[0m'
 
+# Unicode icons (via printf for portable encoding)
+ICON_HIGH=$(printf '\xe2\x98\xa0')  # ☠
+ICON_MED=$(printf '\xe2\x9a\xa0')   # ⚠
+ICON_SKILL=$(printf '\xe2\x97\x8f')       # ⚙
+
 # Context window usage with colored icons
 USED_PCT=$(echo "$input" | jq -r '.context_window.used_percentage // 0' 2>/dev/null)
 USED_PCT=${USED_PCT%.*}  # truncate to integer
 
 if [ "$USED_PCT" -ge 50 ] 2>/dev/null; then
-    CTX="${RED}☠${RESET} CTX:${USED_PCT}%"
+    CTX="${RED}${ICON_HIGH}${RESET} CTX:${USED_PCT}%"
 elif [ "$USED_PCT" -ge 30 ] 2>/dev/null; then
-    CTX="${ORANGE}⚠${RESET} CTX:${USED_PCT}%"
+    CTX="${ORANGE}${ICON_MED}${RESET} CTX:${USED_PCT}%"
 else
     CTX="CTX:${USED_PCT}%"
 fi
@@ -594,7 +599,7 @@ SKILL_INDICATOR=""
 if [ -f /tmp/forge-active-skill ]; then
     ACTIVE_SKILL=$(cat /tmp/forge-active-skill 2>/dev/null)
     if [ -n "$ACTIVE_SKILL" ]; then
-        SKILL_INDICATOR=" ${GREEN}●${RESET} ${ACTIVE_SKILL}"
+        SKILL_INDICATOR=" ${GREEN}${ICON_SKILL}${RESET} ${ACTIVE_SKILL}"
     fi
 fi
 
