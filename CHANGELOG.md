@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.5] - 2026-04-03
+
+### Added
+
+- statusline user customization hook: sources `~/.claude/hooks/statusline-custom.sh` before output, exposing all internal vars (`MODEL`, `FORGE_MARKER`, `SKILL_INDICATOR`, `PROJECT`, `CTX`, `PARTS`, `EFFORT_LABEL`). Changes survive FORGE updates
+
 ## [1.9.4] - 2026-04-01
 
 ### Fixed
@@ -517,6 +523,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - n8n workflow integration patterns (conceptual)
 - MCP server integration patterns (conceptual)
 
+[1.9.5]: https://github.com/fwehrling/forge/releases/tag/v1.9.5
 [1.9.4]: https://github.com/fwehrling/forge/releases/tag/v1.9.4
 [1.9.3]: https://github.com/fwehrling/forge/releases/tag/v1.9.3
 [1.9.2]: https://github.com/fwehrling/forge/releases/tag/v1.9.2
