@@ -215,6 +215,7 @@ your-project/
     forge-update-check.sh # Update notifications
     forge-memory-sync.sh # Memory persistence
     statusline.sh        # Terminal status indicator
+    statusline-custom.sh # Optional: user customizations (survives FORGE updates)
 ```
 
 ---
