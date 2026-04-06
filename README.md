@@ -47,7 +47,7 @@ Want more control? Every step is a standalone command:
 
 ### AI Agents That Actually Collaborate
 
-11 specialized agents (Analyst, PM, Architect, UX, Scrum Master, Dev, Debug, QA, Reviewer, Orchestrator, Security) that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
+12 specialized agents (Analyst, PM, Architect, UX, Scrum Master, Dev, DevOps, QA, Reviewer, Orchestrator, Security + Quick-QA variant) that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
 
 <p align="center">
   <picture>
@@ -215,8 +215,9 @@ your-project/
     forge-update-check.sh # Update notifications
     forge-memory-sync.sh # Memory persistence
     statusline.sh        # Terminal status indicator
-    statusline-custom.sh # Optional: user customizations (survives FORGE updates)
-    rtk-native-hook.sh   # Read/Grep/Glob compression (installed with RTK)
+    statusline-custom.sh  # Optional: user customizations (survives FORGE updates)
+    forge-skill-tracker.sh # Active skill indicator for status line
+    rtk-native-hook.sh    # Read/Grep/Glob compression (installed with RTK)
 ```
 
 ---
