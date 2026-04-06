@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.9.10-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.9.11-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-25%20core%20%2B%208%20business-orange)](#commands)
@@ -259,7 +259,7 @@ FORGE adjusts to your project's complexity:
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.9.10**: fix update.sh -- rtk-native-hook.sh and inject-rtk-claude-md.sh now properly synced on update (were missing since v1.9.7).
+**Latest -- v1.9.11**: fix forge-update -- TMPDIR renamed to FORGE_TMPDIR to avoid macOS system variable collision (hooks were silently skipped on update).
 
 **v1.7.10**: standalone `update.sh` script, fix memory setup banner.
 
