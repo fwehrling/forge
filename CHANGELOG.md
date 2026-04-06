@@ -5,6 +5,18 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.7] - 2026-04-06
+
+### Added
+
+- `hooks/rtk-native-hook.sh` bundled in repo and installed automatically when RTK is present (compresses Read/Grep/Glob output: 80-88% token savings on .ts/.js/.py source files)
+- `scripts/inject-rtk-claude-md.sh` bundled for RTK section injection into `~/.claude/CLAUDE.md`
+- `install.sh`: `setup_rtk_hooks()` installs native hook, patches `settings.json` idempotently, disables RTK telemetry
+
+### Fixed
+
+- statusline skill indicator scoped per project: uses CWD hash in `/tmp/forge-active-skill-{hash}` to prevent bleed across sessions opened in different directories
+
 ## [1.9.6] - 2026-04-03
 
 ### Fixed
@@ -536,6 +548,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.9.2]: https://github.com/fwehrling/forge/releases/tag/v1.9.2
 [1.9.1]: https://github.com/fwehrling/forge/releases/tag/v1.9.1
 [1.9.0]: https://github.com/fwehrling/forge/releases/tag/v1.9.0
+[1.9.7]: https://github.com/fwehrling/forge/releases/tag/v1.9.7
 [1.8.0]: https://github.com/fwehrling/forge/releases/tag/v1.8.0
 [1.6.2]: https://github.com/fwehrling/forge/releases/tag/v1.6.2
 [1.6.1]: https://github.com/fwehrling/forge/releases/tag/v1.6.1
