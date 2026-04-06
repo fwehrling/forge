@@ -159,17 +159,26 @@ Install with: `/forge-update --pack business`
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
 - Git
-- macOS, Linux, or Windows (via WSL)
+- macOS, Linux, or Windows via WSL (Windows Subsystem for Linux)
 - Python 3.9+ (optional -- for vector memory)
 - [RTK](https://github.com/rtk-ai/rtk) (optional -- for 60-90% token compression, proposed at install)
 
 ### Quick Install
 
+**macOS / Linux / WSL:**
 ```bash
 git clone https://github.com/fwehrling/forge.git /tmp/forge
 bash /tmp/forge/install.sh            # Interactive (prompts for RTK, status line, etc.)
 bash /tmp/forge/install.sh -y         # Non-interactive (accept all defaults)
 ```
+
+**Windows (PowerShell):**
+```powershell
+git clone https://github.com/fwehrling/forge.git $env:TEMP\forge
+powershell -ExecutionPolicy Bypass -File $env:TEMP\forge\install.ps1
+```
+
+> `install.ps1` detects WSL automatically. If WSL is missing, it offers to install it (requires admin + reboot), then runs the FORGE installer inside WSL.
 
 The installer copies skills, configures hooks, and sets up vector memory automatically. Then in your project:
 
