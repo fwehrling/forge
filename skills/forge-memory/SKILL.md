@@ -6,79 +6,79 @@ description: >
 
 # /forge-memory — FORGE Vector Memory
 
-Outil de diagnostic pour l'index vectoriel de la mémoire FORGE.
-Les commandes FORGE utilisent automatiquement la recherche vectorielle ; ce skill est pour le diagnostic et la maintenance.
+Diagnostic tool for the FORGE vector memory index.
+FORGE commands use vector search automatically; this skill is for diagnostics and maintenance.
 
-## Prérequis
+## Prerequisites
 
-Le système doit être installé :
+The system must be installed:
 ```bash
 bash ~/.claude/skills/forge/scripts/forge-memory/setup.sh
 ```
 
-## Commandes
+## Commands
 
-### Synchroniser l'index
+### Sync index
 
-Synchronise les fichiers Markdown vers la base SQLite :
+Synchronizes Markdown files to the SQLite database:
 
 ```bash
 forge-memory sync [--force] [--verbose]
 ```
 
-- Sans `--force` : réindexe uniquement les fichiers modifiés (basé sur le hash SHA-256)
-- Avec `--force` : réindexe tous les fichiers
-- Avec `--verbose` : affiche le détail de chaque fichier traité
+- Without `--force`: re-indexes only modified files (based on SHA-256 hash)
+- With `--force`: re-indexes all files
+- With `--verbose`: displays details for each processed file
 
-### Rechercher
+### Search
 
-Recherche hybride (vectorielle + texte) dans la mémoire :
+Hybrid search (vector + text) in memory:
 
 ```bash
 forge-memory search "query" [--namespace all|project|session|agent] [--agent NAME] [--limit 5] [--threshold 0.3] [--pretty]
 ```
 
-- `--namespace` : filtrer par type (project = MEMORY.md, session = logs, agent = mémoires d'agent)
-- `--agent` : filtrer par nom d'agent (pm, architect, dev, qa)
-- `--limit` : nombre max de résultats (défaut: 5)
-- `--threshold` : score minimum (défaut: 0.3)
-- `--pretty` : affichage formaté (sinon JSON)
+- `--namespace`: filter by type (project = MEMORY.md, session = logs, agent = agent memories)
+- `--agent`: filter by agent name (pm, architect, dev, qa)
+- `--limit`: max number of results (default: 5)
+- `--threshold`: minimum score (default: 0.3)
+- `--pretty`: formatted output (otherwise JSON)
 
-### Statut
+### Status
 
-Affiche les statistiques de l'index :
+Displays index statistics:
 
 ```bash
 forge-memory status [--json]
 ```
 
-### Journaliser
+### Log
 
-Ajoute une entrée dans le fichier session du jour (`.forge/memory/sessions/YYYY-MM-DD.md`) :
+Adds an entry to the current day's session file (`.forge/memory/sessions/YYYY-MM-DD.md`):
 
 ```bash
 forge-memory log "message" [--agent NAME] [--story STORY-ID]
 ```
 
-- `--agent` : nom de l'agent (dev, qa, lead, etc.)
-- `--story` : identifiant de la story (STORY-001, etc.)
-- Crée le répertoire `sessions/` et le fichier avec header automatiquement
+- `--agent`: agent name (dev, qa, lead, etc.)
+- `--story`: story identifier (STORY-001, etc.)
+- Creates the `sessions/` directory and file with automatic header
 
-### Consolider
+### Consolidate
 
-Agrège les entrées des session logs dans MEMORY.md, groupées par story :
+Aggregates session log entries into MEMORY.md, grouped by story:
 
 ```bash
 forge-memory consolidate [--verbose]
 ```
 
-- Lit les sessions depuis la dernière consolidation (marqueur `### Consolidation — YYYY-MM-DD`)
-- Ajoute une section récapitulative à la fin de MEMORY.md
-- Pure Python, aucune dépendance LLM
+- Reads sessions since last consolidation (marker `### Consolidation -- YYYY-MM-DD`)
+- Appends a summary section at the end of MEMORY.md
+- Pure Python, no LLM dependency
 
-### Réinitialiser
+### Reset
 
-Supprime et recrée la base de données :
+Deletes and recreates the database:
 
 ```bash
 forge-memory reset --confirm
@@ -88,25 +88,25 @@ forge-memory reset --confirm
 
 ```
 .forge/memory/
-  MEMORY.md              <- source de vérité (écrit par les agents)
-  sessions/YYYY-MM-DD.md <- source de vérité (écrit par les agents)
-  agents/{agent}.md      <- source de vérité (écrit par les agents)
-  index.sqlite           <- index dérivé (synchronisé depuis les .md)
+  MEMORY.md              <- source of truth (written by agents)
+  sessions/YYYY-MM-DD.md <- source of truth (written by agents)
+  agents/{agent}.md      <- source of truth (written by agents)
+  index.sqlite           <- derived index (synchronized from .md files)
 ```
 
-- Synchronisation unidirectionnelle : Markdown -> SQLite
-- Scope de sync élargi : `.forge/memory/` + `docs/` (stories, architecture, PRD)
-- Auto-sync avant chaque recherche (vérifie les changements dans les deux répertoires)
-- Recherche hybride : similarité vectorielle (70%) + FTS5 BM25 (30%)
-- Embeddings locaux : sentence-transformers all-MiniLM-L6-v2 (384 dimensions)
-- Chunking markdown-aware : ~400 tokens/chunk, 80 tokens overlap
+- One-way synchronization: Markdown -> SQLite
+- Extended sync scope: `.forge/memory/` + `docs/` (stories, architecture, PRD)
+- Auto-sync before each search (checks for changes in both directories)
+- Hybrid search: vector similarity (70%) + FTS5 BM25 (30%)
+- Local embeddings: sentence-transformers all-MiniLM-L6-v2 (384 dimensions)
+- Markdown-aware chunking: ~400 tokens/chunk, 80 tokens overlap
 
 ## Output Examples
 
 ### `forge-memory status`
 
 ```
-FORGE Memory — Status
+FORGE Memory -- Status
 ──────────────────────
 Database  : .forge/memory/index.sqlite
 Documents : 42 indexed (12 project, 18 session, 12 agent)

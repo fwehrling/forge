@@ -14,28 +14,28 @@ description: >
 
 ## Workflow
 
-1. **Vérifier que FORGE est installé** :
-   - Vérifier que `~/.claude/skills/forge/SKILL.md` existe
-   - Si absent, afficher une erreur et suggérer l'installation via `install.sh`
+1. **Verify FORGE is installed** :
+   - Check that `~/.claude/skills/forge/SKILL.md` exists
+   - If missing, display an error and suggest installing via `install.sh`
 
-2. **Cloner le repo** :
+2. **Clone the repo** :
    ```bash
    TMPDIR="/tmp/forge-update-$(date +%Y-%m-%d)"
    rm -rf "$TMPDIR"
    git clone --depth 1 https://github.com/fwehrling/forge.git "$TMPDIR"
    ```
 
-3. **Comparer les skills** :
-   - Pour chaque dossier dans `$TMPDIR/skills/*/` :
-     - Comparer avec `~/.claude/skills/<skill>/` via `diff -rq`
-     - Classer en 3 catégories : **modifiés**, **nouveaux**, **supprimés**
-   - Afficher un résumé clair des changements détectés
+3. **Compare skills** :
+   - For each directory in `$TMPDIR/skills/*/` :
+     - Compare with `~/.claude/skills/<skill>/` via `diff -rq`
+     - Classify into 3 categories: **modified**, **new**, **removed**
+   - Display a clear summary of detected changes
 
-4. **Afficher le résumé des changements** :
-   - Lister les skills modifiés avec les fichiers concernés
-   - Lister les nouveaux skills
-   - Lister les skills supprimés (présents localement mais absents du repo)
-   - Si aucun changement, afficher "FORGE est déjà à jour" et terminer
+4. **Display change summary** :
+   - List modified skills with affected files
+   - List new skills
+   - List removed skills (present locally but absent from repo)
+   - If no changes, display "FORGE is already up to date" and stop
 
 5. **Copy updated files** :
    ```bash
@@ -53,7 +53,7 @@ description: >
    - **NEVER** use `rsync --delete`, `rsync -a --delete`, or any destructive sync
    - Only FORGE skills (`forge` and `forge-*`) are managed by this updater
    - Non-FORGE skills in `~/.claude/skills/` MUST be preserved (they belong to the user)
-   - Le `README.md` du repo reste uniquement sur GitHub (pas copié dans les skills)
+   - The repo `README.md` stays on GitHub only (not copied into skills)
    - **Remove deprecated skills** that no longer exist in the repo:
    ```bash
    REMOVED_SKILLS="forge-deploy"
@@ -92,16 +92,16 @@ description: >
    ```
 
 7. **Update version, hooks, and infrastructure** :
-   - Lire `$TMPDIR/VERSION` et ecrire dans `~/.claude/skills/forge/.forge-version`
-   - Vider le cache `~/.claude/skills/forge/.forge-update-cache` pour forcer un check frais au prochain demarrage
-   - Lancer `forge-hooks-setup.sh` pour installer/mettre a jour les hooks FORGE (idempotent) :
-     - `bash-interceptor.js` -- PreToolUse[Bash]: bloque les commandes dangereuses + optimisation tokens
-     - `token-saver.sh` -- script d'execution pour le filtrage de sortie
-     - `forge-update-check.sh` -- SessionStart: notification de mises a jour
-     - `forge-memory-sync.sh` -- Stop: sync memoire vectorielle en fin de session
-     - `statusline.sh` -- Status line: indicateur persistant FORGE dans la barre du terminal
-   - Nettoie les hooks obsoletes (`command-validator.js`, `output-filter.js`, `forge-auto-router.js`)
-   - Patche `~/.claude/settings.json` avec les hooks, permissions, et config statusLine (idempotent)
+   - Read `$TMPDIR/VERSION` and write to `~/.claude/skills/forge/.forge-version`
+   - Clear cache `~/.claude/skills/forge/.forge-update-cache` to force a fresh check on next startup
+   - Run `forge-hooks-setup.sh` to install/update FORGE hooks (idempotent) :
+     - `bash-interceptor.js` -- PreToolUse[Bash]: blocks dangerous commands + token optimization
+     - `token-saver.sh` -- execution script for output filtering
+     - `forge-update-check.sh` -- SessionStart: update notifications
+     - `forge-memory-sync.sh` -- Stop: vector memory sync at end of session
+     - `statusline.sh` -- Status line: persistent FORGE indicator in terminal bar
+   - Remove deprecated hooks (`command-validator.js`, `output-filter.js`, `forge-auto-router.js`)
+   - Patch `~/.claude/settings.json` with hooks, permissions, and statusLine config (idempotent)
    ```bash
    \cp -f "$TMPDIR/VERSION" ~/.claude/skills/forge/.forge-version
    rm -f ~/.claude/skills/forge/.forge-update-cache
@@ -117,14 +117,14 @@ description: >
      ```
 
 9. **Update ~/.claude/CLAUDE.md** :
-   - Comparer `$TMPDIR/templates/claude-md-forge-section.md` avec le bloc FORGE actuel dans `~/.claude/CLAUDE.md` (contenu entre `<!-- FORGE:BEGIN -->` et `<!-- FORGE:END -->`)
-   - Si les marqueurs n'existent pas dans `~/.claude/CLAUDE.md` : lancer `bash "$TMPDIR/scripts/inject-claude-md.sh"` (demandera confirmation à l'utilisateur)
-   - Si les marqueurs existent et le contenu est identique : afficher "CLAUDE.md FORGE section is up to date" et passer
-   - Si les marqueurs existent et le contenu diffère :
-     - Afficher le diff entre le bloc actuel et le template
-     - Demander confirmation avant remplacement
-     - Si confirmé : lancer `bash "$TMPDIR/scripts/inject-claude-md.sh"`
-     - Si refusé : passer
+   - Compare `$TMPDIR/templates/claude-md-forge-section.md` with the current FORGE block in `~/.claude/CLAUDE.md` (content between `<!-- FORGE:BEGIN -->` and `<!-- FORGE:END -->`)
+   - If markers don't exist in `~/.claude/CLAUDE.md` : run `bash "$TMPDIR/scripts/inject-claude-md.sh"` (will ask user confirmation)
+   - If markers exist and content is identical : display "CLAUDE.md FORGE section is up to date" and skip
+   - If markers exist and content differs :
+     - Display diff between current block and template
+     - Ask confirmation before replacing
+     - If confirmed : run `bash "$TMPDIR/scripts/inject-claude-md.sh"`
+     - If refused : skip
 
 10. **Verify installation** :
     - Confirmer que `~/.claude/skills/forge/SKILL.md` existe toujours
@@ -137,7 +137,7 @@ description: >
 
 12. **Save memory** (if `.forge/` exists — ensures update history persists for version tracking and rollback reference):
     ```bash
-    forge-memory log "FORGE mis à jour : v{OLD} → v{NEW}, {X} skills modifiés, {Y} nouveaux, pack business: {installed/not installed}" --agent update
+    forge-memory log "FORGE updated: v{OLD} -> v{NEW}, {X} skills modified, {Y} new, business pack: {installed/not installed}" --agent update
     forge-memory consolidate --verbose
     forge-memory sync
     ```

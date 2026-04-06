@@ -79,9 +79,9 @@ forge-plan → forge-architect → forge-ux → forge-stories → forge-build �
 - **No match found** → read `references/dynamic-creation.md` for dynamic agent creation
 - **Business Pack skill not installed** → suggest `/forge-update --pack business`
 
-## French Language Rule
+## Language Rule
 
-All generated content in French must use proper accents (é, è, ê, à, ù, ç, ô, î).
+Always respond in the user's language. If they write in French, answer in French. If they write in Spanish, answer in Spanish. Match the language of the conversation naturally.
 
 ## Memory
 
