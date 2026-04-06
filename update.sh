@@ -288,10 +288,22 @@ if [ -f "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh" ]; then
     fi
 fi
 
+# ---- Update RTK native hook (if previously installed) ------------------------
+
+if [ -f "${CLAUDE_DIR}/hooks/rtk-native-hook.sh" ] && [ -f "${TMPDIR}/hooks/rtk-native-hook.sh" ]; then
+    cp -f "${TMPDIR}/hooks/rtk-native-hook.sh" "${CLAUDE_DIR}/hooks/rtk-native-hook.sh"
+    chmod +x "${CLAUDE_DIR}/hooks/rtk-native-hook.sh"
+    ok "RTK native hook updated"
+fi
+
 # ---- Update CLAUDE.md --------------------------------------------------------
 
 if [ -f "${TMPDIR}/scripts/inject-claude-md.sh" ]; then
     FORGE_YES="$AUTO_YES" bash "${TMPDIR}/scripts/inject-claude-md.sh"
+fi
+
+if [ -f "${TMPDIR}/scripts/inject-rtk-claude-md.sh" ]; then
+    bash "${TMPDIR}/scripts/inject-rtk-claude-md.sh" 2>/dev/null || true
 fi
 
 # ---- Cleanup -----------------------------------------------------------------
