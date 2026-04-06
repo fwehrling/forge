@@ -239,6 +239,72 @@ install_forge_hooks() {
     fi
 }
 
+
+# --- RTK full setup: Bash hook + native hook + telemetry + CLAUDE.md --------
+
+setup_rtk_hooks() {
+    if [ "$RTK_INSTALLED" != true ]; then
+        return
+    fi
+
+    # (a) RTK Bash hook via rtk init -g
+    if command -v rtk &>/dev/null; then
+        if rtk init --show 2>/dev/null | grep -q "Hook: not found"; then
+            info "Configuring RTK Bash hook..."
+            rtk init -g --auto-patch 2>/dev/null \
+                && ok "RTK Bash hook configured" \
+                || warn "rtk init -g failed (run manually: rtk init -g --auto-patch)"
+        else
+            ok "RTK Bash hook: already configured"
+        fi
+    fi
+
+    # (b) Disable anonymous telemetry
+    local rc_file=""
+    case "${OS}" in
+        macOS) rc_file="${HOME}/.zshrc" ;;
+        *) rc_file="${HOME}/.bashrc" ;;
+    esac
+    if [ -n "$rc_file" ] && ! grep -q "RTK_TELEMETRY_DISABLED" "${rc_file}" 2>/dev/null; then
+        echo 'export RTK_TELEMETRY_DISABLED=1' >> "${rc_file}"
+        ok "RTK telemetry disabled (${rc_file})"
+    fi
+
+    # (c) RTK native hook for Read/Grep/Glob (bundled in FORGE hooks/)
+    local hook_src="${SCRIPT_DIR}/hooks/rtk-native-hook.sh"
+    local hook_dst="${CLAUDE_DIR}/hooks/rtk-native-hook.sh"
+    if [ -f "${hook_src}" ]; then
+        mkdir -p "${CLAUDE_DIR}/hooks"
+        cp -f "${hook_src}" "${hook_dst}"
+        chmod +x "${hook_dst}"
+        # Patch settings.json idempotently
+        local settings="${CLAUDE_DIR}/settings.json"
+        if [ -f "${settings}" ] && command -v python3 &>/dev/null; then
+            python3 - "${settings}" "${hook_dst}" <<'PYSCRIPT'
+import json, sys
+sp, hp = sys.argv[1], sys.argv[2]
+with open(sp) as f: cfg = json.load(f)
+pre = cfg.setdefault('hooks', {}).setdefault('PreToolUse', [])
+if not any('rtk-native-hook' in str(e) for e in pre):
+    pre.append({'matcher': 'Read|Grep|Glob', 'hooks': [{'type': 'command', 'command': hp}]})
+    with open(sp, 'w') as f: json.dump(cfg, f, indent=2)
+    print('settings.json patched')
+PYSCRIPT
+            ok "RTK native hook registered in settings.json (Read/Grep/Glob)"
+        else
+            warn "settings.json not found or python3 missing -- add hook manually"
+        fi
+    else
+        warn "hooks/rtk-native-hook.sh not found in FORGE directory -- skipping"
+    fi
+
+    # (d) Inject RTK section into ~/.claude/CLAUDE.md
+    if [ -f "${SCRIPT_DIR}/scripts/inject-rtk-claude-md.sh" ]; then
+        bash "${SCRIPT_DIR}/scripts/inject-rtk-claude-md.sh" 2>/dev/null \
+            && ok "RTK section added/updated in ~/.claude/CLAUDE.md"
+    fi
+}
+
 # ─── [6/7] RTK (Token Optimization) ─────────────────────────────────────────
 
 check_rtk() {
@@ -248,7 +314,6 @@ check_rtk() {
         RTK_INSTALLED=true
         ok "RTK detected ($(rtk --version 2>/dev/null || echo 'installed'))"
         info "FORGE will use RTK for output compression (60-90% token savings)"
-        return
     fi
 
     echo ""
@@ -299,6 +364,8 @@ check_rtk() {
         info "Non-interactive mode: skipping RTK installation."
         info "Install later: brew install rtk"
     fi
+
+    setup_rtk_hooks
 }
 
 # ─── [7/7] Verify installation ──────────────────────────────────────────────
@@ -349,6 +416,10 @@ verify_installation() {
         if [ -f "${HOME}/.claude/hooks/statusline.sh" ]; then
             ok "Hook: statusline.sh (optional)"
         fi
+        # RTK native hook (optional)
+        if [ -f "${HOME}/.claude/hooks/rtk-native-hook.sh" ]; then
+            ok "Hook: rtk-native-hook.sh (Read/Grep/Glob compression)"
+        fi
         if [ "$hooks_ok" = true ]; then
             ok "All FORGE hooks installed"
         fi
@@ -385,7 +456,10 @@ print_summary() {
         printf '%b\n' "    ${YELLOW}--${NC} FORGE Hooks (not installed)"
     fi
     if [ "$RTK_INSTALLED" = true ]; then
-        printf '%b\n' "    ${GREEN}✓${NC} RTK token optimizer (60-90% output compression)"
+        printf '%b\n' "    ${GREEN}✓${NC} RTK token optimizer (Bash auto-rewrite + native Read/Grep/Glob hook)"
+        if [ -f "${HOME}/.claude/hooks/rtk-native-hook.sh" ]; then
+            printf '%b\n' "    ${GREEN}✓${NC} RTK native hook: 80-85% compression on .ts/.js/.py source files"
+        fi
     else
         printf '%b\n' "    ${YELLOW}--${NC} RTK (not installed -- using built-in token-saver)"
     fi

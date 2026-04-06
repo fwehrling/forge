@@ -216,6 +216,7 @@ your-project/
     forge-memory-sync.sh # Memory persistence
     statusline.sh        # Terminal status indicator
     statusline-custom.sh # Optional: user customizations (survives FORGE updates)
+    rtk-native-hook.sh   # Read/Grep/Glob compression (installed with RTK)
 ```
 
 ---

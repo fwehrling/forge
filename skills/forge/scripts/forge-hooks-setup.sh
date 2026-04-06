@@ -417,7 +417,8 @@ cat > "$HOOKS_DIR/forge-skill-tracker.sh" << 'SKILLTRACKEREOF'
 
 input=$(cat)
 ACTION="$1"
-SKILL_FILE="/tmp/forge-active-skill"
+CWD_HASH=$(printf '%s' "${PWD}" | shasum -a 256 | cut -c1-8)
+SKILL_FILE="/tmp/forge-active-skill-${CWD_HASH}"
 
 SKILL_NAME=$(echo "$input" | jq -r '.tool_input.skill // empty' 2>/dev/null)
 
@@ -594,10 +595,12 @@ if [ -d "$CWD/.forge" ]; then
     FORGE_MARKER=" [FORGE${FORGE_VER}]"
 fi
 
-# Active FORGE skill indicator
+# Active FORGE skill indicator (scoped per project via CWD hash)
 SKILL_INDICATOR=""
-if [ -f /tmp/forge-active-skill ]; then
-    ACTIVE_SKILL=$(cat /tmp/forge-active-skill 2>/dev/null)
+CWD_HASH=$(printf '%s' "${CWD}" | shasum -a 256 | cut -c1-8)
+SKILL_FILE="/tmp/forge-active-skill-${CWD_HASH}"
+if [ -f "$SKILL_FILE" ]; then
+    ACTIVE_SKILL=$(cat "$SKILL_FILE" 2>/dev/null)
     if [ -n "$ACTIVE_SKILL" ]; then
         SKILL_INDICATOR=" ${GREEN}${ICON_SKILL}${RESET} ${ACTIVE_SKILL}"
     fi
