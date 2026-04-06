@@ -5,6 +5,15 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.9] - 2026-04-06
+
+### Changed
+
+- All SKILL.md files translated to English for international accessibility (9 files: forge hub, forge-update, forge-memory, and all 6 Business Pack skills)
+- forge hub: "French Language Rule" replaced with "Language Rule" -- Claude now responds in the user's language automatically
+- Business Pack personas (Clara, Theo, Maya, Victor, Leo) and their full instructions rewritten in English
+- forge-legal: instructions in English, French legal acronyms (RGPD, CGV, LCEN, URSSAF) preserved as proper nouns
+
 ## [1.9.8] - 2026-04-06
 
 ### Changed
@@ -557,6 +566,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.9.0]: https://github.com/fwehrling/forge/releases/tag/v1.9.0
 [1.9.8]: https://github.com/fwehrling/forge/releases/tag/v1.9.8
 [1.9.7]: https://github.com/fwehrling/forge/releases/tag/v1.9.7
+[1.9.9]: https://github.com/fwehrling/forge/releases/tag/v1.9.9
 [1.8.0]: https://github.com/fwehrling/forge/releases/tag/v1.8.0
 [1.6.2]: https://github.com/fwehrling/forge/releases/tag/v1.6.2
 [1.6.1]: https://github.com/fwehrling/forge/releases/tag/v1.6.1
