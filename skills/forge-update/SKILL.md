@@ -20,13 +20,14 @@ description: >
 
 2. **Clone the repo** :
    ```bash
-   TMPDIR="/tmp/forge-update-$(date +%Y-%m-%d)"
-   rm -rf "$TMPDIR"
-   git clone --depth 1 https://github.com/fwehrling/forge.git "$TMPDIR"
+   FORGE_TMPDIR="/tmp/forge-update-$(date +%Y-%m-%d)"
+   rm -rf "$FORGE_TMPDIR"
+   git clone --depth 1 https://github.com/fwehrling/forge.git "$FORGE_TMPDIR"
    ```
+   > **Important**: use `FORGE_TMPDIR`, NOT `TMPDIR` — `TMPDIR` is a macOS system variable (`/var/folders/...`) and would cause path errors.
 
 3. **Compare skills** :
-   - For each directory in `$TMPDIR/skills/*/` :
+   - For each directory in `$FORGE_TMPDIR/skills/*/` :
      - Compare with `~/.claude/skills/<skill>/` via `diff -rq`
      - Classify into 3 categories: **modified**, **new**, **removed**
    - Display a clear summary of detected changes
@@ -43,12 +44,12 @@ description: >
    # that removes files not present in the source — this would destroy non-FORGE
    # skills (user-installed via skills.sh, custom skills, etc.)
    # Use \cp to bypass macOS cp -i alias that blocks non-interactive overwrites.
-   for dir in "$TMPDIR/skills/"forge*/; do
+   for dir in "$FORGE_TMPDIR/skills/"forge*/; do
      skill=$(basename "$dir")
      \cp -rf "$dir" ~/.claude/skills/"$skill"
    done
    # Also copy the main forge router skill
-   \cp -rf "$TMPDIR/skills/forge/" ~/.claude/skills/forge/
+   \cp -rf "$FORGE_TMPDIR/skills/forge/" ~/.claude/skills/forge/
    ```
    - **NEVER** use `rsync --delete`, `rsync -a --delete`, or any destructive sync
    - Only FORGE skills (`forge` and `forge-*`) are managed by this updater
@@ -66,13 +67,13 @@ description: >
    ```
 
 6. **Install packs** (if `--pack` argument provided) :
-   - Read `$TMPDIR/packs.yaml` to get the list of skills in the requested pack
+   - Read `$FORGE_TMPDIR/packs.yaml` to get the list of skills in the requested pack
    - For each skill in the pack:
-     - Compare `$TMPDIR/packs/<pack>/<skill>/` with `~/.claude/skills/<skill>/`
+     - Compare `$FORGE_TMPDIR/packs/<pack>/<skill>/` with `~/.claude/skills/<skill>/`
      - Copy if new or modified
    ```bash
    # Example for --pack business:
-   for dir in "$TMPDIR/packs/business/"forge-*/; do
+   for dir in "$FORGE_TMPDIR/packs/business/"forge-*/; do
      skill=$(basename "$dir")
      \cp -rf "$dir" ~/.claude/skills/"$skill"
    done
@@ -83,7 +84,7 @@ description: >
      (because they were previously installed and should stay in sync)
    ```bash
    # Auto-detect previously installed pack skills
-   for dir in "$TMPDIR/packs/business/"forge-*/; do
+   for dir in "$FORGE_TMPDIR/packs/business/"forge-*/; do
      skill=$(basename "$dir")
      if [ -d ~/.claude/skills/"$skill" ]; then
        \cp -rf "$dir" ~/.claude/skills/"$skill"
@@ -92,7 +93,7 @@ description: >
    ```
 
 7. **Update version, hooks, and infrastructure** :
-   - Read `$TMPDIR/VERSION` and write to `~/.claude/skills/forge/.forge-version`
+   - Read `$FORGE_TMPDIR/VERSION` and write to `~/.claude/skills/forge/.forge-version`
    - Clear cache `~/.claude/skills/forge/.forge-update-cache` to force a fresh check on next startup
    - Run `forge-hooks-setup.sh` to install/update FORGE hooks (idempotent) :
      - `bash-interceptor.js` -- PreToolUse[Bash]: blocks dangerous commands + token optimization
@@ -103,13 +104,13 @@ description: >
    - Remove deprecated hooks (`command-validator.js`, `output-filter.js`, `forge-auto-router.js`)
    - Patch `~/.claude/settings.json` with hooks, permissions, and statusLine config (idempotent)
    ```bash
-   \cp -f "$TMPDIR/VERSION" ~/.claude/skills/forge/.forge-version
+   \cp -f "$FORGE_TMPDIR/VERSION" ~/.claude/skills/forge/.forge-version
    rm -f ~/.claude/skills/forge/.forge-update-cache
    bash ~/.claude/skills/forge/scripts/forge-hooks-setup.sh
    ```
 
 8. **Suggest Business Pack** (if not installed and no `--pack` argument) :
-   - Check if any skill from `$TMPDIR/packs/business/` exists in `~/.claude/skills/`
+   - Check if any skill from `$FORGE_TMPDIR/packs/business/` exists in `~/.claude/skills/`
    - If none installed, display a one-time suggestion:
      ```
      Tip: FORGE Business Pack available (marketing, SEO, legal, security, strategy).
@@ -117,13 +118,13 @@ description: >
      ```
 
 9. **Update ~/.claude/CLAUDE.md** :
-   - Compare `$TMPDIR/templates/claude-md-forge-section.md` with the current FORGE block in `~/.claude/CLAUDE.md` (content between `<!-- FORGE:BEGIN -->` and `<!-- FORGE:END -->`)
-   - If markers don't exist in `~/.claude/CLAUDE.md` : run `bash "$TMPDIR/scripts/inject-claude-md.sh"` (will ask user confirmation)
+   - Compare `$FORGE_TMPDIR/templates/claude-md-forge-section.md` with the current FORGE block in `~/.claude/CLAUDE.md` (content between `<!-- FORGE:BEGIN -->` and `<!-- FORGE:END -->`)
+   - If markers don't exist in `~/.claude/CLAUDE.md` : run `bash "$FORGE_TMPDIR/scripts/inject-claude-md.sh"` (will ask user confirmation)
    - If markers exist and content is identical : display "CLAUDE.md FORGE section is up to date" and skip
    - If markers exist and content differs :
      - Display diff between current block and template
      - Ask confirmation before replacing
-     - If confirmed : run `bash "$TMPDIR/scripts/inject-claude-md.sh"`
+     - If confirmed : run `bash "$FORGE_TMPDIR/scripts/inject-claude-md.sh"`
      - If refused : skip
 
 10. **Verify installation** :
@@ -132,7 +133,7 @@ description: >
 
 11. **Clean up** :
     ```bash
-    rm -rf "$TMPDIR"
+    rm -rf "$FORGE_TMPDIR"
     ```
 
 12. **Save memory** (if `.forge/` exists — ensures update history persists for version tracking and rollback reference):
