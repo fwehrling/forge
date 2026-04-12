@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.9.12-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.9.13-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-25%20core%20%2B%208%20business-orange)](#commands)
@@ -268,7 +268,9 @@ FORGE adjusts to your project's complexity:
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.9.12**: add install.ps1 for Windows -- auto-detects WSL, offers to install it if missing, then runs the FORGE installer inside WSL.
+**Latest -- v1.9.13**: statusline burn rate indicator -- red triangle warns when token usage exceeds expected 20%/hour rate (5% tolerance).
+
+**v1.9.12**: add install.ps1 for Windows -- auto-detects WSL, offers to install it if missing, then runs the FORGE installer inside WSL.
 
 **v1.7.10**: standalone `update.sh` script, fix memory setup banner.
 
