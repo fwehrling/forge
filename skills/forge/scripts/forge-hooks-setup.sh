@@ -508,6 +508,12 @@ MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"' 2>/dev/null)
 CWD=$(echo "$input" | jq -r '.workspace.current_dir // ""' 2>/dev/null)
 PROJECT=$(basename "$CWD" 2>/dev/null)
 
+# ANSI color codes (defined early -- used by burn rate indicator and context display)
+RED='\033[31m'
+ORANGE='\033[38;5;208m'
+GREEN='\033[32m'
+RESET='\033[0m'
+
 # Rate limits: 5-hour window
 FIVE_PCT=$(echo "$input" | jq -r '.rate_limits.five_hour.used_percentage // empty' 2>/dev/null)
 FIVE_RESET=$(echo "$input" | jq -r '.rate_limits.five_hour.resets_at // empty' 2>/dev/null)
@@ -534,7 +540,22 @@ if [ -n "$FIVE_PCT" ] && [ -n "$FIVE_RESET" ]; then
         fi
     fi
     FIVE_INT=$(printf '%.0f' "$FIVE_PCT")
-    RATE_PARTS="5h:${FIVE_INT}% (reset ${FIVE_REMAINING})"
+
+    # Burn rate indicator: red triangle if usage exceeds expected rate + 5% tolerance
+    BURN_ICON=""
+    WIN_START=$(( FIVE_RESET - 18000 ))  # 5h = 18000s
+    ELAPSED=$(( NOW - WIN_START ))
+    if [ "$ELAPSED" -gt 0 ]; then
+        ELAPSED_HOURS_X100=$(( ELAPSED * 100 / 3600 ))   # elapsed hours * 100 (integer math)
+        EXPECTED_X100=$(( ELAPSED_HOURS_X100 * 20 ))      # expected% * 100
+        ACTUAL_X100=$(( FIVE_INT * 100 ))
+        TOLERANCE=500  # 5% margin (in X100 units)
+        if [ "$ACTUAL_X100" -gt "$(( EXPECTED_X100 + TOLERANCE ))" ] 2>/dev/null; then
+            BURN_ICON="${RED}$(printf '\xe2\x96\xb2')${RESET} "
+        fi
+    fi
+
+    RATE_PARTS="${BURN_ICON}5h:${FIVE_INT}% (reset ${FIVE_REMAINING})"
 fi
 
 if [ -n "$WEEK_PCT" ] && [ -n "$WEEK_RESET" ]; then
@@ -561,12 +582,6 @@ if [ -n "$WEEK_PCT" ] && [ -n "$WEEK_RESET" ]; then
         RATE_PARTS="7d:${WEEK_INT}% (reset ${WEEK_REMAINING})"
     fi
 fi
-
-# ANSI color codes
-RED='\033[31m'
-ORANGE='\033[38;5;208m'
-GREEN='\033[32m'
-RESET='\033[0m'
 
 # Unicode icons (via printf for portable encoding)
 ICON_HIGH=$(printf '\xe2\x98\xa0')  # ☠
