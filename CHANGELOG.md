@@ -5,6 +5,14 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.2] - 2026-04-15
+
+### Fixed
+
+- **ASCII encoding**: replace decorative Unicode (em dashes, box-drawing, arrows, checkmarks) with ASCII equivalents across all 71 files -- prevents garbled display in non-UTF-8 terminals. French accents preserved
+- **forge-init step 7**: no longer copies satellites into project directory -- verifies global installation instead (hub-only architecture)
+- **README**: correct satellite count (25, not 33), add missing forge-resume to tools table
+
 ## [1.11.1] - 2026-04-15
 
 ### Fixed
@@ -649,3 +657,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/fwehrling/forge/releases/tag/v1.0.0
+[1.11.2]: https://github.com/fwehrling/forge/releases/tag/v1.11.2
