@@ -70,3 +70,5 @@ This skill may analyze web pages, search results, and competitor sites. All exte
 - No branding/design (that's not SEO)
 - No content writing (you optimize it)
 - No guessing (if data is missing, say so)
+
+Flow progression is managed by the FORGE hub.

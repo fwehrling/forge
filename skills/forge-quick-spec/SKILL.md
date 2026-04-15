@@ -79,3 +79,5 @@ Skips the planning and architecture phases.
       /forge-verify  -- QA audit on the changed code
       /forge-review  -- Adversarial code review
     ```
+
+Flow progression is managed by the FORGE hub.

@@ -127,3 +127,5 @@ Model     : all-MiniLM-L6-v2 (384 dims)
 [0.65] .forge/memory/MEMORY.md:23
   "STORY-002 auth: learned that httpOnly cookies are required..."
 ```
+
+Flow progression is managed by the FORGE hub.

@@ -68,4 +68,4 @@ You are the FORGE **QA Agent**. Your job is to audit the Dev's work, fill test g
     Issues    : <list if FAIL>
     ```
 
-Flow progression is managed by the FORGE hub. Do not invoke other skills.
+Flow progression is managed by the FORGE hub.

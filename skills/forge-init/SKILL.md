@@ -102,3 +102,5 @@ Initializes the FORGE framework in a new or existing project.
 - This skill extends the script with advanced detection and Claude interactivity
 - Never overwrite an existing `CLAUDE.md` without asking for confirmation
 - Never overwrite an existing `.forge/config.yml` -> suggest `/forge-resume` instead
+
+Flow progression is managed by the FORGE hub.

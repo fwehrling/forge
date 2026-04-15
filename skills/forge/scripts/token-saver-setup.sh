@@ -128,7 +128,7 @@ set -o pipefail
 MAX_LINES=200
 CMD="$1"
 if [ -z "$CMD" ]; then echo "Usage: token-saver.sh '<command>'" >&2; exit 1; fi
-OUTPUT=$(eval "$CMD" 2>&1)
+OUTPUT=$(bash -co pipefail "$CMD" 2>&1)
 EXIT_CODE=$?
 if [ ${#OUTPUT} -lt 80 ]; then printf '%s\n' "$OUTPUT"; exit $EXIT_CODE; fi
 read -r WORD1 WORD2 _ <<< "$CMD"

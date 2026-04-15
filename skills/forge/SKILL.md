@@ -262,6 +262,7 @@ Available at any point during a flow. Load via Read() when triggered:
 | Update FORGE | forge-update |
 | Compress output tokens | forge-slim |
 | Initialize project | forge-init |
+| Resume previous session | forge-resume |
 
 ## Language Rule
 

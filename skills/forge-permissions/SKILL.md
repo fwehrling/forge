@@ -1,15 +1,8 @@
 ---
 name: forge-permissions
 description: >
-  Permission and access control system design and refactoring. Use this skill whenever
-  the user mentions roles, permissions, RBAC, ACL, authorization, access control,
-  hardcoded role mappings, permission checks, role-based features, or wants to
-  refactor how their app handles who-can-do-what. Covers: switch/if-else permission
-  logic, role-to-permission objects, overly permissive defaults, decoupling roles
-  from permissions, implementing selectable permission categories in the UI, and
-  migrating from hardcoded to configurable access control. Use even when the user
-  says "fix permissions" or "our roles are a mess" without explicitly asking for
-  a full refactor.
+  Permission and access control system design and refactoring -- RBAC, ACL, authorization,
+  role decoupling, configurable access control.
 paths:
   - ".forge/**"
 ---
@@ -145,3 +138,5 @@ The core insight: roles describe *who someone is*, categories describe *what the
 - **Single source of truth** -- categories defined once, referenced everywhere
 - **Categories are additive** -- selecting multiple categories unions their permissions
 - **UI makes it visible** -- if permissions aren't visible in the UI, they'll drift from intent
+
+Flow progression is managed by the FORGE hub.

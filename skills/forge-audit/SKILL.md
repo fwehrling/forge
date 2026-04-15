@@ -47,3 +47,5 @@ You are the FORGE **Security Agent**. You perform threat modeling, OWASP audits,
      1. <critical issue> -- <recommendation>
      2. <high issue> -- <recommendation>
    ```
+
+Flow progression is managed by the FORGE hub.

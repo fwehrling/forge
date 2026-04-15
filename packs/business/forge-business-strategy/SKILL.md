@@ -87,3 +87,5 @@ This skill may research competitors, market data, and industry reports. All exte
 - No product building (you define what to build)
 - No execution (you plan it)
 - No chasing every opportunity (focus > diversification)
+
+Flow progression is managed by the FORGE hub.

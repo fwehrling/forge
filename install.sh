@@ -17,7 +17,7 @@ fi
 info()  { printf '%b\n' "${BLUE}->${NC} $1"; }
 ok()    { printf '%b\n' "${GREEN}ok${NC} $1"; }
 warn()  { printf '%b\n' "${YELLOW}!${NC} $1"; }
-error() { printf '%b\n' "${RED}✗${NC} $1" >&2; }
+error() { printf '%b\n' "${RED}x${NC} $1" >&2; }
 step()  { printf '\n%b\n' "${BOLD}[$1/$TOTAL_STEPS] $2${NC}"; }
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -41,7 +41,7 @@ echo ""
 printf '%b\n' "${GREEN}FORGE${NC} -- Framework for Orchestrated Resilient Generative Engineering"
 echo ""
 
-# --- [1/6] Detect OS --------------------------------------------------------
+# --- [1/7] Detect OS --------------------------------------------------------
 
 detect_os() {
     step 1 "Detecting OS..."
@@ -83,7 +83,7 @@ detect_os() {
     ok "Detected OS: ${OS}"
 }
 
-# --- [2/6] Install skills ---------------------------------------------------
+# --- [2/7] Install skills ---------------------------------------------------
 
 FORGE_DIR="${HOME}/.forge"
 
@@ -177,7 +177,7 @@ install_skills() {
     # are installed in step 5 via forge-hooks-setup.sh
 }
 
-# --- [3/6] Update ~/.claude/CLAUDE.md ----------------------------------------
+# --- [3/7] Update ~/.claude/CLAUDE.md ----------------------------------------
 
 inject_claude_md() {
     step 3 "Configuring ~/.claude/CLAUDE.md..."
@@ -189,7 +189,7 @@ inject_claude_md() {
     fi
 }
 
-# --- [4/6] Check Python & vector memory -------------------------------------
+# --- [4/7] Check Python & vector memory -------------------------------------
 
 check_python() {
     step 4 "Checking Python..."
@@ -251,7 +251,7 @@ check_python() {
     fi
 }
 
-# --- [5/6] FORGE Hooks -----------------------------------------------------
+# --- [5/7] FORGE Hooks -----------------------------------------------------
 
 install_forge_hooks() {
     step 5 "Installing FORGE Hooks..."
@@ -411,7 +411,7 @@ verify_installation() {
     fi
 
     # Check satellite skills in ~/.forge/skills/
-    for skill in forge-auto forge-build forge-verify forge-plan forge-init forge-ux forge-loop forge-analyze forge-audit forge-quick-test forge-audit-skill forge-stories forge-architect forge-party forge-team forge-memory forge-quick-spec forge-review forge-resume forge-status forge-update; do
+    for skill in forge-auto forge-build forge-verify forge-plan forge-init forge-ux forge-loop forge-analyze forge-audit forge-quick-test forge-audit-skill forge-stories forge-architect forge-party forge-team forge-memory forge-quick-spec forge-review forge-resume forge-status forge-update forge-debug forge-permissions forge-slim forge-think; do
         if [ -f "${FORGE_DIR}/skills/${skill}/SKILL.md" ]; then
             ok "Skill: ${skill}"
         else

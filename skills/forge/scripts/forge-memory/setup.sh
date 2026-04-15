@@ -109,7 +109,7 @@ if [ "${SYMLINK_INSTALLED}" = false ]; then
 fi
 
 if [ "${SYMLINK_INSTALLED}" = false ]; then
-    echo "  ⚠️  Could not add forge-memory to PATH automatically."
+    echo "  [!] Could not add forge-memory to PATH automatically."
     echo "  Add this to your shell profile:"
     echo "    export PATH=\"${SCRIPT_DIR}:\${PATH}\""
 fi
@@ -118,7 +118,7 @@ fi
 # Post-install: detect project and propose initial sync
 # ---------------------------------------------------------------------------
 echo ""
-echo "✅ FORGE Vector Memory installed!"
+echo "[OK] FORGE Vector Memory installed!"
 echo ""
 
 # Check if we're inside a FORGE project (or a parent has .forge/memory/)
@@ -137,12 +137,12 @@ if [ -n "${PROJECT_ROOT}" ]; then
     DB_FILE="${MEMORY_DIR}/index.sqlite"
     MEMORY_FILE="${MEMORY_DIR}/MEMORY.md"
 
-    echo "📂 FORGE project detected: ${PROJECT_ROOT}"
+    echo "[dir] FORGE project detected: ${PROJECT_ROOT}"
     echo ""
 
     # Check if MEMORY.md needs enrichment (still has placeholders)
     if grep -q "à compléter" "${MEMORY_FILE}" 2>/dev/null; then
-        echo "📝 MEMORY.md contains placeholders -- it needs enrichment."
+        echo "[note] MEMORY.md contains placeholders -- it needs enrichment."
         echo "   Run your FORGE agents (/forge-architect, /forge-plan) to populate it,"
         echo "   or manually fill in project context, decisions, and patterns."
         echo ""
@@ -151,16 +151,16 @@ if [ -n "${PROJECT_ROOT}" ]; then
     # Check if index is empty or stale
     NEEDS_SYNC=false
     if [ ! -f "${DB_FILE}" ]; then
-        echo "🔍 No index found -- initial sync recommended."
+        echo "[search] No index found -- initial sync recommended."
         NEEDS_SYNC=true
     else
         FILE_COUNT=$("${WRAPPER}" status --json 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('file_count',0))" 2>/dev/null || echo "0")
         MD_COUNT=$(find "${MEMORY_DIR}" -name '*.md' 2>/dev/null | wc -l | tr -d ' ')
         if [ "${FILE_COUNT}" -lt "${MD_COUNT}" ]; then
-            echo "🔍 Index has ${FILE_COUNT} file(s) but ${MD_COUNT} .md file(s) found -- sync recommended."
+            echo "[search] Index has ${FILE_COUNT} file(s) but ${MD_COUNT} .md file(s) found -- sync recommended."
             NEEDS_SYNC=true
         else
-            echo "✅ Index is up to date (${FILE_COUNT} file(s), synced)."
+            echo "[OK] Index is up to date (${FILE_COUNT} file(s), synced)."
         fi
     fi
 

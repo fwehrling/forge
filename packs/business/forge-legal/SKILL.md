@@ -153,3 +153,5 @@ Prohibited clauses: limitation of right of withdrawal, undisclosed fees, refund 
 - No personalized tax advice (consult an accountant for complex cases)
 - No custom contract drafting (provides templates and recommendations)
 - French jurisdiction only (French and European law)
+
+Flow progression is managed by the FORGE hub.

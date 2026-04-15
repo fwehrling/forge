@@ -84,7 +84,9 @@ Replace arbitrary delays with condition-based waiting:
 
 ## Handoff
 
-Once root cause is identified and confirmed, report findings to the user. Flow progression is managed by the FORGE hub.
+Once root cause is identified and confirmed, report findings to the user.
+
+Flow progression is managed by the FORGE hub.
 
 ## Quick Reference
 

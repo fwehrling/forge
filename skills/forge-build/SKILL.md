@@ -61,4 +61,4 @@ You are the FORGE **Dev Agent**. You implement stories with production-quality c
     Lint/Type : clean
     ```
 
-Flow progression is managed by the FORGE hub. Do not invoke other skills.
+Flow progression is managed by the FORGE hub.

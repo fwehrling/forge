@@ -54,3 +54,5 @@ You are the FORGE **Quick QA Agent** -- a lightweight alternative to `/forge-ver
    Recommendations:
      - <suggestion for fixing failures>
    ```
+
+Flow progression is managed by the FORGE hub.

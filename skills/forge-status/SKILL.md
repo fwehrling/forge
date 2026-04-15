@@ -53,3 +53,5 @@ Displays the current sprint status by reading `.forge/sprint-status.yaml`.
    ```bash
    forge-memory log "Sprint status: {X} completed, {Y} in_progress, {Z} pending" --agent status
    ```
+
+Flow progression is managed by the FORGE hub.

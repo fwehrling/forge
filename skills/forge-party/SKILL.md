@@ -65,3 +65,5 @@ Select 2-3 from the following based on the topic:
    ```bash
    forge-memory log "Party done: {TOPIC}, {N} agents, recommendation: {SUMMARY}" --agent orchestrator
    ```
+
+Flow progression is managed by the FORGE hub.

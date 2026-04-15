@@ -74,3 +74,5 @@ This skill may analyze social media feeds, competitor posts, and trending conten
 - No fake hype ("GAME CHANGER!!!" when it isn't)
 - No engagement bait ("Tag 3 friends to win...")
 - No word-for-word copying of viral posts (inspiration != plagiarism)
+
+Flow progression is managed by the FORGE hub.

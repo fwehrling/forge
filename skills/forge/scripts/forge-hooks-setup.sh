@@ -803,10 +803,10 @@ fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2) + '\n');
 echo ""
 echo "  FORGE Hooks -- Installation complete!"
 if [ "$INSTALL_STATUSLINE" = true ]; then
-  echo "     6 hook scripts in ~/.claude/hooks/"
+  echo "     7 hook scripts in ~/.claude/hooks/"
   echo "     5 hook events + status line in ~/.claude/settings.json"
 else
-  echo "     5 hook scripts in ~/.claude/hooks/"
+  echo "     6 hook scripts in ~/.claude/hooks/"
   echo "     5 hook events in ~/.claude/settings.json"
 fi
 echo "     (PreToolUse[Bash|Skill], PostToolUse[Skill], SessionStart, Stop)"

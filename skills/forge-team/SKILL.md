@@ -376,3 +376,5 @@ When constructing spawn prompts, replace these variables:
 | Single story implementation | `/forge-build STORY-XXX` (no team needed) |
 | Sequential pipeline, no parallelism | `/forge-auto` (existing skill) |
 | Quick 2-3 agent analysis | `/forge-party` (existing skill, uses subagents) |
+
+Flow progression is managed by the FORGE hub. This skill acts as a delegated orchestrator -- it is invoked by the hub and may load other satellites as part of its orchestration role.

@@ -92,3 +92,5 @@ bash ~/.claude/skills/forge/forge-loop.sh checkpoint-list
 # Restore a checkpoint
 bash ~/.claude/skills/forge/forge-loop.sh rollback --story forge-ckpt-iter-5
 ```
+
+Flow progression is managed by the FORGE hub.

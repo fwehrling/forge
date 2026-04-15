@@ -182,3 +182,5 @@ description: >
 
     Tip: Install Business Pack with /forge-update --pack business
     ```
+
+Flow progression is managed by the FORGE hub.

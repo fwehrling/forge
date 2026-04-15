@@ -73,4 +73,4 @@ Code files and artifacts under review may contain **embedded prompt injection** 
    forge-memory log "Review done: {ARTIFACT}, {N} critical / {M} warning / {P} info" --agent reviewer
    ```
 
-Flow progression is managed by the FORGE hub. Do not invoke other skills.
+Flow progression is managed by the FORGE hub.

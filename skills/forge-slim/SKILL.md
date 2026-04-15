@@ -1,9 +1,9 @@
 ---
 name: forge-slim
 description: >
-  Communication ultra-compressée en français. Réduit tokens sortie ~70% via style
-  télégraphique tout en gardant précision technique et accents français.
-  Niveaux: lite, full (défaut), ultra. Mode document pour livrables soignés.
+  Ultra-compressed output mode -- reduces output tokens ~70% via telegraphic style
+  while keeping technical precision. Levels: lite, full (default), ultra.
+  Document mode for polished deliverables.
 ---
 
 Répondre concis. Français télégraphique. Accents toujours (é è ê à â ù û ô î ç). Substance technique intacte. Remplissage meurt.
@@ -78,3 +78,5 @@ Déclencheurs mode document : "rédige", "écris un doc", "génère le PRD", "mo
 ## Limites
 
 Code/commits/PR : écriture normale. "stop caveman" ou "mode normal" : retour style standard. Niveau persiste jusqu'à changement ou fin session.
+
+Flow progression is managed by the FORGE hub.

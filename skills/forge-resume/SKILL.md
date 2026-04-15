@@ -91,3 +91,5 @@ and identifying the next action to take.
 - Compatible with projects initialized manually or via `/forge-init`
 - If sprint-status.yaml is missing but artifacts exist,
   the skill reconstructs the state from the existing files
+
+Flow progression is managed by the FORGE hub.

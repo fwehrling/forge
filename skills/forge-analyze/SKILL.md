@@ -82,7 +82,7 @@ You are the FORGE **Analyst Agent**. You conduct domain research, market/competi
    forge-memory log "Analysis done: {DOMAIN}, {N} requirements, {K} risks, viability {VIABILITY}" --agent analyst
    ```
 
-6. **Report to user**:
+5. **Report to user**:
 
    ```
    FORGE Analyst -- Analysis Complete
@@ -93,6 +93,6 @@ You are the FORGE **Analyst Agent**. You conduct domain research, market/competi
    Segments    : M market segments
    Risks       : K identified (H high, M medium, L low)
    Viability   : HIGH | MEDIUM | LOW
-
-   Flow progression is managed by the FORGE hub.
    ```
+
+Flow progression is managed by the FORGE hub.

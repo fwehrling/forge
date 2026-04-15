@@ -159,3 +159,5 @@ Autopilot and manual commands are 100% compatible:
 - Persistent memory ensures continuity between sessions
 - Compatible with projects initialized via `/forge-init`
 - Also works for resuming existing projects (analyzes the state)
+
+Flow progression is managed by the FORGE hub. This skill acts as a delegated orchestrator -- it is invoked by the hub and may load other satellites as part of its orchestration role.
