@@ -5,6 +5,13 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.3] - 2026-04-15
+
+### Fixed
+
+- **README factual accuracy audit**: add `/forge` prefix to hero example, correct agent count from "12" to "26" with accurate breakdown (8 pipeline + 4 orchestration + 14 utility), replace unverified RTK savings numbers with typical ranges, clarify Docker sandbox is configurable (not mandatory), fix "built-in token-saver.sh" to "generated hook", add missing `agents/{agent}.md` to memory structure, remove unverified "~1,700 tokens/turn" claim
+- **CHANGELOG v1.11.0**: correct satellite count from 33 to 25, remove unverified token savings figure
+
 ## [1.11.2] - 2026-04-15
 
 ### Fixed
@@ -23,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- **Hub-only architecture**: only the FORGE hub (`forge/SKILL.md`) is registered in `~/.claude/skills/`. All 33 satellite agents move to `~/.forge/skills/` and are loaded on demand via `Read()`, saving ~1,700 tokens per conversation turn from the system prompt
+- **Hub-only architecture**: only the FORGE hub (`forge/SKILL.md`) is registered in `~/.claude/skills/`. All 25 satellite agents move to `~/.forge/skills/` and are loaded on demand via `Read()`, reducing system prompt token cost significantly
 - **Flow-based orchestration**: the hub classifies user intent into 6 flows (CREATE, FEATURE, DEBUG, IMPROVE, SECURE, BUSINESS) with defined step sequences instead of 1-to-1 routing
 - **HITL quality gates**: after every build-verify-review cycle, the hub presents findings by severity (CRITICAL/WARNING/INFO) and lets the user choose what to fix (C/CW/ALL/SKIP or manual selection)
 - **Persistent flow state**: new `.forge/flow-state.yaml` tracks active flow, current step, story progress, and HITL preferences for cross-session resume

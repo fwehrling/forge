@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.11.2-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.11.3-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-26%20core%20%2B%208%20business-orange)](#commands)
@@ -11,10 +11,10 @@
 > FORGE turns Claude Code into a team of AI agents that plan, build, test, review, and deploy your project -- while you focus on decisions that matter.
 
 ```
-"Build a SaaS with auth, payments, and a dashboard"
+/forge "Build a SaaS with auth, payments, and a dashboard"
 ```
 
-One sentence. FORGE breaks it into requirements, architecture, stories, code, and tests. Each phase has a specialized agent. Artifacts flow from one to the next. Nothing gets lost.
+One command. FORGE breaks it into requirements, architecture, stories, code, and tests. Each phase has a specialized agent. Artifacts flow from one to the next. Nothing gets lost.
 
 ---
 
@@ -39,7 +39,7 @@ Want to resume where you left off? Just type `/forge` -- memory picks up exactly
 
 ### AI Agents That Actually Collaborate
 
-12 specialized agents (Analyst, PM, Architect, UX, Scrum Master, Dev, DevOps, QA, Reviewer, Orchestrator, Security + Quick-QA variant) that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
+26 specialized agents -- 8 pipeline (Analyst, PM, Architect, UX, Scrum Master, Dev, QA, Reviewer), 4 orchestration (Autopilot, Teams, Party, Loop), and 14 utility agents (Debug, Audit, Init, Think, Permissions, etc.) -- that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
 
 <p align="center">
   <picture>
@@ -56,6 +56,7 @@ FORGE remembers everything across sessions. Two-layer system: Markdown files for
 ```
 .forge/memory/
   MEMORY.md              # Long-term project knowledge
+  agents/{agent}.md      # Agent-specific memories
   sessions/YYYY-MM-DD.md # Daily session logs (tagged by agent)
   index.sqlite           # Vector search index (optional)
 ```
@@ -64,15 +65,15 @@ FORGE remembers everything across sessions. Two-layer system: Markdown files for
 
 Shell output wastes tokens. FORGE intercepts verbose commands and compresses them automatically. With [RTK](https://github.com/rtk-ai/rtk) (optional, proposed at install):
 
-| Command | Before | After | Savings |
-|---------|--------|-------|---------|
-| `npm test` (713 tests) | 52 KB | 1 KB | **-97%** |
-| `git diff` (20 commits) | 420 KB | 7 KB | **-98%** |
-| `git status/add/commit/push` | verbose | 1-2 lines | **-92%** |
+| Command | Typical savings |
+|---------|----------------|
+| `npm test` / `pytest` | **90-97%** (keeps pass/fail summary, drops verbose output) |
+| `git diff` / `git log` | **85-98%** (keeps meaningful changes, drops noise) |
+| `git status/add/commit/push` | **80-92%** (1-2 lines instead of verbose output) |
 
-Zero config. RTK provides 60-90% compression on 50+ commands. Falls back to built-in `token-saver.sh` if RTK is not installed.
+Zero config. RTK provides 60-90% compression on 50+ commands. Falls back to a generated `token-saver.sh` hook if RTK is not installed.
 
-Hub-only architecture means zero token cost from satellite agents in the system prompt -- only the hub description is loaded per turn.
+Hub-only architecture means zero token cost from satellite agents in the system prompt -- only the hub description is loaded per turn. Satellites are loaded on demand via `Read()`.
 
 ### Beyond Code
 
@@ -110,7 +111,7 @@ One entry point: `/forge`. It classifies your intent and runs the right flow.
 
 **Parallel execution**: `/forge team build STORY-001 STORY-002` uses Agent Teams for simultaneous story building.
 
-**Autonomous loops**: `/forge loop` runs with cost caps, circuit breakers, Docker sandbox, and git rollback.
+**Autonomous loops**: `/forge loop` runs with cost caps, circuit breakers, configurable sandbox (Docker, local, or none), and git rollback.
 
 ---
 
@@ -232,7 +233,7 @@ your-project/
   skills/forge-*/        # 25 satellite agents (loaded on demand by the hub)
 ```
 
-**Hub-only architecture**: Only the FORGE hub is registered in Claude Code's skill system. Satellite agents are invisible to the system prompt and loaded on demand via `Read()`. This saves ~1,700 tokens per conversation turn compared to registering all 26 skills.
+**Hub-only architecture**: Only the FORGE hub is registered in Claude Code's skill system. Satellite agents are invisible to the system prompt and loaded on demand via `Read()`.
 
 ---
 
@@ -259,7 +260,7 @@ Your choice. FORGE learns your preferences across sessions.
 
 5-layer defense for autonomous execution: input validation, sandbox isolation, credential management, audit/rollback, and human gates.
 
-- Autonomous loops run in Docker sandboxes with network whitelisting
+- Autonomous loops support Docker sandbox isolation (configurable: docker, local, or none)
 - Dangerous commands blocked at the hook level (`rm -rf /`, `DROP DATABASE`, `git push --force main`...)
 - Prompt injection protection across all skills that read external content
 - Cost caps and circuit breakers prevent runaway spending
@@ -272,7 +273,7 @@ Your choice. FORGE learns your preferences across sessions.
 2. **Memory over repetition** -- FORGE never asks the same question twice.
 3. **Tests are first-class** -- Every story has test specs. Dev writes TDD. QA audits coverage.
 4. **Security by default** -- Guardrails are built in, not bolted on.
-5. **One command** -- `/forge "goal"` and walk away. HITL gates keep you in control without micromanaging.
+5. **One command** -- `/forge "goal"` starts the full pipeline. HITL gates keep you in control without micromanaging.
 
 ---
 
@@ -280,11 +281,13 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.11.2**: ASCII encoding fix -- replace decorative Unicode with ASCII across all files, fix forge-init satellite path, correct README skill counts.
+**Latest -- v1.11.3**: README factual accuracy audit -- correct agent counts, add /forge prefix to examples, replace unverified metrics with typical ranges, clarify configurable Docker sandbox.
+
+**v1.11.2**: ASCII encoding fix -- replace decorative Unicode with ASCII across all files, fix forge-init satellite path, correct README skill counts.
 
 **v1.11.1**: RTK anti-bypass -- strengthened CLAUDE.md instructions to prevent Claude from working around RTK token compression.
 
-**v1.11.0**: hub-only architecture -- satellites move to ~/.forge/skills/ (saves ~1,700 tokens/turn), flow-based orchestration (CREATE/FEATURE/DEBUG/IMPROVE/SECURE/BUSINESS), HITL quality gates, persistent flow-state for cross-session resume.
+**v1.11.0**: hub-only architecture -- satellites move to ~/.forge/skills/ (significant token savings per turn), flow-based orchestration (CREATE/FEATURE/DEBUG/IMPROVE/SECURE/BUSINESS), HITL quality gates, persistent flow-state for cross-session resume.
 
 **v1.10.0**: forge-slim -- output token compression (~70% savings) with auto-activation via SessionStart hook, three intensity levels, and document mode for deliverables.
 
