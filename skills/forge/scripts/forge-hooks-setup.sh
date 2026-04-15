@@ -374,6 +374,29 @@ chmod +x "$HOOKS_DIR/forge-update-check.sh"
 echo "    Created forge-update-check.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# 3b. forge-slim.sh — SessionStart — Auto-activate compressed output mode
+# ═══════════════════════════════════════════════════════════════════════════════
+cat > "$HOOKS_DIR/forge-slim.sh" << 'SLIMEOF'
+#!/usr/bin/env bash
+# FORGE Slim -- SessionStart hook
+# Activates compressed French output mode to reduce output tokens ~70%.
+# Always exits 0 (never blocks session startup).
+
+# Only activate if forge-slim skill is installed
+if [ ! -f "$HOME/.claude/skills/forge-slim/SKILL.md" ]; then
+    exit 0
+fi
+
+cat << 'MSG'
+FORGE-SLIM active (full). Reponses en francais telegraphique, accents obligatoires. Supprimer articles, remplissage, politesses. Fragments OK. Pattern: [chose] [action] [raison]. Mode document pour livrables (francais impeccable). /forge-slim lite|full|ultra pour changer. "stop slim" pour desactiver.
+MSG
+
+exit 0
+SLIMEOF
+chmod +x "$HOOKS_DIR/forge-slim.sh"
+echo "    Created forge-slim.sh"
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # 4. forge-memory-sync.sh — Stop — Memory persistence
 # ═══════════════════════════════════════════════════════════════════════════════
 cat > "$HOOKS_DIR/forge-memory-sync.sh" << 'MEMORYEOF'
@@ -748,6 +771,9 @@ if (!bashHooks.some(h => h.command === interceptorCmd)) {
 
 // SessionStart -- forge-update-check.sh
 addCommandHook('SessionStart', '', 'bash ~/.claude/hooks/forge-update-check.sh');
+
+// SessionStart -- forge-slim.sh (compressed output mode)
+addCommandHook('SessionStart', '', 'bash ~/.claude/hooks/forge-slim.sh');
 
 // Stop -- forge-memory-sync.sh
 addCommandHook('Stop', '', 'bash ~/.claude/hooks/forge-memory-sync.sh');

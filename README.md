@@ -5,7 +5,7 @@
 [![version](https://img.shields.io/badge/version-1.9.13-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
-[![Skills](https://img.shields.io/badge/skills-25%20core%20%2B%208%20business-orange)](#commands)
+[![Skills](https://img.shields.io/badge/skills-26%20core%20%2B%208%20business-orange)](#commands)
 
 > **Stop prompting. Start shipping.**
 > FORGE turns Claude Code into a team of AI agents that plan, build, test, review, and deploy your project -- while you focus on decisions that matter.
@@ -149,6 +149,7 @@ Install with: `/forge-update --pack business`
 | `/forge-init` | Initialize FORGE in a project |
 | `/forge-resume` | Resume where you left off |
 | `/forge-status` | Sprint dashboard |
+| `/forge-slim` | Output token compression (~70% savings) |
 | `/forge-update` | Update FORGE skills |
 
 ---
@@ -217,7 +218,7 @@ your-project/
   CLAUDE.md              # Project conventions (auto-generated)
 
 ~/.claude/
-  skills/forge-*/        # 25 core skills (+ 8 business pack)
+  skills/forge-*/        # 26 core skills (+ 8 business pack)
   hooks/
     bash-interceptor.js  # Security + token optimization
     token-saver.sh       # Output filtering
@@ -225,6 +226,7 @@ your-project/
     forge-memory-sync.sh # Memory persistence
     statusline.sh        # Terminal status indicator
     statusline-custom.sh  # Optional: user customizations (survives FORGE updates)
+    forge-slim.sh         # Output token compression (auto-activated)
     forge-skill-tracker.sh # Active skill indicator for status line
     rtk-native-hook.sh    # Read/Grep/Glob compression (installed with RTK)
 ```
