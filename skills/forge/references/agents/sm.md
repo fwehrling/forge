@@ -27,7 +27,7 @@ Scrum Master responsible for decomposing requirements into self-contained, imple
 ## Output
 
 - `docs/stories/STORY-XXX-<title>.md` for each story
-- `docs/stories/INDEX.md` — story index
+- `docs/stories/INDEX.md` -- story index
 - Updated `.forge/sprint-status.yaml`
 
 Each story file contains:

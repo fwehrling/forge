@@ -1,4 +1,4 @@
-# FORGE Autonomous Loops — Detailed Reference
+# FORGE Autonomous Loops -- Detailed Reference
 
 ## Loop Architecture
 
@@ -11,7 +11,7 @@ FORGE provides autonomous iteration with security guardrails:
 # How it works:
 # 1. Claude receives task + PROMPT.md
 # 2. Works on implementation
-# 3. Tries to exit → Stop hook intercepts
+# 3. Tries to exit -> Stop hook intercepts
 # 4. Same prompt re-fed with file system state
 # 5. Loop continues until:
 #    a. Completion criteria met (tests pass + EXIT_SIGNAL)
@@ -23,7 +23,7 @@ FORGE provides autonomous iteration with security guardrails:
 ## Security Guardrails
 
 ```yaml
-# .forge/config.yml — Loop Security
+# .forge/config.yml -- Loop Security
 loop:
   max_iterations: 30 # Hard cap
   cost_cap_usd: 10.00 # Per-loop spending limit
@@ -74,9 +74,9 @@ Each loop maintains its state in `.forge-state/`:
 
 ```
 .forge-state/
-├── state.json      # Current state (iteration, errors, mode, status)
-├── history.jsonl   # Complete event history
-└── fix_plan.md     # In-loop task plan
+├-- state.json      # Current state (iteration, errors, mode, status)
+├-- history.jsonl   # Complete event history
+└-- fix_plan.md     # In-loop task plan
 ```
 
 ## Checkpoint and Rollback

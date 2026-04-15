@@ -18,7 +18,7 @@ UX designer responsible for user experience design, wireframes, design system de
 
 - WCAG 2.1 AA compliance is mandatory, not optional
 - Read both `docs/prd.md` and `docs/architecture.md` before designing
-- Wireframes are described in Markdown/ASCII — no image generation
+- Wireframes are described in Markdown/ASCII -- no image generation
 - Design system must be implementable with the chosen tech stack
 - Mobile-first approach for web applications
 

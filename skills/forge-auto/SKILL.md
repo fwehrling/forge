@@ -5,7 +5,7 @@ description: >
   Full pipeline, autonomous mode, end-to-end build.
 ---
 
-# /forge-auto — FORGE Autopilot Mode
+# /forge-auto -- FORGE Autopilot Mode
 
 FORGE takes full control of the development pipeline. It analyzes, decides,
 executes, verifies, and iterates automatically until the objective is complete.
@@ -13,8 +13,8 @@ executes, verifies, and iterates automatically until the objective is complete.
 ## Principle
 
 ```
-The user provides an objective → FORGE handles EVERYTHING else.
-Planning → Architecture → Stories → Code → Tests → Verification → Deployment
+The user provides an objective -> FORGE handles EVERYTHING else.
+Planning -> Architecture -> Stories -> Code -> Tests -> Verification -> Deployment
 ```
 
 ## Workflow
@@ -22,27 +22,27 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
 1. **Load memory** (skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context
    - Read `.forge/sprint-status.yaml` for the current state
-   - `forge-memory search "<current objective>" --limit 3` — skip if similar search done
+   - `forge-memory search "<current objective>" --limit 3` -- skip if similar search done
 
 2. **Analyze state and determine the phase**:
 
    Inspect the project artifacts and sprint status, then execute the appropriate phase:
 
-   - **No artifacts exist** → Start with `/forge-plan` (generates the PRD)
-   - **PRD exists, no architecture** → Launch `/forge-architect`
-   - **Architecture exists, no UX design** → Launch `/forge-ux`
-   - **UX exists, no stories** → Launch `/forge-stories`
+   - **No artifacts exist** -> Start with `/forge-plan` (generates the PRD)
+   - **PRD exists, no architecture** -> Launch `/forge-architect`
+   - **Architecture exists, no UX design** -> Launch `/forge-ux`
+   - **UX exists, no stories** -> Launch `/forge-stories`
    - **Stories exist with "pending" status**:
      - Count unblocked pending stories
-     - 2+ unblocked stories AND Agent Teams available → Delegate to `/forge-team build [STORY-IDs]` (parallel execution), then continue with QA
-     - Otherwise → Pick the next unblocked story, launch `/forge-build STORY-XXX` (sequential)
-   - **"in_progress" story exists** → Resume `/forge-build STORY-XXX`
-   - **Story implemented (Dev tests pass)** → Launch `/forge-verify STORY-XXX`
-   - **QA verdict = FAIL** → Increment failure counter. Under 3 failures: fix and re-verify. At 3+ failures: escalate to `/forge-loop "Fix STORY-XXX: [summary]" --mode hitl` which iterates with sandbox guardrails until tests pass
-   - **QA verdict = PASS or CONCERNS** → Launch `/forge-review` on the story's source code (adversarial analysis)
-   - **Review raises CRITICAL issues** → Fix, re-run `/forge-verify`, re-run `/forge-review`
-   - **Review is clean** → Move to the next story
-   - **All stories completed** → Propose new stories or wrap up
+     - 2+ unblocked stories AND Agent Teams available -> Delegate to `/forge-team build [STORY-IDs]` (parallel execution), then continue with QA
+     - Otherwise -> Pick the next unblocked story, launch `/forge-build STORY-XXX` (sequential)
+   - **"in_progress" story exists** -> Resume `/forge-build STORY-XXX`
+   - **Story implemented (Dev tests pass)** -> Launch `/forge-verify STORY-XXX`
+   - **QA verdict = FAIL** -> Increment failure counter. Under 3 failures: fix and re-verify. At 3+ failures: escalate to `/forge-loop "Fix STORY-XXX: [summary]" --mode hitl` which iterates with sandbox guardrails until tests pass
+   - **QA verdict = PASS or CONCERNS** -> Launch `/forge-review` on the story's source code (adversarial analysis)
+   - **Review raises CRITICAL issues** -> Fix, re-run `/forge-verify`, re-run `/forge-review`
+   - **Review is clean** -> Move to the next story
+   - **All stories completed** -> Propose new stories or wrap up
 
 3. **Execute with the appropriate agents**:
    - Each phase invokes the corresponding agent (PM, Architect, UX, SM, Dev, QA)
@@ -56,13 +56,13 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
    - After each story: lint + typecheck + tests > 80% coverage
    - After each /forge-verify: mandatory QA verdict
    - After QA PASS/CONCERNS: mandatory /forge-review (adversarial review)
-   - If /forge-review raises critical issues: fix → re-verify → re-review
+   - If /forge-review raises critical issues: fix -> re-verify -> re-review
    - **Loop escalation**: if 3 consecutive failures on the same story, autopilot
      delegates to `/forge-loop` in HITL mode with the QA failure summary as task.
      forge-loop iterates with sandbox guardrails (cost cap, circuit breaker, rollback)
      until tests pass, then returns control to autopilot for re-verification.
    - Ultimate circuit breaker: if forge-loop also fails (hits its own circuit breaker)
-     → pause + report to user
+     -> pause + report to user
 
 5. **Save memory**:
    ```bash
@@ -79,7 +79,7 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
 ## Options
 
 ```bash
-# Full autopilot — FORGE decides everything
+# Full autopilot -- FORGE decides everything
 /forge-auto
 
 # Autopilot with a specific objective
@@ -103,11 +103,11 @@ Planning → Architecture → Stories → Code → Tests → Verification → De
 At each step, FORGE displays:
 
 ```
-FORGE AUTOPILOT — Progress
-──────────────────────────────
+FORGE AUTOPILOT -- Progress
+------------------------------
 Phase     : Development (Story 3/8)
-Last      : STORY-002 ✓ (QA: PASS)
-Current   : STORY-003 — Implementation
+Last      : STORY-002 [OK] (QA: PASS)
+Current   : STORY-003 -- Implementation
 Next      : STORY-004 (pending)
 
 Metrics:
@@ -127,7 +127,7 @@ Session   : .forge/memory/sessions/YYYY-MM-DD.md
 | 1 story ready | `/forge-build STORY-XXX` (sequential) | Always |
 | Story implemented (Dev tests pass) | `/forge-verify STORY-XXX` (QA audit) | Always |
 | QA verdict PASS/CONCERNS | `/forge-review src/{MODULE}/` (adversarial review) | Always |
-| Review raises critical issues | Fix → `/forge-verify` → `/forge-review` | Always |
+| Review raises critical issues | Fix -> `/forge-verify` -> `/forge-review` | Always |
 | 3 consecutive failures on a story | `/forge-loop` (iterative fix) | Always |
 | forge-loop also fails | Pause + report to user | Ultimate circuit breaker |
 
@@ -139,7 +139,7 @@ Session   : .forge/memory/sessions/YYYY-MM-DD.md
 | **Decision**   | The user chooses the task       | FORGE decides the next action           |
 | **Agents**     | A single one (usually Dev)     | All agents depending on the phase       |
 | **Memory**     | Local fix_plan.md              | Persistent project memory               |
-| **Progression**| Linear (iterations)            | Full pipeline (plan → deploy)           |
+| **Progression**| Linear (iterations)            | Full pipeline (plan -> deploy)           |
 | **Use case**   | "Implement this feature"       | "Build this project from A to Z"        |
 | **Relation**   | Standalone or called by auto   | Calls /forge-loop on difficult stories  |
 

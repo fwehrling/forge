@@ -4,7 +4,7 @@ description: >
   Sprint dashboard -- stories, metrics, progress. Reads .forge/sprint-status.yaml.
 ---
 
-# /forge-status — FORGE Sprint Status
+# /forge-status -- FORGE Sprint Status
 
 Displays the current sprint status by reading `.forge/sprint-status.yaml`.
 
@@ -18,17 +18,17 @@ Displays the current sprint status by reading `.forge/sprint-status.yaml`.
 3. **Display summary table**:
 
    ```
-   FORGE Sprint Status — <project name>
-   ──────────────────────────────────────
+   FORGE Sprint Status -- <project name>
+   --------------------------------------
    Sprint    : #<id>
    Stories   : X completed / Y in_progress / Z pending / W blocked
 
    | Story       | Status      | QA      | Review  | Assignee |
    |-------------|-------------|---------|---------|----------|
    | STORY-001   | completed   | PASS    | CLEAN   | dev      |
-   | STORY-002   | in_progress | —       | —       | dev      |
-   | STORY-003   | pending     | —       | —       | —        |
-   | STORY-004   | blocked     | —       | —       | —        |
+   | STORY-002   | in_progress | --       | --       | dev      |
+   | STORY-003   | pending     | --       | --       | --        |
+   | STORY-004   | blocked     | --       | --       | --        |
 
    Metrics:
      Tests    : XX pass / Y fail
@@ -39,8 +39,8 @@ Displays the current sprint status by reading `.forge/sprint-status.yaml`.
      - STORY-004 blocked by STORY-002
 
    Backlog (not in sprint):
-     - STORY-010 — <title>
-     - STORY-011 — <title>
+     - STORY-010 -- <title>
+     - STORY-011 -- <title>
    ```
 
 4. **Identify next story**: First unblocked `pending` story

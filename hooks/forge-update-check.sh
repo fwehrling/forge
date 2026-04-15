@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# FORGE Update Check — SessionStart hook
+# FORGE Update Check -- SessionStart hook
 # Silently checks if a newer FORGE version is available (max 1x per 24h).
 # Outputs a notification string if update available, empty otherwise.
 # Always exits 0 (never blocks session startup).
@@ -11,7 +11,7 @@ CACHE_FILE="${HOME}/.claude/skills/forge/.forge-update-cache"
 REMOTE_URL="https://raw.githubusercontent.com/fwehrling/forge/main/VERSION"
 TTL=86400  # 24 hours in seconds
 
-# Not installed — skip silently
+# Not installed -- skip silently
 if [ ! -f "$LOCAL_VERSION_FILE" ]; then
     exit 0
 fi
@@ -22,7 +22,7 @@ if [ -f "$CACHE_FILE" ]; then
     now=$(date +%s)
     elapsed=$(( now - cache_ts ))
     if [ "$elapsed" -lt "$TTL" ]; then
-        # Cache still fresh — print cached notification if any
+        # Cache still fresh -- print cached notification if any
         cached_msg=$(tail -n +2 "$CACHE_FILE" 2>/dev/null || true)
         if [ -n "$cached_msg" ]; then
             echo "$cached_msg"

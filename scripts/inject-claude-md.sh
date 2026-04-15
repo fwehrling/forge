@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# FORGE — Inject/update FORGE section in ~/.claude/CLAUDE.md
+# FORGE -- Inject/update FORGE section in ~/.claude/CLAUDE.md
 # Used by install.sh and /forge-update
 set -euo pipefail
 
@@ -13,8 +13,8 @@ else
     GREEN='' YELLOW='' BLUE='' NC=''
 fi
 
-info()  { printf '%b\n' "${BLUE}→${NC} $1"; }
-ok()    { printf '%b\n' "${GREEN}✓${NC} $1"; }
+info()  { printf '%b\n' "${BLUE}->${NC} $1"; }
+ok()    { printf '%b\n' "${GREEN}ok${NC} $1"; }
 warn()  { printf '%b\n' "${YELLOW}!${NC} $1"; }
 
 CLAUDE_MD="${HOME}/.claude/CLAUDE.md"
@@ -32,7 +32,7 @@ elif [ -f "${SCRIPT_DIR}/../templates/claude-md-forge-section.md" ]; then
 elif [ -f "${HOME}/.claude/skills/forge/templates/claude-md-forge-section.md" ]; then
     TEMPLATE="${HOME}/.claude/skills/forge/templates/claude-md-forge-section.md"
 else
-    warn "FORGE template not found — skipping CLAUDE.md injection."
+    warn "FORGE template not found -- skipping CLAUDE.md injection."
     exit 0
 fi
 
@@ -41,7 +41,7 @@ FORGE_BLOCK="${MARKER_BEGIN}
 ${TEMPLATE_CONTENT}
 ${MARKER_END}"
 
-# ─── Backup helper ────────────────────────────────────────────────────────────
+# --- Backup helper ------------------------------------------------------------
 
 backup_claude_md() {
     if [ -f "$CLAUDE_MD" ]; then
@@ -51,7 +51,7 @@ backup_claude_md() {
     fi
 }
 
-# ─── Case 1: File does not exist ─────────────────────────────────────────────
+# --- Case 1: File does not exist ---------------------------------------------
 
 if [ ! -f "$CLAUDE_MD" ]; then
     mkdir -p "$(dirname "$CLAUDE_MD")"
@@ -76,7 +76,7 @@ if [ ! -f "$CLAUDE_MD" ]; then
     exit 0
 fi
 
-# ─── Case 2: Markers already present → replace silently ──────────────────────
+# --- Case 2: Markers already present -> replace silently ----------------------
 
 if grep -q "$MARKER_BEGIN" "$CLAUDE_MD" && grep -q "$MARKER_END" "$CLAUDE_MD"; then
     backup_claude_md
@@ -95,7 +95,7 @@ if grep -q "$MARKER_BEGIN" "$CLAUDE_MD" && grep -q "$MARKER_END" "$CLAUDE_MD"; t
     exit 0
 fi
 
-# ─── Case 3: No markers → ask before appending ───────────────────────────────
+# --- Case 3: No markers -> ask before appending -------------------------------
 
 echo ""
 info "~/.claude/CLAUDE.md exists but has no FORGE section markers."

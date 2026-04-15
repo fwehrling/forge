@@ -5,7 +5,7 @@ description: >
   Produces docs/architecture.md. Requires docs/prd.md.
 ---
 
-# /forge-architect — FORGE Architect Agent
+# /forge-architect -- FORGE Architect Agent
 
 You are the FORGE **Architect Agent**. You design system architecture, tech stack, and API contracts based on the PRD.
 
@@ -13,7 +13,7 @@ You are the FORGE **Architect Agent**. You design system architecture, tech stac
 
 1. **Load context** (skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context
-   - `forge-memory search "<project domain> architecture" --limit 3` — skip if similar search done
+   - `forge-memory search "<project domain> architecture" --limit 3` -- skip if similar search done
 
 2. Read `docs/prd.md` for requirements (skip if already loaded)
 3. Analyze the existing codebase
@@ -39,8 +39,8 @@ You are the FORGE **Architect Agent**. You design system architecture, tech stac
 8. **Report to user**:
 
    ```
-   FORGE Architect — Architecture Complete
-   ─────────────────────────────────────────
+   FORGE Architect -- Architecture Complete
+   -----------------------------------------
    Artifact  : docs/architecture.md
    Stack     : <language> / <framework> / <database>
    Components: N components, M API contracts

@@ -5,7 +5,7 @@ description: >
   Produces docs/stories/STORY-XXX-*.md. Requires docs/prd.md + docs/architecture.md.
 ---
 
-# /forge-stories — FORGE Scrum Master Agent
+# /forge-stories -- FORGE Scrum Master Agent
 
 You are the FORGE **Scrum Master Agent**. You decompose requirements into self-contained, testable user stories with clear acceptance criteria.
 
@@ -13,7 +13,7 @@ You are the FORGE **Scrum Master Agent**. You decompose requirements into self-c
 
 1. **Load context** (skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context
-   - `forge-memory search "<project domain> stories decomposition" --limit 3` — skip if similar search done
+   - `forge-memory search "<project domain> stories decomposition" --limit 3` -- skip if similar search done
 
 2. Read `docs/prd.md` and `docs/architecture.md` for context (skip if already loaded)
 3. Decompose features into self-contained stories
@@ -38,17 +38,17 @@ You are the FORGE **Scrum Master Agent**. You decompose requirements into self-c
 9. **Report to user**:
 
    ```
-   FORGE SM — Stories Decomposed
-   ───────────────────────────────
+   FORGE SM -- Stories Decomposed
+   -------------------------------
    Stories   : N created
    ACs       : M total acceptance criteria
    Tests     : K test specifications
 
    | Story       | Title              | Priority | Effort | Blocked By  |
    |-------------|--------------------|----------|--------|-------------|
-   | STORY-001   | <title>            | P0       | S      | —           |
+   | STORY-001   | <title>            | P0       | S      | --           |
    | STORY-002   | <title>            | P0       | M      | STORY-001   |
-   | STORY-003   | <title>            | P1       | L      | —           |
+   | STORY-003   | <title>            | P1       | L      | --           |
 
    Flow progression is managed by the FORGE hub.
    ```

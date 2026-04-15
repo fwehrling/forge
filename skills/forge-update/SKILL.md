@@ -4,7 +4,7 @@ description: >
   Updates FORGE skills from GitHub. Supports --pack business.
 ---
 
-# /forge-update — FORGE Updater
+# /forge-update -- FORGE Updater
 
 ## Arguments
 
@@ -24,12 +24,12 @@ description: >
    rm -rf "$FORGE_TMPDIR"
    git clone --depth 1 https://github.com/fwehrling/forge.git "$FORGE_TMPDIR"
    ```
-   > **Important**: use `FORGE_TMPDIR`, NOT `TMPDIR` — `TMPDIR` is a macOS system variable (`/var/folders/...`) and would cause path errors.
+   > **Important**: use `FORGE_TMPDIR`, NOT `TMPDIR` -- `TMPDIR` is a macOS system variable (`/var/folders/...`) and would cause path errors.
 
 3. **Compare skills** :
-   - For each directory in `$FORGE_TMPDIR/skills/*/` :
-     - Compare with `~/.claude/skills/<skill>/` via `diff -rq`
-     - Classify into 3 categories: **modified**, **new**, **removed**
+   - For the hub: compare `$FORGE_TMPDIR/skills/forge/` with `~/.claude/skills/forge/`
+   - For each satellite `$FORGE_TMPDIR/skills/forge-*/`: compare with `~/.forge/skills/<skill>/`
+   - Classify into 3 categories: **modified**, **new**, **removed**
    - Display a clear summary of detected changes
 
 4. **Display change summary** :
@@ -38,44 +38,64 @@ description: >
    - List removed skills (present locally but absent from repo)
    - If no changes, display "FORGE is already up to date" and stop
 
-5. **Copy updated files** :
+5. **Migrate old layout and copy updated files** :
+
+   Hub-only architecture: only `forge/` goes to `~/.claude/skills/`, all satellites go to `~/.forge/skills/`.
+
    ```bash
-   # CRITICAL: Only copy forge-* skills. NEVER use rsync --delete or any command
-   # that removes files not present in the source — this would destroy non-FORGE
-   # skills (user-installed via skills.sh, custom skills, etc.)
-   # Use \cp to bypass macOS cp -i alias that blocks non-interactive overwrites.
-   for dir in "$FORGE_TMPDIR/skills/"forge*/; do
-     skill=$(basename "$dir")
-     \cp -rf "$dir" ~/.claude/skills/"$skill"
+   # Create ~/.forge/skills/ if missing (v1 installations)
+   mkdir -p ~/.forge/skills
+
+   # Migrate: remove old forge-* satellites from ~/.claude/skills/ (v1 layout)
+   for old_sat in ~/.claude/skills/forge-*/; do
+     [ -d "$old_sat" ] || continue
+     skill=$(basename "$old_sat")
+     rm -rf "$old_sat"
+     echo "Migrated from ~/.claude/skills/: $skill"
    done
-   # Also copy the main forge router skill
+
+   # Copy hub to ~/.claude/skills/
+   # Use \cp to bypass macOS cp -i alias that blocks non-interactive overwrites.
+   rm -rf ~/.claude/skills/forge
    \cp -rf "$FORGE_TMPDIR/skills/forge/" ~/.claude/skills/forge/
+
+   # Copy satellites to ~/.forge/skills/
+   for dir in "$FORGE_TMPDIR/skills/"forge-*/; do
+     [ -d "$dir" ] || continue
+     skill=$(basename "$dir")
+     rm -rf ~/.forge/skills/"$skill"
+     \cp -rf "$dir" ~/.forge/skills/"$skill"
+   done
    ```
    - **NEVER** use `rsync --delete`, `rsync -a --delete`, or any destructive sync
    - Only FORGE skills (`forge` and `forge-*`) are managed by this updater
    - Non-FORGE skills in `~/.claude/skills/` MUST be preserved (they belong to the user)
    - The repo `README.md` stays on GitHub only (not copied into skills)
-   - **Remove deprecated skills** that no longer exist in the repo:
+   - **Remove deprecated skills** from both locations:
    ```bash
    REMOVED_SKILLS="forge-deploy"
    for skill in $REMOVED_SKILLS; do
-     if [ -d ~/.claude/skills/"$skill" ]; then
-       rm -rf ~/.claude/skills/"$skill"
-       echo "Removed deprecated: $skill"
-     fi
+     for loc in ~/.claude/skills/"$skill" ~/.forge/skills/"$skill"; do
+       if [ -d "$loc" ]; then
+         rm -rf "$loc"
+         echo "Removed deprecated: $skill"
+       fi
+     done
    done
    ```
 
 6. **Install packs** (if `--pack` argument provided) :
    - Read `$FORGE_TMPDIR/packs.yaml` to get the list of skills in the requested pack
    - For each skill in the pack:
-     - Compare `$FORGE_TMPDIR/packs/<pack>/<skill>/` with `~/.claude/skills/<skill>/`
+     - Compare `$FORGE_TMPDIR/packs/<pack>/<skill>/` with `~/.forge/skills/<skill>/`
      - Copy if new or modified
    ```bash
    # Example for --pack business:
    for dir in "$FORGE_TMPDIR/packs/business/"forge-*/; do
+     [ -d "$dir" ] || continue
      skill=$(basename "$dir")
-     \cp -rf "$dir" ~/.claude/skills/"$skill"
+     rm -rf ~/.forge/skills/"$skill"
+     \cp -rf "$dir" ~/.forge/skills/"$skill"
    done
    ```
    - If `--only` flag is set, skip core skills update (step 5) and jump directly here
@@ -85,9 +105,11 @@ description: >
    ```bash
    # Auto-detect previously installed pack skills
    for dir in "$FORGE_TMPDIR/packs/business/"forge-*/; do
+     [ -d "$dir" ] || continue
      skill=$(basename "$dir")
-     if [ -d ~/.claude/skills/"$skill" ]; then
-       \cp -rf "$dir" ~/.claude/skills/"$skill"
+     if [ -d ~/.forge/skills/"$skill" ]; then
+       rm -rf ~/.forge/skills/"$skill"
+       \cp -rf "$dir" ~/.forge/skills/"$skill"
      fi
    done
    ```
@@ -110,7 +132,7 @@ description: >
    ```
 
 8. **Suggest Business Pack** (if not installed and no `--pack` argument) :
-   - Check if any skill from `$FORGE_TMPDIR/packs/business/` exists in `~/.claude/skills/`
+   - Check if any skill from `$FORGE_TMPDIR/packs/business/` exists in `~/.forge/skills/`
    - If none installed, display a one-time suggestion:
      ```
      Tip: FORGE Business Pack available (marketing, SEO, legal, security, strategy).
@@ -128,15 +150,17 @@ description: >
      - If refused : skip
 
 10. **Verify installation** :
-    - Confirmer que `~/.claude/skills/forge/SKILL.md` existe toujours
-    - Compter le nombre de skills installés (core + pack si installé)
+    - Confirmer que `~/.claude/skills/forge/SKILL.md` existe (hub)
+    - Confirmer que `~/.forge/skills/` contient les satellites
+    - Vérifier qu'aucun `forge-*` ne reste dans `~/.claude/skills/` (migration complète)
+    - Compter le nombre de skills installés (1 hub + satellites + pack si installé)
 
 11. **Clean up** :
     ```bash
     rm -rf "$FORGE_TMPDIR"
     ```
 
-12. **Save memory** (if `.forge/` exists — ensures update history persists for version tracking and rollback reference):
+12. **Save memory** (if `.forge/` exists -- ensures update history persists for version tracking and rollback reference):
     ```bash
     forge-memory log "FORGE updated: v{OLD} -> v{NEW}, {X} skills modified, {Y} new, business pack: {installed/not installed}" --agent update
     forge-memory consolidate --verbose
@@ -146,14 +170,15 @@ description: >
 13. **Display results** :
 
     ```
-    FORGE Update — Complete
-    ─────────────────────────
-    Core    : X skills updated, Y new
+    FORGE Update -- Complete
+    -------------------------
+    Hub     : ~/.claude/skills/forge/
+    Sats    : ~/.forge/skills/ (X updated, Y new)
     Pack    : Business Pack [installed / not installed]
               (Z skills updated)
     Total   : N skills installed
     Version : vX.Y.Z
+    Cleanup : M old satellites removed from ~/.claude/skills/
 
-    Note: Skills removed from the repo are NOT deleted locally (manual action required).
     Tip: Install Business Pack with /forge-update --pack business
     ```

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Token Saver — Standalone setup script (v1.6.0+)
+# Token Saver -- Standalone setup script (v1.6.0+)
 # Installs bash-interceptor.js + token-saver.sh into ~/.claude/hooks/
 # and patches ~/.claude/settings.json.
 #
@@ -17,14 +17,14 @@ set -euo pipefail
 HOOKS_DIR="$HOME/.claude/hooks"
 SETTINGS="$HOME/.claude/settings.json"
 
-echo "  Token Saver — Setting up output filtering..."
+echo "  Token Saver -- Setting up output filtering..."
 mkdir -p "$HOOKS_DIR"
 
-# ── bash-interceptor.js (unified security + token optimization) ──────────────
+# -- bash-interceptor.js (unified security + token optimization) --------------
 cat > "$HOOKS_DIR/bash-interceptor.js" << 'INTERCEPTOREOF'
 #!/usr/bin/env node
 /**
- * bash-interceptor.js — Unified PreToolUse hook for Bash
+ * bash-interceptor.js -- Unified PreToolUse hook for Bash
  *
  * Combines command validation (block dangerous commands) and
  * output filtering (rewrite verbose commands through token-saver.sh).
@@ -120,7 +120,7 @@ if (require.main === module) {
 INTERCEPTOREOF
 echo "    Created bash-interceptor.js"
 
-# ── token-saver.sh ───────────────────────────────────────────────────────────
+# -- token-saver.sh -----------------------------------------------------------
 cat > "$HOOKS_DIR/token-saver.sh" << 'SAVEREOF'
 #!/usr/bin/env bash
 # Token Saver -- Execute command and filter verbose output
@@ -162,7 +162,7 @@ SAVEREOF
 chmod +x "$HOOKS_DIR/token-saver.sh"
 echo "    Created token-saver.sh"
 
-# ── Clean up legacy hooks ────────────────────────────────────────────────────
+# -- Clean up legacy hooks ----------------------------------------------------
 for legacy_file in command-validator.js output-filter.js; do
   if [ -f "$HOOKS_DIR/$legacy_file" ]; then
     rm -f "$HOOKS_DIR/$legacy_file"
@@ -170,7 +170,7 @@ for legacy_file in command-validator.js output-filter.js; do
   fi
 done
 
-# ── Patch settings.json ──────────────────────────────────────────────────────
+# -- Patch settings.json ------------------------------------------------------
 if [ -f "$SETTINGS" ]; then
   SETTINGS_ESCAPED=$(printf '%s' "$SETTINGS" | sed "s/'/\\\\'/g")
   node -e "

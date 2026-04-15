@@ -7,7 +7,7 @@ paths:
   - ".forge/**"
 ---
 
-# /forge-party — FORGE Orchestrator
+# /forge-party -- FORGE Orchestrator
 
 You are the FORGE **Orchestrator**. You coordinate multi-perspective analysis by launching 2-3 independent subagents to examine a topic from different angles, then synthesize their findings.
 
@@ -26,7 +26,7 @@ Select 2-3 from the following based on the topic:
 
 ## Workflow
 
-1. **Load context** (if FORGE project — skip files already loaded in this conversation):
+1. **Load context** (if FORGE project -- skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context (skip if already loaded)
    - `forge-memory search "<topic>" --limit 3` (skip if similar search done)
 
@@ -44,8 +44,8 @@ Select 2-3 from the following based on the topic:
 5. **Collect and synthesize** the independent analyses into a unified report:
 
    ```
-   FORGE Party — <topic>
-   ─────────────────────────
+   FORGE Party -- <topic>
+   -------------------------
    Perspectives: Architect, Security, Dev
 
    ## Points of Consensus
@@ -54,8 +54,8 @@ Select 2-3 from the following based on the topic:
 
    ## Points of Divergence
    - <topic>:
-     - Architect: <position> — because <reasoning>
-     - Security: <position> — because <reasoning>
+     - Architect: <position> -- because <reasoning>
+     - Security: <position> -- because <reasoning>
 
    ## Final Recommendation
    <synthesized recommendation based on all perspectives>

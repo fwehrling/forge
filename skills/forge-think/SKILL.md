@@ -79,7 +79,7 @@ The typical failure mode you exist to prevent: someone asks for help, the first 
 
    ```
    FORGE Think -- Analysis
-   ────────────────────────
+   ------------------------
    Problem  : <the real problem, one sentence>
    Scope    : <what's affected>
 
@@ -97,7 +97,7 @@ The typical failure mode you exist to prevent: someone asks for help, the first 
         - <weakness>
 
    Recommendation: Approach N
-   ──────────────────────────
+   --------------------------
    <Why this one. Concrete reasoning, not vibes.>
 
    Implementation:

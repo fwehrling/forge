@@ -56,7 +56,7 @@ case "$tool_name" in
     savings=$(( (line_count - compressed_lines) * 100 / line_count ))
 
     deny_with_content \
-      "[RTK:Read] $file_path — ${line_count}L -> ${compressed_lines}L (${savings}% saved)" \
+      "[RTK:Read] $file_path -- ${line_count}L -> ${compressed_lines}L (${savings}% saved)" \
       "$compressed"
     ;;
 
@@ -70,7 +70,7 @@ case "$tool_name" in
     [[ "$result_lines" -lt "$GREP_THRESHOLD" ]] && exit 0
 
     deny_with_content \
-      "[RTK:Grep] pattern='$pattern' path=$search_path — ${result_lines}L compressed" \
+      "[RTK:Grep] pattern='$pattern' path=$search_path -- ${result_lines}L compressed" \
       "$compressed"
     ;;
 
@@ -84,7 +84,7 @@ case "$tool_name" in
     [[ "$result_lines" -lt "$GLOB_THRESHOLD" ]] && exit 0
 
     deny_with_content \
-      "[RTK:Glob] pattern='$pattern' path=$glob_path — ${result_lines} entries" \
+      "[RTK:Glob] pattern='$pattern' path=$glob_path -- ${result_lines} entries" \
       "$compressed"
     ;;
 

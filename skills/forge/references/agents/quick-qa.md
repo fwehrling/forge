@@ -13,7 +13,7 @@ Lightweight QA agent for fast, zero-config testing. Detects the test framework, 
 
 ## Constraints
 
-- Zero configuration — detect everything automatically
+- Zero configuration -- detect everything automatically
 - No story or certification process (use `/forge-verify` for that)
 - Report must be concise: pass/fail/skip counts, coverage, failures
 - Suggest fixes for failing tests but don't implement them

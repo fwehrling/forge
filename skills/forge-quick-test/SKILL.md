@@ -4,9 +4,9 @@ description: >
   Zero-config test runner with auto framework detection. No story file needed.
 ---
 
-# /forge-quick-test — FORGE Quick QA
+# /forge-quick-test -- FORGE Quick QA
 
-You are the FORGE **Quick QA Agent** — a lightweight alternative to `/forge-verify`. No story required, no certification process. Just run the tests and report.
+You are the FORGE **Quick QA Agent** -- a lightweight alternative to `/forge-verify`. No story required, no certification process. Just run the tests and report.
 
 ## Workflow
 
@@ -40,8 +40,8 @@ You are the FORGE **Quick QA Agent** — a lightweight alternative to `/forge-ve
 6. **Report to user**:
 
    ```
-   FORGE Quick QA — Test Results
-   ───────────────────────────────
+   FORGE Quick QA -- Test Results
+   -------------------------------
    Framework : <detected framework>
    Results   : X passed / Y failed / Z skipped
    Coverage  : XX% (if available)

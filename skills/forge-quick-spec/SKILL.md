@@ -4,14 +4,14 @@ description: >
   Quick track for bug fixes and small changes (< 1 day). Skips PRD/architecture.
 ---
 
-# /forge-quick-spec — FORGE Quick Track
+# /forge-quick-spec -- FORGE Quick Track
 
 Fast-track mode for bug fixes and small changes (<1 day).
 Skips the planning and architecture phases.
 
 ## Workflow
 
-1. **Load context** (if FORGE project — skip files already loaded in this conversation):
+1. **Load context** (if FORGE project -- skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context (skip if already loaded)
    - `forge-memory search "<change description>" --limit 3` (skip if similar search done)
 
@@ -65,8 +65,8 @@ Skips the planning and architecture phases.
 10. **Report to user**:
 
     ```
-    FORGE Quick Track — Complete
-    ──────────────────────────────
+    FORGE Quick Track -- Complete
+    ------------------------------
     Type      : Bug Fix | Small Change
     Change    : <description>
     Tests     : X unit + Y functional (all passing)
@@ -76,6 +76,6 @@ Skips the planning and architecture phases.
       fix: <description>
 
     Next steps:
-      /forge-verify  — QA audit on the changed code
-      /forge-review  — Adversarial code review
+      /forge-verify  -- QA audit on the changed code
+      /forge-review  -- Adversarial code review
     ```

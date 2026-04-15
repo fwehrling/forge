@@ -86,8 +86,8 @@ sandbox:
 
 ### HITL vs AFK Modes
 
-- **HITL (Human-In-The-Loop)**: Sandbox optional — human observing
-- **AFK (Away From Keyboard)**: Sandbox MANDATORY — no human oversight
+- **HITL (Human-In-The-Loop)**: Sandbox optional -- human observing
+- **AFK (Away From Keyboard)**: Sandbox MANDATORY -- no human oversight
 - **Production Deploy**: ALWAYS requires human approval gate
 
 ## Layer 3: Credential Management
@@ -102,7 +102,7 @@ sandbox:
 ### Pattern
 
 ```yaml
-# .forge/config.yml — Reference env vars, NEVER values
+# .forge/config.yml -- Reference env vars, NEVER values
 deploy:
   api_key_env: 'DEPLOY_API_KEY' # Name of env var
   # NOT: api_key: "sk-abc123..."   # NEVER this
@@ -123,7 +123,7 @@ forge-loop "deploy to staging"
 ### .gitignore Requirements
 
 ```
-# FORGE security — always ignored
+# FORGE security -- always ignored
 .env
 .env.*
 *.pem

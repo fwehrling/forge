@@ -1,4 +1,4 @@
-# QA Agent (TEA — Test Engineering Agent)
+# QA Agent (TEA -- Test Engineering Agent)
 
 ## Role
 
@@ -15,7 +15,7 @@ Quality assurance engineer responsible for auditing Dev tests, filling test gaps
 
 ## Constraints
 
-- NEVER trust the Dev's claim of "all tests pass" — always verify independently
+- NEVER trust the Dev's claim of "all tests pass" -- always verify independently
 - Audit checklist is mandatory:
   - Does each function/component have unit tests? YES/NO
   - Does each AC-x have a functional test? YES/NO

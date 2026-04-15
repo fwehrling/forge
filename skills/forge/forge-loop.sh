@@ -15,7 +15,7 @@
 
 set -euo pipefail
 
-# ─── Configuration ───────────────────────────────────────────────
+# --- Configuration -----------------------------------------------
 TASK=""
 MAX_ITERATIONS=30
 COST_CAP=10.00
@@ -41,7 +41,7 @@ LOG_FILE=".forge/loop-$(date +%s).log"
 OUTPUT_FILE=".forge/loop-output.txt"
 MAX_CHECKPOINTS=5
 
-# ─── Parse Arguments ─────────────────────────────────────────────
+# --- Parse Arguments ---------------------------------------------
 while [[ $# -gt 0 ]]; do
   case $1 in
     --max-iterations) MAX_ITERATIONS="$2"; shift 2 ;;
@@ -69,7 +69,7 @@ case "$MODE" in
   *) echo "Error: Invalid mode '$MODE'. Use: afk|hitl|pair"; exit 1 ;;
 esac
 
-# ─── State Directory ─────────────────────────────────────────────
+# --- State Directory ---------------------------------------------
 mkdir -p "$STATE_DIR"
 mkdir -p .forge
 
@@ -119,12 +119,12 @@ append_history() {
 
 init_state
 
-# ─── Logging ─────────────────────────────────────────────────────
+# --- Logging -----------------------------------------------------
 log() {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "$LOG_FILE"
 }
 
-# ─── Monitor Mode ────────────────────────────────────────────────
+# --- Monitor Mode ------------------------------------------------
 MONITOR_PID=""
 if [ "$MONITOR" = true ]; then
   log "Monitor enabled: tailing $LOG_FILE"
@@ -139,14 +139,14 @@ cleanup_monitor() {
 }
 trap cleanup_monitor EXIT
 
-# ─── Fix Plan ────────────────────────────────────────────────────
+# --- Fix Plan ----------------------------------------------------
 init_fix_plan() {
   if [ -z "$FIX_PLAN" ]; then
     FIX_PLAN="${STATE_DIR}/fix_plan.md"
   fi
   if [ ! -f "$FIX_PLAN" ]; then
     cat > "$FIX_PLAN" << EOF
-# Fix Plan — FORGE Loop
+# Fix Plan -- FORGE Loop
 
 ## Task
 ${TASK}
@@ -172,7 +172,7 @@ EOF
 
 init_fix_plan
 
-# ─── Generate PROMPT.md ─────────────────────────────────────────
+# --- Generate PROMPT.md -----------------------------------------
 generate_prompt() {
   local story_context=""
   if [ -n "$STORY" ] && [ -f "$STORY" ]; then
@@ -208,7 +208,7 @@ Commit smaller, more frequent changes for easier review."
   esac
 
   cat > PROMPT.md << PROMPT_EOF
-# FORGE Loop — Iteration ${ITERATION}/${MAX_ITERATIONS}
+# FORGE Loop -- Iteration ${ITERATION}/${MAX_ITERATIONS}
 
 ## Task
 ${TASK}
@@ -246,7 +246,7 @@ When ALL of the following are true, output "${COMPLETION_PROMISE}":
 PROMPT_EOF
 }
 
-# ─── Git Checkpoint (via tags) ───────────────────────────────────
+# --- Git Checkpoint (via tags) -----------------------------------
 checkpoint() {
   if git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
     git add -A 2>/dev/null || true
@@ -276,7 +276,7 @@ checkpoint() {
   fi
 }
 
-# ─── Rollback Commands ───────────────────────────────────────────
+# --- Rollback Commands -------------------------------------------
 rollback_list() {
   echo "Available checkpoints:"
   git tag -l 'forge-ckpt-iter-*' --sort=-version:refname 2>/dev/null || echo "(none)"
@@ -315,7 +315,7 @@ if [ "$TASK" = "rollback" ] || [ "$TASK" = "checkpoint-list" ]; then
   exit 0
 fi
 
-# ─── Safety Checks ───────────────────────────────────────────────
+# --- Safety Checks -----------------------------------------------
 check_cost_cap() {
   local estimated_cost
   estimated_cost=$(echo "$ITERATION * 0.20" | bc -l 2>/dev/null || echo "0")
@@ -361,7 +361,7 @@ check_same_output() {
   return 0
 }
 
-# ─── Rate Limiting ───────────────────────────────────────────────
+# --- Rate Limiting -----------------------------------------------
 ITERATION_START_TIMES=()
 
 rate_limit_wait() {
@@ -391,7 +391,7 @@ rate_limit_wait() {
   ITERATION_START_TIMES+=("$(date +%s)")
 }
 
-# ─── HITL Confirmation ───────────────────────────────────────────
+# --- HITL Confirmation -------------------------------------------
 hitl_confirm() {
   local message="$1"
   if [ "$MODE" = "hitl" ] || [ "$MODE" = "pair" ]; then
@@ -409,7 +409,7 @@ hitl_confirm() {
   return 0
 }
 
-# ─── Sandbox Wrapper ─────────────────────────────────────────────
+# --- Sandbox Wrapper ---------------------------------------------
 run_in_sandbox() {
   local cmd="$1"
 
@@ -449,7 +449,7 @@ except: pass
   esac
 }
 
-# ─── Output Analysis ─────────────────────────────────────────────
+# --- Output Analysis ---------------------------------------------
 analyze_output() {
   if [ ! -f "$OUTPUT_FILE" ]; then
     NO_PROGRESS_COUNT=$((NO_PROGRESS_COUNT + 1))
@@ -515,7 +515,7 @@ analyze_output() {
   fi
 }
 
-# ─── Main Loop ───────────────────────────────────────────────────
+# --- Main Loop ---------------------------------------------------
 log "FORGE Loop Starting"
 log "   Task: ${TASK}"
 log "   Max iterations: ${MAX_ITERATIONS}"
@@ -572,7 +572,7 @@ while [ "$ITERATION" -lt "$MAX_ITERATIONS" ]; do
     # Exit code 2 = stop hook (autonomous loop pattern)
     if [ "$exit_code" -eq 2 ]; then
       log "Stop hook detected (exit code 2)"
-      # Continue loop — this is the autonomous iteration pattern
+      # Continue loop -- this is the autonomous iteration pattern
     fi
   fi
 
@@ -590,7 +590,7 @@ if [ "$ITERATION" -ge "$MAX_ITERATIONS" ] && [ "$LOOP_RESULT" = "max_iterations"
   update_state "status" "\"max_iterations\""
 fi
 
-# ─── Summary ─────────────────────────────────────────────────────
+# --- Summary -----------------------------------------------------
 log "=== FORGE Loop Summary ==="
 log "   Result: ${LOOP_RESULT}"
 log "   Iterations: ${ITERATION}/${MAX_ITERATIONS}"

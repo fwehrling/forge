@@ -1,7 +1,7 @@
-# FORGE MCP Integration — Detailed Reference (Conceptual)
+# FORGE MCP Integration -- Detailed Reference (Conceptual)
 
 > This section describes planned MCP integration patterns. These are not yet implemented
-> as code — they serve as a design reference for future development. See
+> as code -- they serve as a design reference for future development. See
 > `~/.claude/skills/forge/n8n-integration.md` for the integration guide.
 
 ## FORGE as MCP Server (Planned)
@@ -9,7 +9,7 @@
 FORGE could expose its capabilities as MCP tools for external clients.
 
 ```typescript
-// FORGE MCP Server — exposes development tools
+// FORGE MCP Server -- exposes development tools
 tools: [
   'forge_analyze', // Run analysis phase
   'forge_plan', // Generate PRD

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# FORGE Memory Stop Hook — consolidate + sync on session end
+# FORGE Memory Stop Hook -- consolidate + sync on session end
 # Catches memory updates that skills didn't save (crash, cancel, etc.)
 
 set -e

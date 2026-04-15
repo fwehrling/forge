@@ -4,7 +4,7 @@ description: >
   Vector memory diagnostic -- sync, search, status, reset, log, consolidate.
 ---
 
-# /forge-memory — FORGE Vector Memory
+# /forge-memory -- FORGE Vector Memory
 
 Diagnostic tool for the FORGE vector memory index.
 FORGE commands use vector search automatically; this skill is for diagnostics and maintenance.
@@ -107,7 +107,7 @@ forge-memory reset --confirm
 
 ```
 FORGE Memory -- Status
-──────────────────────
+----------------------
 Database  : .forge/memory/index.sqlite
 Documents : 42 indexed (12 project, 18 session, 12 agent)
 Chunks    : 187 total

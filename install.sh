@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# FORGE Installer — Cross-platform (macOS, Linux, WSL)
+# FORGE Installer -- Cross-platform (macOS, Linux, WSL)
 set -euo pipefail
 
 # Colors (disabled if not a terminal)
@@ -14,8 +14,8 @@ else
     GREEN='' YELLOW='' BLUE='' RED='' BOLD='' NC=''
 fi
 
-info()  { printf '%b\n' "${BLUE}→${NC} $1"; }
-ok()    { printf '%b\n' "${GREEN}✓${NC} $1"; }
+info()  { printf '%b\n' "${BLUE}->${NC} $1"; }
+ok()    { printf '%b\n' "${GREEN}ok${NC} $1"; }
 warn()  { printf '%b\n' "${YELLOW}!${NC} $1"; }
 error() { printf '%b\n' "${RED}✗${NC} $1" >&2; }
 step()  { printf '\n%b\n' "${BOLD}[$1/$TOTAL_STEPS] $2${NC}"; }
@@ -35,13 +35,13 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# ─── Banner ──────────────────────────────────────────────────────────────────
+# --- Banner ------------------------------------------------------------------
 
 echo ""
 printf '%b\n' "${GREEN}FORGE${NC} -- Framework for Orchestrated Resilient Generative Engineering"
 echo ""
 
-# ─── [1/6] Detect OS ────────────────────────────────────────────────────────
+# --- [1/6] Detect OS --------------------------------------------------------
 
 detect_os() {
     step 1 "Detecting OS..."
@@ -60,7 +60,7 @@ detect_os() {
         MINGW*|MSYS*|CYGWIN*)
             warn "Git Bash detected. FORGE requires a full POSIX environment."
             warn "Some features (vector memory, autonomous loops) will not work."
-            warn "Recommended: use WSL instead — https://learn.microsoft.com/en-us/windows/wsl/install"
+            warn "Recommended: use WSL instead -- https://learn.microsoft.com/en-us/windows/wsl/install"
             echo ""
             if [ "$AUTO_YES" = true ]; then
                 info "Auto-yes: continuing on Git Bash"
@@ -83,7 +83,7 @@ detect_os() {
     ok "Detected OS: ${OS}"
 }
 
-# ─── [2/6] Install skills ───────────────────────────────────────────────────
+# --- [2/6] Install skills ---------------------------------------------------
 
 FORGE_DIR="${HOME}/.forge"
 
@@ -101,7 +101,7 @@ install_skills() {
     mkdir -p "${CLAUDE_DIR}/skills"
     mkdir -p "${FORGE_DIR}/skills"
 
-    # ── Hub-only architecture ──
+    # -- Hub-only architecture --
     # Only the forge hub goes into ~/.claude/skills/ (visible to Claude Code).
     # All satellite skills go into ~/.forge/skills/ (loaded on demand by the hub).
 
@@ -137,7 +137,7 @@ install_skills() {
     for skill_dir in "${SCRIPT_DIR}/skills/"*/; do
         local skill_name
         skill_name="$(basename "$skill_dir")"
-        # Skip the hub — it's already installed above
+        # Skip the hub -- it's already installed above
         [ "$skill_name" = "forge" ] && continue
         rm -rf "${FORGE_DIR}/skills/${skill_name}"
         cp -r "$skill_dir" "${FORGE_DIR}/skills/${skill_name}"
@@ -177,7 +177,7 @@ install_skills() {
     # are installed in step 5 via forge-hooks-setup.sh
 }
 
-# ─── [3/6] Update ~/.claude/CLAUDE.md ────────────────────────────────────────
+# --- [3/6] Update ~/.claude/CLAUDE.md ----------------------------------------
 
 inject_claude_md() {
     step 3 "Configuring ~/.claude/CLAUDE.md..."
@@ -185,11 +185,11 @@ inject_claude_md() {
     if [ -f "${SCRIPT_DIR}/scripts/inject-claude-md.sh" ]; then
         FORGE_YES="$AUTO_YES" bash "${SCRIPT_DIR}/scripts/inject-claude-md.sh"
     else
-        warn "inject-claude-md.sh not found — skipping CLAUDE.md configuration."
+        warn "inject-claude-md.sh not found -- skipping CLAUDE.md configuration."
     fi
 }
 
-# ─── [4/6] Check Python & vector memory ─────────────────────────────────────
+# --- [4/6] Check Python & vector memory -------------------------------------
 
 check_python() {
     step 4 "Checking Python..."
@@ -215,7 +215,7 @@ check_python() {
     done
 
     if [ -z "$py_cmd" ]; then
-        warn "Python 3.9+ not found — skipping vector memory setup."
+        warn "Python 3.9+ not found -- skipping vector memory setup."
         echo ""
         info "Vector memory is optional. FORGE works without it (Markdown memory is always active)."
         info "To install Python 3.9+ later:"
@@ -251,7 +251,7 @@ check_python() {
     fi
 }
 
-# ─── [5/6] FORGE Hooks ─────────────────────────────────────────────────────
+# --- [5/6] FORGE Hooks -----------------------------------------------------
 
 install_forge_hooks() {
     step 5 "Installing FORGE Hooks..."
@@ -332,7 +332,7 @@ PYSCRIPT
     fi
 }
 
-# ─── [6/7] RTK (Token Optimization) ─────────────────────────────────────────
+# --- [6/7] RTK (Token Optimization) -----------------------------------------
 
 check_rtk() {
     step 6 "Checking RTK (token optimizer)..."
@@ -395,7 +395,7 @@ check_rtk() {
     setup_rtk_hooks
 }
 
-# ─── [7/7] Verify installation ──────────────────────────────────────────────
+# --- [7/7] Verify installation ----------------------------------------------
 
 verify_installation() {
     step 7 "Verifying installation..."
@@ -458,19 +458,19 @@ verify_installation() {
     fi
 }
 
-# ─── Summary ─────────────────────────────────────────────────────────────────
+# --- Summary -----------------------------------------------------------------
 
 print_summary() {
     echo ""
-    printf '%b\n' "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    printf '%b\n' "${GREEN}=========================================${NC}"
     printf '%b\n' "${GREEN}  FORGE installed successfully${NC}"
-    printf '%b\n' "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+    printf '%b\n' "${GREEN}=========================================${NC}"
     echo ""
     echo "  Installed:"
-    printf '%b\n' "    ${GREEN}✓${NC} Hub: ~/.claude/skills/forge/"
-    printf '%b\n' "    ${GREEN}✓${NC} ${SATELLITE_COUNT} satellites: ~/.forge/skills/"
+    printf '%b\n' "    ${GREEN}ok${NC} Hub: ~/.claude/skills/forge/"
+    printf '%b\n' "    ${GREEN}ok${NC} ${SATELLITE_COUNT} satellites: ~/.forge/skills/"
     if [ "$VECTOR_MEMORY_INSTALLED" = true ]; then
-        printf '%b\n' "    ${GREEN}✓${NC} Vector memory (forge-memory CLI)"
+        printf '%b\n' "    ${GREEN}ok${NC} Vector memory (forge-memory CLI)"
     else
         printf '%b\n' "    ${YELLOW}--${NC} Vector memory (not installed)"
     fi
@@ -479,14 +479,14 @@ print_summary() {
         if [ -f "${HOME}/.claude/hooks/statusline.sh" ]; then
             sl_status=", status line"
         fi
-        printf '%b\n' "    ${GREEN}✓${NC} FORGE Hooks (bash-interceptor, token-saver, update-check, memory-sync${sl_status})"
+        printf '%b\n' "    ${GREEN}ok${NC} FORGE Hooks (bash-interceptor, token-saver, update-check, memory-sync${sl_status})"
     else
         printf '%b\n' "    ${YELLOW}--${NC} FORGE Hooks (not installed)"
     fi
     if [ "$RTK_INSTALLED" = true ]; then
-        printf '%b\n' "    ${GREEN}✓${NC} RTK token optimizer (Bash auto-rewrite + native Read/Grep/Glob hook)"
+        printf '%b\n' "    ${GREEN}ok${NC} RTK token optimizer (Bash auto-rewrite + native Read/Grep/Glob hook)"
         if [ -f "${HOME}/.claude/hooks/rtk-native-hook.sh" ]; then
-            printf '%b\n' "    ${GREEN}✓${NC} RTK native hook: 80-85% compression on .ts/.js/.py source files"
+            printf '%b\n' "    ${GREEN}ok${NC} RTK native hook: 80-85% compression on .ts/.js/.py source files"
         fi
     else
         printf '%b\n' "    ${YELLOW}--${NC} RTK (not installed -- using built-in token-saver)"
@@ -514,7 +514,7 @@ print_summary() {
     echo ""
 }
 
-# ─── Main ────────────────────────────────────────────────────────────────────
+# --- Main --------------------------------------------------------------------
 
 main() {
     detect_os

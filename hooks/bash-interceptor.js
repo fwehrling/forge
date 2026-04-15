@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * bash-interceptor.js — Unified PreToolUse hook for Bash
+ * bash-interceptor.js -- Unified PreToolUse hook for Bash
  *
  * Combines command validation (block dangerous commands) and
  * output filtering (rewrite verbose commands through RTK or token-saver.sh).

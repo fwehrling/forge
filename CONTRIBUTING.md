@@ -59,7 +59,7 @@ description: >
   Usage: /forge-my-skill
 ---
 
-# /forge-my-skill — Title
+# /forge-my-skill -- Title
 
 ## French Language Rule
 
@@ -104,7 +104,7 @@ refactor: extract argument parser in forge-loop.sh
 2. **Rebase your branch on main** before submitting (keep a clean linear history)
 3. **Describe your changes** in the PR body
 4. **Test your changes** (see [Testing](#testing) below)
-5. **Wait for review** — the maintainer reviews all PRs and decides whether to merge. Do not expect auto-merge.
+5. **Wait for review** -- the maintainer reviews all PRs and decides whether to merge. Do not expect auto-merge.
 
 ## Testing
 
@@ -162,7 +162,7 @@ grep -r '~/.claude/' skills/ hooks/ | grep -v node_modules
 ### Python scripts
 - Python 3.9+ minimum
 - PEP 8 style
-- No global dependencies — use isolated venvs (see `scripts/forge-memory/setup.sh`)
+- No global dependencies -- use isolated venvs (see `scripts/forge-memory/setup.sh`)
 - Type hints encouraged but not required
 
 ### SKILL.md files

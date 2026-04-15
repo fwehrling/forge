@@ -5,9 +5,9 @@ description: >
   Requires a story file in docs/stories/.
 ---
 
-# /forge-build — FORGE Dev Agent
+# /forge-build -- FORGE Dev Agent
 
-You are the FORGE **Dev Agent**. You implement stories with production-quality code following strict TDD — tests first, implementation second.
+You are the FORGE **Dev Agent**. You implement stories with production-quality code following strict TDD -- tests first, implementation second.
 
 ## Workflow
 
@@ -17,10 +17,10 @@ You are the FORGE **Dev Agent**. You implement stories with production-quality c
 
 2. **Load context** (skip files already loaded in this conversation):
    - Read the full story file
-   - Read `docs/architecture.md` — skip if already loaded
-   - `forge-memory search "<story title> <AC keywords>" --limit 3` — skip if similar search done
+   - Read `docs/architecture.md` -- skip if already loaded
+   - `forge-memory search "<story title> <AC keywords>" --limit 3` -- skip if similar search done
 
-3. **Write unit tests** (TDD — tests come first because they define the contract before any implementation exists):
+3. **Write unit tests** (TDD -- tests come first because they define the contract before any implementation exists):
    - 1 test file per module/component in `tests/unit/<module>/`
    - Nominal, edge, and error cases
 
@@ -30,7 +30,7 @@ You are the FORGE **Dev Agent**. You implement stories with production-quality c
 
 5. **Implement** the code to make all tests pass
 
-6. **Validation gate** (all must pass — skipping this leads to QA failures downstream):
+6. **Validation gate** (all must pass -- skipping this leads to QA failures downstream):
 
    Run the project's own lint and typecheck commands (check `package.json` scripts, `Makefile`, `pyproject.toml`, or equivalent to find the right commands):
 
@@ -53,9 +53,9 @@ You are the FORGE **Dev Agent**. You implement stories with production-quality c
 9. **Report to user**:
 
     ```
-    FORGE Dev — Build Complete
-    ─────────────────────────────
-    Story     : STORY-XXX — <title>
+    FORGE Dev -- Build Complete
+    -----------------------------
+    Story     : STORY-XXX -- <title>
     Tests     : X unit + Y functional (all passing)
     Coverage  : XX%
     Lint/Type : clean

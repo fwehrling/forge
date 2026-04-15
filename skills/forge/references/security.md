@@ -1,19 +1,19 @@
-# FORGE Security Model — Detailed Reference
+# FORGE Security Model -- Detailed Reference
 
 ## Threat Model
 
 FORGE addresses the "Lethal Trifecta" (Simon Willison, 2025):
 
-1. **Untrusted input** → All external data treated as potentially hostile
-2. **Tool access** → Least privilege, sandbox isolation
-3. **Autonomous execution** → Human-in-the-loop gates for destructive actions
+1. **Untrusted input** -> All external data treated as potentially hostile
+2. **Tool access** -> Least privilege, sandbox isolation
+3. **Autonomous execution** -> Human-in-the-loop gates for destructive actions
 
 ## Prompt Injection Defense
 
 FORGE processes content from multiple untrusted sources. The defense is implemented at three levels:
 
 ### Level 1: Router (forge/SKILL.md)
-The router contains a comprehensive "PROMPT INJECTION DEFENSE" section with detection patterns and response protocol. This is the primary defense — it applies to ALL skills and agents invoked through FORGE.
+The router contains a comprehensive "PROMPT INJECTION DEFENSE" section with detection patterns and response protocol. This is the primary defense -- it applies to ALL skills and agents invoked through FORGE.
 
 ### Level 2: Individual Skills
 Skills that read external content include an "External Content Warning" or "Prompt Injection Awareness" section:

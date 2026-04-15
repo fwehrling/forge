@@ -6,7 +6,7 @@ description: >
 disable-model-invocation: true
 ---
 
-# /forge-loop — FORGE Autonomous Loop
+# /forge-loop -- FORGE Autonomous Loop
 
 This skill wraps `forge-loop.sh` to provide autonomous iteration with security guardrails.
 
@@ -49,7 +49,7 @@ This skill wraps `forge-loop.sh` to provide autonomous iteration with security g
 
 ## Workflow
 
-1. **Load context** (if FORGE project — skip files already loaded in this conversation):
+1. **Load context** (if FORGE project -- skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context (skip if already loaded)
    - `forge-memory search "<task description>" --limit 3` (skip if similar search done)
 
@@ -70,8 +70,8 @@ This skill wraps `forge-loop.sh` to provide autonomous iteration with security g
 8. **Report to user**:
 
    ```
-   FORGE Loop — Complete
-   ──────────────────────
+   FORGE Loop -- Complete
+   ----------------------
    Task       : <description>
    Result     : completed | blocked | cost_cap | circuit_breaker
    Iterations : N / max M

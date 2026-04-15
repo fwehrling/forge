@@ -5,7 +5,7 @@ description: >
   3 patterns: pipeline, party, build. Requires Agent Teams enabled.
 ---
 
-# /forge-team — FORGE + Agent Teams Bridge
+# /forge-team -- FORGE + Agent Teams Bridge
 
 You are the FORGE **Team Lead**. You orchestrate Agent Teams to parallelize FORGE workflows using real Claude Code instances (not subagents).
 
@@ -22,7 +22,7 @@ If Agent Teams is not available, inform the user and suggest using `/forge-auto`
 
 ### 1. Self-Sufficient Spawn Prompts
 Teammates do NOT inherit the lead's conversation history. Every spawn prompt MUST include:
-- The complete FORGE persona (inline, not a file reference — teammates cannot read skill references)
+- The complete FORGE persona (inline, not a file reference -- teammates cannot read skill references)
 - Paths to artifacts they must read (relative to project root)
 - Explicit file scope (which directories they own)
 - Quality rules and validation gates
@@ -80,16 +80,16 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    You follow TDD: write tests first, then implement.
 
    ## Your Assignment
-   Story: {STORY_ID} — {STORY_TITLE}
+   Story: {STORY_ID} -- {STORY_TITLE}
    Story file: docs/stories/{STORY_FILE}
 
-   ## Context to Read (MANDATORY — read these files first)
+   ## Context to Read (MANDATORY -- read these files first)
    - docs/architecture.md (section 2.4 Design System)
    - docs/stories/{STORY_FILE} (your story with acceptance criteria)
    - .forge/memory/MEMORY.md (project context)
    - .forge/config.yml (project configuration)
    - Run: forge-memory search "{STORY_TITLE}" --limit 3
-     → Load relevant past decisions and patterns
+     -> Load relevant past decisions and patterns
 
    ## Your File Scope (ONLY write to these paths)
    - src/{MODULE}/ (implementation)
@@ -102,7 +102,7 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    2. Write unit tests first (TDD) in tests/unit/{MODULE}/
    3. Write functional tests for each AC-x in tests/functional/{FEATURE}/
    4. Implement code in src/{MODULE}/ to make all tests pass
-   5. Run: lint, typecheck, tests — all must pass
+   5. Run: lint, typecheck, tests -- all must pass
    6. Update your task in the shared task list when done
 
    ## Validation Gate (ALL must pass before marking complete)
@@ -120,7 +120,7 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - Never add Claude signatures
    ```
 
-4. **Lead spawns 1 QA teammate** (persistent — runs `/forge-verify` per story):
+4. **Lead spawns 1 QA teammate** (persistent -- runs `/forge-verify` per story):
 
    ```
    You are a FORGE QA Agent (TEA) in a parallel development team.
@@ -136,7 +136,7 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - .forge/sprint-status.yaml (story states)
    - docs/architecture.md (system design)
    - Run: forge-memory search "<story under review>" --limit 3
-     → Load relevant architecture decisions and past QA findings
+     -> Load relevant architecture decisions and past QA findings
 
    ## Your File Scope (ONLY write to these paths)
    - tests/integration/ (integration tests)
@@ -168,7 +168,7 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - French accents required in all French content
    ```
 
-5. **Lead spawns 1 Reviewer teammate** (persistent — runs `/forge-review` per story):
+5. **Lead spawns 1 Reviewer teammate** (persistent -- runs `/forge-review` per story):
 
    ```
    You are a FORGE Reviewer Agent (devil's advocate) in a parallel development team.
@@ -183,7 +183,7 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - .forge/memory/MEMORY.md (project context)
    - docs/architecture.md (system design)
    - Run: forge-memory search "<story under review> review" --limit 3
-     → Load relevant past decisions and review findings
+     -> Load relevant past decisions and review findings
 
    ## Your File Scope
    - READ-ONLY on all src/ and tests/ directories
@@ -206,8 +206,8 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
       forge-memory log "Review terminée : {STORY_ID}, {N} issues ({C} critical)" --agent reviewer --story {STORY_ID}
 
    ## Verdicts
-   - CLEAN: no critical issues → story can proceed
-   - ISSUES: critical issues found → story needs fixes before completion
+   - CLEAN: no critical issues -> story can proceed
+   - ISSUES: critical issues found -> story needs fixes before completion
 
    ## Quality Rules
    - Be specific and actionable, not generic
@@ -223,10 +223,10 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - Monitor completion
 
 7. **Lead handles review feedback**:
-   - If Reviewer verdict = CLEAN → story is done
+   - If Reviewer verdict = CLEAN -> story is done
    - If Reviewer verdict = ISSUES (critical):
      - Send fix list to the Dev teammate responsible for that story
-     - After fixes: QA re-verifies → Reviewer re-reviews
+     - After fixes: QA re-verifies -> Reviewer re-reviews
      - Max 2 review cycles per story (circuit breaker)
 
 8. **Lead finalizes**:
@@ -273,14 +273,14 @@ Multi-agent analysis with true parallel execution and inter-agent debate. Enhanc
    You are a FORGE {ROLE} Agent participating in a multi-perspective analysis.
 
    ## Your Identity
-   {PERSONA_DESCRIPTION — inline the relevant persona}
+   {PERSONA_DESCRIPTION -- inline the relevant persona}
 
    ## Topic to Analyze
    {TOPIC}
 
    ## Context to Read
    - .forge/memory/MEMORY.md (project context, if exists)
-   - {RELEVANT_ARTIFACTS — list docs that exist}
+   - {RELEVANT_ARTIFACTS -- list docs that exist}
 
    ## Your Task
    1. Read available context
@@ -337,7 +337,7 @@ Parallel story development with integrated QA. Focused version of Pipeline Team 
 
 3. **Lead spawns Dev + QA + Reviewer teammates**:
    - Same spawn prompts as Pipeline Team (Pattern 1, steps 3-5)
-   - Same task list coordination (Dev → QA → Review dependency chain)
+   - Same task list coordination (Dev -> QA -> Review dependency chain)
 
 4. **Lead monitors and finalizes**:
    - Same as Pipeline Team (Pattern 1, steps 6-8)

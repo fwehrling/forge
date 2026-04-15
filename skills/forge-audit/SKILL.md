@@ -4,7 +4,7 @@ description: >
   Threat modeling, OWASP audit, compliance checks. Produces docs/security.md.
 ---
 
-# /forge-audit — FORGE Security Agent
+# /forge-audit -- FORGE Security Agent
 
 You are the FORGE **Security Agent**. You perform threat modeling, OWASP audits, and compliance checks.
 
@@ -12,10 +12,10 @@ You are the FORGE **Security Agent**. You perform threat modeling, OWASP audits,
 
 1. **Load context** (skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context
-   - `forge-memory search "<project domain> security threats" --limit 3` — skip if similar search done
+   - `forge-memory search "<project domain> security threats" --limit 3` -- skip if similar search done
 
-2. Read `docs/architecture.md` for system design — skip if already loaded
-3. Read `docs/prd.md` for data sensitivity — skip if already loaded
+2. Read `docs/architecture.md` for system design -- skip if already loaded
+3. Read `docs/prd.md` for data sensitivity -- skip if already loaded
 4. If `docs/security.md` exists: Edit/Validate mode
 5. Otherwise: Create mode
    - **Threat modeling**: STRIDE analysis, attack surface mapping, trust boundaries
@@ -35,8 +35,8 @@ You are the FORGE **Security Agent**. You perform threat modeling, OWASP audits,
 7. **Report to user**:
 
    ```
-   FORGE Security — Audit Complete
-   ─────────────────────────────────
+   FORGE Security -- Audit Complete
+   ---------------------------------
    Artifact      : docs/security.md
    Threats       : N identified (STRIDE)
    Vulnerabilities: M found (X critical, Y high, Z medium)
@@ -44,6 +44,6 @@ You are the FORGE **Security Agent**. You perform threat modeling, OWASP audits,
    Dependencies  : K with known CVEs
 
    Priority Fixes:
-     1. <critical issue> — <recommendation>
-     2. <high issue> — <recommendation>
+     1. <critical issue> -- <recommendation>
+     2. <high issue> -- <recommendation>
    ```

@@ -20,7 +20,7 @@ How it works:
 2. Claude receives prompt + filesystem state
 3. Implements incrementally, committing after each change
 4. Stop hook intercepts exit attempts
-5. Same prompt re-fed — Claude sees its previous commits
+5. Same prompt re-fed -- Claude sees its previous commits
 6. Loop exits when: tests pass + EXIT_SIGNAL emitted
 
 ## Pattern 2: Phased Development
@@ -62,7 +62,7 @@ cd ../project-api
 
 ```bash
 #!/bin/bash
-# overnight-forge.sh — Run before bed
+# overnight-forge.sh -- Run before bed
 
 export FORGE_COST_CAP=20.00  # Total budget for tonight
 
@@ -168,7 +168,7 @@ How it works:
 Fix Plan structure:
 
 ```markdown
-# Fix Plan — FORGE Loop
+# Fix Plan -- FORGE Loop
 
 ## Task
 
@@ -176,7 +176,7 @@ Fix Plan structure:
 
 ## Steps
 
-- [x] Analyze failing tests → 3 tests failing in auth.test.ts
+- [x] Analyze failing tests -> 3 tests failing in auth.test.ts
 - [x] Fix test 1: missing mock for UserService
 - [ ] Fix test 2: incorrect assertion on token expiry
 - [ ] Fix test 3: race condition in session refresh

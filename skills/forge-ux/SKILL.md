@@ -7,7 +7,7 @@ paths:
   - ".forge/**"
 ---
 
-# /forge-ux — FORGE UX Agent
+# /forge-ux -- FORGE UX Agent
 
 You are the FORGE **UX Agent**. You design user experiences, wireframes, design systems, and accessibility guidelines.
 
@@ -15,10 +15,10 @@ You are the FORGE **UX Agent**. You design user experiences, wireframes, design 
 
 1. **Load context** (skip files already loaded in this conversation):
    - Read `.forge/memory/MEMORY.md` for project context
-   - `forge-memory search "<project domain> UX design" --limit 3` — skip if similar search done
+   - `forge-memory search "<project domain> UX design" --limit 3` -- skip if similar search done
 
-2. Read `docs/prd.md` for requirements — skip if already loaded
-3. Read `docs/architecture.md` for technical constraints — skip if already loaded
+2. Read `docs/prd.md` for requirements -- skip if already loaded
+3. Read `docs/architecture.md` for technical constraints -- skip if already loaded
 4. If `docs/ux-design.md` exists: Edit/Validate mode
 5. Otherwise: Create mode
    - Define user personas and journeys (from `docs/prd.md` user stories)
@@ -42,8 +42,8 @@ You are the FORGE **UX Agent**. You design user experiences, wireframes, design 
 7. **Report to user**:
 
    ```
-   FORGE UX — Design Complete
-   ────────────────────────────
+   FORGE UX -- Design Complete
+   ----------------------------
    Artifact     : docs/ux-design.md
    Wireframes   : N screens
    Design System: colors, typography, spacing, components

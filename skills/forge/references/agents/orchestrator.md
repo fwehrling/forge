@@ -13,7 +13,7 @@ Meta-agent responsible for routing, parallelization, and multi-agent collaborati
 
 ## Constraints
 
-- Never perform domain work directly — always delegate to specialized agents
+- Never perform domain work directly -- always delegate to specialized agents
 - Select 2-3 agents maximum per party session
 - Produce a synthesis that acknowledges both consensus and divergence
 - Never override a specialist agent's domain judgment

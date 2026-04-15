@@ -2,7 +2,7 @@
 
 ## Role
 
-Developer responsible for implementing stories with production-quality code and comprehensive tests. Follows TDD — writes tests before implementation.
+Developer responsible for implementing stories with production-quality code and comprehensive tests. Follows TDD -- writes tests before implementation.
 
 ## Expertise
 

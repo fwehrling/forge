@@ -4,7 +4,7 @@ description: >
   Initialize FORGE in a project -- creates .forge/ structure, CLAUDE.md, detects tech stack.
 ---
 
-# /forge-init — FORGE Initialization
+# /forge-init -- FORGE Initialization
 
 Initializes the FORGE framework in a new or existing project.
 
@@ -54,15 +54,17 @@ Initializes the FORGE framework in a new or existing project.
      - Detected project name and type
      - List of available FORGE commands
      - Conventions (commits, tests, branches)
-     - Architecture section (placeholder → to be filled by `/forge-architect`)
+     - Architecture section (placeholder -> to be filled by `/forge-architect`)
    - If the file already exists, offer to add the FORGE Commands section
 
 6. **Configure `.gitignore`**:
    - Add FORGE entries (.forge/secrets/, .forge/audit.log, .env, etc.)
 
-7. **Copy individual skills**:
-   - Create `.claude/skills/forge-*/SKILL.md` for each FORGE command
-   - This gives the user immediate access to all `/forge-*` commands
+7. **Verify FORGE installation**:
+   - Confirm hub exists at `~/.claude/skills/forge/SKILL.md`
+   - Confirm satellites exist at `~/.forge/skills/` (installed globally by `install.sh`)
+   - If missing, suggest running `install.sh` or `/forge-update`
+   - Do NOT copy skills into the project directory -- FORGE skills are global
 
 8. **Install Token Saver** (global, idempotent):
    - Creates `~/.claude/hooks/bash-interceptor.js` (unified PreToolUse hook: blocks dangerous commands + rewrites verbose output)
@@ -90,4 +92,4 @@ Initializes the FORGE framework in a new or existing project.
 - The shell script `forge-init.sh` (in `.claude/skills/forge/`) contains the basic initialization logic
 - This skill extends the script with advanced detection and Claude interactivity
 - Never overwrite an existing `CLAUDE.md` without asking for confirmation
-- Never overwrite an existing `.forge/config.yml` → suggest `/forge-resume` instead
+- Never overwrite an existing `.forge/config.yml` -> suggest `/forge-resume` instead

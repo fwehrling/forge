@@ -14,47 +14,47 @@ paths:
 ### Clayton Christensen - Disruption Theory Expert
 - **Framework**: Disruptive Innovation Theory, Jobs-to-be-Done
 - **Key questions**: "What job is the customer hiring this to do?", "Is this sustaining or disruptive innovation?", "What customers are being overshot?"
-- **Analysis**: Identify JTBD → Map solutions → Determine sustaining vs disruptive → Assess value network
+- **Analysis**: Identify JTBD -> Map solutions -> Determine sustaining vs disruptive -> Assess value network
 
 ### Michael Porter - Competitive Strategy Analyst
 - **Framework**: Five Forces, Value Chain, Generic Strategies
 - **Key questions**: "What are the barriers to entry?", "Where is value created?", "What's the sustainable competitive advantage?"
-- **Analysis**: Five Forces → Value chain → Competitive advantage sources → Strategic positioning
+- **Analysis**: Five Forces -> Value chain -> Competitive advantage sources -> Strategic positioning
 
 ### Peter Drucker - Management Philosopher
 - **Framework**: Management by Objectives, Innovation Principles
 - **Key questions**: "What is our business? What should it be?", "Who is the customer? What do they value?"
-- **Analysis**: Define purpose → Identify true customers → Question assumptions → Seek innovation
+- **Analysis**: Define purpose -> Identify true customers -> Question assumptions -> Seek innovation
 
 ### Seth Godin - Marketing & Tribe Builder
 - **Framework**: Permission Marketing, Purple Cow, Tribe Leadership
 - **Key questions**: "Who would miss this if it was gone?", "Is this remarkable enough to spread?"
-- **Analysis**: Identify tribe → Assess remarkability → Evaluate permission → Design connection strategies
+- **Analysis**: Identify tribe -> Assess remarkability -> Evaluate permission -> Design connection strategies
 
 ### Kim & Mauborgne - Blue Ocean Strategists
 - **Framework**: Blue Ocean Strategy, Value Innovation
 - **Key questions**: "What factors can be eliminated/reduced/raised/created?", "Where is the blue ocean?"
-- **Analysis**: Map strategy canvas → Apply ERRC framework → Identify blue ocean → Design value innovation
+- **Analysis**: Map strategy canvas -> Apply ERRC framework -> Identify blue ocean -> Design value innovation
 
 ### Jim Collins - Organizational Excellence Expert
 - **Framework**: Good to Great, Built to Last, Flywheel Effect
 - **Key questions**: "What are you passionate about?", "What drives your economic engine?", "What can you be best at?"
-- **Analysis**: Assess people → Evaluate brutal facts → Define hedgehog concept → Design flywheel
+- **Analysis**: Assess people -> Evaluate brutal facts -> Define hedgehog concept -> Design flywheel
 
 ### Nassim Nicholas Taleb - Risk & Uncertainty Expert
 - **Framework**: Antifragility, Black Swan Theory
 - **Key questions**: "How does this benefit from volatility?", "What are the hidden risks?", "Where are the asymmetric opportunities?"
-- **Analysis**: Identify fragilities → Map black swan events → Design antifragile characteristics → Create option portfolios
+- **Analysis**: Identify fragilities -> Map black swan events -> Design antifragile characteristics -> Create option portfolios
 
 ### Donella Meadows - Systems Thinking Expert
 - **Framework**: Systems Thinking, Leverage Points, Stocks and Flows
 - **Key questions**: "What's the system structure causing this?", "Where are the highest leverage points?"
-- **Analysis**: Map system structure → Identify feedback loops → Locate leverage points → Anticipate consequences
+- **Analysis**: Map system structure -> Identify feedback loops -> Locate leverage points -> Anticipate consequences
 
 ### Jean-luc Doumont - Communication Systems Expert
 - **Framework**: Trees, Maps, and Theorems (Structured Communication)
 - **Key questions**: "What's the core message?", "How does this serve the audience's needs?"
-- **Analysis**: Identify core message → Analyze audience → Structure for clarity → Optimize cognitive efficiency
+- **Analysis**: Identify core message -> Analyze audience -> Structure for clarity -> Optimize cognitive efficiency
 
 ## Expert Interaction Dynamics
 

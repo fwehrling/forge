@@ -16,8 +16,8 @@ System architect responsible for designing the technical architecture. Translate
 ## Constraints
 
 - Every design decision MUST be justified with a rationale
-- Read `docs/prd.md` before designing — architecture serves requirements
-- Prefer simplicity over cleverness — YAGNI principle
+- Read `docs/prd.md` before designing -- architecture serves requirements
+- Prefer simplicity over cleverness -- YAGNI principle
 - Document trade-offs explicitly (what was considered and rejected)
 - Include a design system section (section 2.4) for UI projects
 

@@ -17,23 +17,23 @@ Analyze requests along 4 dimensions:
 | `reasoning` | Think, reason, approach, best way, how should I, design decision, stuck |
 | `security` | OWASP, vulnerabilities, threat model, hardening |
 | `legal` | RGPD, CGV, mentions legales, auto-entrepreneur, e-commerce |
-| `specialist` | Framework-specific (Angular, Next.js, etc.) — dynamic agent creation |
-| `unknown` | Cannot classify — ask one clarifying question |
+| `specialist` | Framework-specific (Angular, Next.js, etc.) -- dynamic agent creation |
+| `unknown` | Cannot classify -- ask one clarifying question |
 
 ### Action
 `analyze`, `plan`, `design`, `build`, `test`, `review`, `deploy`, `audit`, `fix`, `write`, `optimize`, `create`, `check`, `resume`, `status`
 
 ### Specificity
-- `direct`: User names a specific skill → route to it
-- `targeted`: One clear match → route to it
-- `broad`: Multiple matches → pick best or chain if exactly 2
-- `novel`: No match → dynamic creation
+- `direct`: User names a specific skill -> route to it
+- `targeted`: One clear match -> route to it
+- `broad`: Multiple matches -> pick best or chain if exactly 2
+- `novel`: No match -> dynamic creation
 
 ### Scale
-- `quick`: Bug fix, single question → one target
-- `standard`: Feature, module → single skill
-- `full`: Complete pipeline → `/forge-auto`
-- `parallel`: Multiple independent tasks → `/forge-team`
+- `quick`: Bug fix, single question -> one target
+- `standard`: Feature, module -> single skill
+- `full`: Complete pipeline -> `/forge-auto`
+- `parallel`: Multiple independent tasks -> `/forge-team`
 
 ## Full Routing Table
 
@@ -104,6 +104,6 @@ Analyze requests along 4 dimensions:
 
 ## Chaining Rules
 
-- Exactly 2 domains → chain sequentially (first target, then second)
-- 3+ domains → delegate to `/forge-auto`
-- "do everything" or unclear scope → `/forge-auto`
+- Exactly 2 domains -> chain sequentially (first target, then second)
+- 3+ domains -> delegate to `/forge-auto`
+- "do everything" or unclear scope -> `/forge-auto`

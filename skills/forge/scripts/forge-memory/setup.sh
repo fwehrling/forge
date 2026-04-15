@@ -1,5 +1,5 @@
 #!/bin/bash
-# FORGE Vector Memory — Installation
+# FORGE Vector Memory -- Installation
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -9,12 +9,12 @@ if [[ "${1:-}" == "--auto" ]]; then
     AUTO_MODE=true
 fi
 
-echo "→ FORGE Vector Memory — Installation"
+echo "-> FORGE Vector Memory -- Installation"
 echo ""
 
 # Create isolated venv
 if [ ! -d "${VENV_DIR}" ]; then
-    echo "→ Creating virtual environment..."
+    echo "-> Creating virtual environment..."
     python3 -m venv "${VENV_DIR}"
 fi
 
@@ -25,7 +25,7 @@ mkdir -p "${PIP_TMPDIR}"
 export TMPDIR="${PIP_TMPDIR}"
 
 # Activate and install deps
-echo "→ Installing dependencies..."
+echo "-> Installing dependencies..."
 "${VENV_DIR}/bin/pip" install --quiet --upgrade pip
 "${VENV_DIR}/bin/pip" install --quiet -r "${SCRIPT_DIR}/requirements.txt"
 
@@ -34,7 +34,7 @@ rm -rf "${PIP_TMPDIR}"
 unset TMPDIR
 
 # Pre-download model (suppress harmless HF/transformers warnings)
-echo "→ Pre-downloading embedding model (all-MiniLM-L6-v2)..."
+echo "-> Pre-downloading embedding model (all-MiniLM-L6-v2)..."
 "${VENV_DIR}/bin/python" -W ignore -c "
 import os, warnings
 os.environ['HF_HUB_DISABLE_TELEMETRY'] = '1'
@@ -64,7 +64,7 @@ chmod +x "${WRAPPER}"
 # Add forge-memory to PATH (symlink)
 # ---------------------------------------------------------------------------
 echo ""
-echo "→ Adding forge-memory to PATH..."
+echo "-> Adding forge-memory to PATH..."
 
 SYMLINK_INSTALLED=false
 
@@ -142,7 +142,7 @@ if [ -n "${PROJECT_ROOT}" ]; then
 
     # Check if MEMORY.md needs enrichment (still has placeholders)
     if grep -q "à compléter" "${MEMORY_FILE}" 2>/dev/null; then
-        echo "📝 MEMORY.md contains placeholders — it needs enrichment."
+        echo "📝 MEMORY.md contains placeholders -- it needs enrichment."
         echo "   Run your FORGE agents (/forge-architect, /forge-plan) to populate it,"
         echo "   or manually fill in project context, decisions, and patterns."
         echo ""
@@ -151,13 +151,13 @@ if [ -n "${PROJECT_ROOT}" ]; then
     # Check if index is empty or stale
     NEEDS_SYNC=false
     if [ ! -f "${DB_FILE}" ]; then
-        echo "🔍 No index found — initial sync recommended."
+        echo "🔍 No index found -- initial sync recommended."
         NEEDS_SYNC=true
     else
         FILE_COUNT=$("${WRAPPER}" status --json 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin).get('file_count',0))" 2>/dev/null || echo "0")
         MD_COUNT=$(find "${MEMORY_DIR}" -name '*.md' 2>/dev/null | wc -l | tr -d ' ')
         if [ "${FILE_COUNT}" -lt "${MD_COUNT}" ]; then
-            echo "🔍 Index has ${FILE_COUNT} file(s) but ${MD_COUNT} .md file(s) found — sync recommended."
+            echo "🔍 Index has ${FILE_COUNT} file(s) but ${MD_COUNT} .md file(s) found -- sync recommended."
             NEEDS_SYNC=true
         else
             echo "✅ Index is up to date (${FILE_COUNT} file(s), synced)."
@@ -170,7 +170,7 @@ if [ -n "${PROJECT_ROOT}" ]; then
             "${WRAPPER}" sync --verbose
         else
             echo ""
-            read -r -p "→ Run initial sync now? [Y/n] " REPLY
+            read -r -p "-> Run initial sync now? [Y/n] " REPLY
             REPLY="${REPLY:-Y}"
             if [[ "${REPLY}" =~ ^[Yy]$ ]]; then
                 echo ""

@@ -53,7 +53,7 @@ The core insight: roles describe *who someone is*, categories describe *what the
 
    ```
    FORGE Permissions -- Analysis Complete
-   ────────────────────────────────────────
+   ----------------------------------------
    Anti-patterns found : N
    Permission sources  : M files
    Proposed categories : K
@@ -118,7 +118,7 @@ The core insight: roles describe *who someone is*, categories describe *what the
 
     ```
     FORGE Permissions -- Refactoring Complete
-    ──────────────────────────────────────────
+    ------------------------------------------
     Anti-patterns fixed : N
     Categories created  : K
     Files modified      : M

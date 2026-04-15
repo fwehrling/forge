@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
-# FORGE Hooks — Complete setup script (v1.9.0+)
+# FORGE Hooks -- Complete setup script (v1.9.0+)
 # Installs ALL FORGE hooks into ~/.claude/hooks/ and patches ~/.claude/settings.json.
 #
 # Hooks installed:
-#   1. bash-interceptor.js    — PreToolUse[Bash]      — Blocks dangerous commands + rewrites verbose output
-#   2. token-saver.sh         — Execution script       — Filters verbose output to save tokens
-#   3. forge-update-check.sh  — SessionStart           — Notifies of FORGE updates (1x/24h)
-#   4. forge-memory-sync.sh   — Stop                   — Auto-syncs vector memory on session end
-#   5. statusline.sh          — Status line            — Persistent FORGE indicator in terminal
-#   6. forge-skill-tracker.sh — PreToolUse[Skill]+Stop — Tracks active FORGE skill for status line
+#   1. bash-interceptor.js    -- PreToolUse[Bash]      -- Blocks dangerous commands + rewrites verbose output
+#   2. token-saver.sh         -- Execution script       -- Filters verbose output to save tokens
+#   3. forge-update-check.sh  -- SessionStart           -- Notifies of FORGE updates (1x/24h)
+#   4. forge-memory-sync.sh   -- Stop                   -- Auto-syncs vector memory on session end
+#   5. statusline.sh          -- Status line            -- Persistent FORGE indicator in terminal
+#   6. forge-skill-tracker.sh -- PreToolUse[Skill]+Stop -- Tracks active FORGE skill for status line
 #
 # Removed in v1.6.0:
 #   - command-validator.js + output-filter.js (merged into bash-interceptor.js)
-#   - PreToolUse[Skill] notification — unnecessary token cost (replaced by skill-tracker in v1.7.25)
+#   - PreToolUse[Skill] notification -- unnecessary token cost (replaced by skill-tracker in v1.7.25)
 # Removed in v1.9.3:
-#   - forge-router-reminder.sh (UserPromptSubmit) — excessive token cost, user invokes /forge explicitly
+#   - forge-router-reminder.sh (UserPromptSubmit) -- excessive token cost, user invokes /forge explicitly
 #
 # Idempotent: safe to run multiple times.
 # Called by: install.sh, /forge-update
@@ -26,16 +26,16 @@ set -euo pipefail
 HOOKS_DIR="$HOME/.claude/hooks"
 SETTINGS="$HOME/.claude/settings.json"
 
-echo "  FORGE Hooks — Installing hook infrastructure..."
+echo "  FORGE Hooks -- Installing hook infrastructure..."
 mkdir -p "$HOOKS_DIR"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 1. bash-interceptor.js — PreToolUse[Bash] — Security + token optimization
+# 1. bash-interceptor.js -- PreToolUse[Bash] -- Security + token optimization
 # ═══════════════════════════════════════════════════════════════════════════════
 cat > "$HOOKS_DIR/bash-interceptor.js" << 'INTERCEPTOREOF'
 #!/usr/bin/env node
 /**
- * bash-interceptor.js — Unified PreToolUse hook for Bash
+ * bash-interceptor.js -- Unified PreToolUse hook for Bash
  *
  * Combines command validation (block dangerous commands) and
  * output filtering (rewrite verbose commands through RTK or token-saver.sh).
@@ -174,7 +174,7 @@ INTERCEPTOREOF
 echo "    Created bash-interceptor.js"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 2. token-saver.sh — Execution script for output filtering
+# 2. token-saver.sh -- Execution script for output filtering
 # ═══════════════════════════════════════════════════════════════════════════════
 cat > "$HOOKS_DIR/token-saver.sh" << 'SAVEREOF'
 #!/usr/bin/env bash
@@ -313,7 +313,7 @@ chmod +x "$HOOKS_DIR/token-saver.sh"
 echo "    Created token-saver.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 3. forge-update-check.sh — SessionStart — Update notifications
+# 3. forge-update-check.sh -- SessionStart -- Update notifications
 # ═══════════════════════════════════════════════════════════════════════════════
 cat > "$HOOKS_DIR/forge-update-check.sh" << 'UPDATEEOF'
 #!/usr/bin/env bash
@@ -374,7 +374,7 @@ chmod +x "$HOOKS_DIR/forge-update-check.sh"
 echo "    Created forge-update-check.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 3b. forge-slim.sh — SessionStart — Auto-activate compressed output mode
+# 3b. forge-slim.sh -- SessionStart -- Auto-activate compressed output mode
 # ═══════════════════════════════════════════════════════════════════════════════
 cat > "$HOOKS_DIR/forge-slim.sh" << 'SLIMEOF'
 #!/usr/bin/env bash
@@ -397,7 +397,7 @@ chmod +x "$HOOKS_DIR/forge-slim.sh"
 echo "    Created forge-slim.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 4. forge-memory-sync.sh — Stop — Memory persistence
+# 4. forge-memory-sync.sh -- Stop -- Memory persistence
 # ═══════════════════════════════════════════════════════════════════════════════
 cat > "$HOOKS_DIR/forge-memory-sync.sh" << 'MEMORYEOF'
 #!/usr/bin/env bash
@@ -426,7 +426,7 @@ chmod +x "$HOOKS_DIR/forge-memory-sync.sh"
 echo "    Created forge-memory-sync.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 5b. forge-skill-tracker.sh — Tracks active FORGE skill for status line
+# 5b. forge-skill-tracker.sh -- Tracks active FORGE skill for status line
 # ═══════════════════════════════════════════════════════════════════════════════
 cat > "$HOOKS_DIR/forge-skill-tracker.sh" << 'SKILLTRACKEREOF'
 #!/bin/bash
@@ -474,7 +474,7 @@ echo "    Created forge-skill-tracker.sh"
 rm -f "$HOOKS_DIR/forge-router-reminder.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 6. statusline.sh — FORGE status line indicator
+# 6. statusline.sh -- FORGE status line indicator
 # ═══════════════════════════════════════════════════════════════════════════════
 INSTALL_STATUSLINE=false
 
@@ -524,7 +524,7 @@ fi
 if [ "$INSTALL_STATUSLINE" = true ]; then
 cat > "$HOOKS_DIR/statusline.sh" << 'STATUSLINEEOF'
 #!/bin/bash
-# FORGE Status Line — persistent indicator in Claude Code terminal
+# FORGE Status Line -- persistent indicator in Claude Code terminal
 # Reads JSON context from stdin, outputs status text
 input=$(cat)
 MODEL=$(echo "$input" | jq -r '.model.display_name // "Claude"' 2>/dev/null)
@@ -649,7 +649,7 @@ if [ -n "$RATE_PARTS" ]; then
     PARTS="${CTX} | ${RATE_PARTS}"
 fi
 
-# User customizations — sourced before output, survives FORGE updates
+# User customizations -- sourced before output, survives FORGE updates
 # Available vars: MODEL, FORGE_MARKER, SKILL_INDICATOR, PROJECT, CTX, PARTS, RATE_PARTS
 # Add-on vars (init here so user script can set them): EFFORT_LABEL
 EFFORT_LABEL=""
@@ -677,7 +677,7 @@ for legacy_file in command-validator.js output-filter.js forge-auto-router.js; d
 done
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# 8. Patch settings.json — Register hooks + permissions + status line
+# 8. Patch settings.json -- Register hooks + permissions + status line
 # ═══════════════════════════════════════════════════════════════════════════════
 echo "  Patching settings.json..."
 

@@ -31,7 +31,7 @@ git clone https://github.com/fwehrling/forge.git /tmp/forge && bash /tmp/forge/i
 
 That's it. FORGE classifies your intent, selects the right flow (CREATE, FEATURE, DEBUG, IMPROVE, SECURE, or BUSINESS), and orchestrates every agent automatically. You validate at quality gates.
 
-Want to resume where you left off? Just type `/forge` — memory picks up exactly where you stopped.
+Want to resume where you left off? Just type `/forge` -- memory picks up exactly where you stopped.
 
 ---
 
@@ -45,7 +45,7 @@ Want to resume where you left off? Just type `/forge` — memory picks up exactl
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="assets/pipeline.svg">
     <source media="(prefers-color-scheme: light)" srcset="assets/pipeline.svg">
-    <img alt="FORGE Pipeline: Requirements → Design → Development → Quality" src="assets/pipeline.svg" width="700">
+    <img alt="FORGE Pipeline: Requirements -> Design -> Development -> Quality" src="assets/pipeline.svg" width="700">
   </picture>
 </p>
 
@@ -99,12 +99,12 @@ One entry point: `/forge`. It classifies your intent and runs the right flow.
 
 | Flow | Triggers | Pipeline |
 |------|----------|----------|
-| **CREATE** | "build a SaaS", "new MVP" | analyze → plan → architect → ux → stories → build cycles |
-| **FEATURE** | "add feature X" | plan → stories → build cycles |
-| **DEBUG** | "bug", "why is this failing" | debug → quick-spec → verify → review |
-| **IMPROVE** | "refactor", "optimize" | review (audit) → HITL → fixes → verify |
-| **SECURE** | "security audit", "OWASP" | audit → HITL → fixes → re-audit |
-| **BUSINESS** | "marketing", "SEO", "legal" | strategy → execution agents |
+| **CREATE** | "build a SaaS", "new MVP" | analyze -> plan -> architect -> ux -> stories -> build cycles |
+| **FEATURE** | "add feature X" | plan -> stories -> build cycles |
+| **DEBUG** | "bug", "why is this failing" | debug -> quick-spec -> verify -> review |
+| **IMPROVE** | "refactor", "optimize" | review (audit) -> HITL -> fixes -> verify |
+| **SECURE** | "security audit", "OWASP" | audit -> HITL -> fixes -> re-audit |
+| **BUSINESS** | "marketing", "SEO", "legal" | strategy -> execution agents |
 
 **Build cycles** include HITL quality gates: after QA + code review, you choose which findings to fix (Critical only, Critical+Warning, All, or Skip).
 
@@ -237,10 +237,10 @@ your-project/
 
 ## HITL Quality Gates
 
-After every build → verify → review cycle, FORGE stops and asks:
+After every build -> verify -> review cycle, FORGE stops and asks:
 
 ```
-FORGE — Quality Gate
+FORGE -- Quality Gate
   3 CRITICAL / 5 WARNING / 8 INFO
 
   [C]     Critical only

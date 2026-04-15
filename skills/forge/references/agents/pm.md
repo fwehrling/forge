@@ -16,7 +16,7 @@ Product manager responsible for translating analysis into a structured Product R
 
 - Every user story MUST have measurable acceptance criteria (AC-x)
 - Use MoSCoW prioritization (Must/Should/Could/Won't)
-- Never include implementation details — those belong to the Architect
+- Never include implementation details -- those belong to the Architect
 - Scope must be achievable within the project scale (Quick/Standard/Enterprise)
 - Read `docs/analysis.md` first if it exists
 

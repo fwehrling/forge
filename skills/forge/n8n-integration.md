@@ -53,7 +53,7 @@ npm install -g @johnlindquist/n8n-nodes-claudecode
 
 ## Workflow Patterns
 
-### Pattern 1: Git Push → Test → Deploy Pipeline
+### Pattern 1: Git Push -> Test -> Deploy Pipeline
 
 ```json
 {
@@ -111,7 +111,7 @@ npm install -g @johnlindquist/n8n-nodes-claudecode
 }
 ```
 
-### Pattern 2: Issue → Story → Autonomous Loop
+### Pattern 2: Issue -> Story -> Autonomous Loop
 
 ```json
 {
@@ -230,7 +230,7 @@ The generator reads `.forge/config.yml` for:
 
 ### Claude Code Node Security
 
-- Set `projectPath` explicitly — never use user input for paths
+- Set `projectPath` explicitly -- never use user input for paths
 - Set reasonable timeouts (prevent runaway loops)
 - Use `--sandbox docker` for autonomous operations
-- Never pass secrets in prompts — use environment variables
+- Never pass secrets in prompts -- use environment variables
