@@ -50,6 +50,5 @@ You are the FORGE **UX Agent**. You design user experiences, wireframes, design 
    Accessibility: WCAG 2.1 AA
    Dark Mode    : included
 
-   Suggested next step:
-     → /forge-stories
+   Flow progression is managed by the FORGE hub.
    ```

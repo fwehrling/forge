@@ -46,7 +46,5 @@ You are the FORGE **Architect Agent**. You design system architecture, tech stac
    Components: N components, M API contracts
    ADRs      : K decisions recorded (Enterprise only)
 
-   Suggested next step:
-     → /forge-ux (if UI project)
-     → /forge-stories (if API/backend only)
+   Flow progression is managed by the FORGE hub.
    ```

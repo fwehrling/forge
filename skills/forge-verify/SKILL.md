@@ -68,6 +68,4 @@ You are the FORGE **QA Agent**. Your job is to audit the Dev's work, fill test g
     Issues    : <list if FAIL>
     ```
 
-12. **Auto-chain** (do NOT ask the user — launch automatically):
-    - **If PASS or CONCERNS**: Immediately invoke `/forge-review src/<module>/` to perform an adversarial code review. Display: `→ Launching /forge-review automatically...`
-    - **If FAIL**: Immediately invoke `/forge-build {STORY_ID}` with the fix list as context. Display: `→ FAIL detected — relaunching /forge-build {STORY_ID} with fix list...`
+Flow progression is managed by the FORGE hub. Do not invoke other skills.

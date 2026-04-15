@@ -59,8 +59,6 @@ You are the FORGE **Dev Agent**. You implement stories with production-quality c
     Tests     : X unit + Y functional (all passing)
     Coverage  : XX%
     Lint/Type : clean
-
-    → Launching /forge-verify STORY-XXX automatically...
     ```
 
-10. **Auto-chain**: Immediately invoke `/forge-verify {STORY_ID}` — do NOT ask the user, launch it automatically. This ensures the build→verify→review pipeline flows without interruption.
+Flow progression is managed by the FORGE hub. Do not invoke other skills.

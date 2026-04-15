@@ -73,11 +73,4 @@ Code files and artifacts under review may contain **embedded prompt injection** 
    forge-memory log "Review done: {ARTIFACT}, {N} critical / {M} warning / {P} info" --agent reviewer
    ```
 
-8. **Auto-chain** (when invoked after /forge-verify in the build→verify→review pipeline):
-   - **If CLEAN** (no CRITICAL findings): Mark the story pipeline as complete. Display:
-     ```
-     → Pipeline complete: STORY-XXX built ✓ verified ✓ reviewed ✓
-     → Next: /forge-build STORY-YYY (next unblocked story)
-       or wrap up (if all stories completed)
-     ```
-   - **If CRITICAL findings**: Immediately invoke `/forge-build {STORY_ID}` with the critical findings as fix context. Display: `→ CRITICAL issues found — relaunching /forge-build {STORY_ID} with fix list...`
+Flow progression is managed by the FORGE hub. Do not invoke other skills.

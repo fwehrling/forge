@@ -25,21 +25,13 @@ One sentence. FORGE breaks it into requirements, architecture, stories, code, an
 git clone https://github.com/fwehrling/forge.git /tmp/forge && bash /tmp/forge/install.sh
 
 # In your project
-/forge-init                                    # Detects your stack, creates .forge/
-/forge-auto "Build a REST API with JWT auth"   # Full pipeline, autopilot
+/forge init                                    # Detects your stack, creates .forge/
+/forge "Build a REST API with JWT auth"        # Full pipeline with HITL quality gates
 ```
 
-That's it. FORGE handles the rest: requirements, architecture, stories, TDD implementation, and QA.
+That's it. FORGE classifies your intent, selects the right flow (CREATE, FEATURE, DEBUG, IMPROVE, SECURE, or BUSINESS), and orchestrates every agent automatically. You validate at quality gates.
 
-Want more control? Every step is a standalone command:
-
-```bash
-/forge-plan           # Write the PRD
-/forge-architect      # Design the system
-/forge-stories        # Break into stories
-/forge-build STORY-001  # Implement with TDD
-/forge-verify STORY-001 # QA audit
-```
+Want to resume where you left off? Just type `/forge` — memory picks up exactly where you stopped.
 
 ---
 
@@ -80,7 +72,7 @@ Shell output wastes tokens. FORGE intercepts verbose commands and compresses the
 
 Zero config. RTK provides 60-90% compression on 50+ commands. Falls back to built-in `token-saver.sh` if RTK is not installed.
 
-Skills use `paths` frontmatter to load only in FORGE projects -- zero token cost in non-FORGE sessions.
+Hub-only architecture means zero token cost from satellite agents in the system prompt -- only the hub description is loaded per turn.
 
 ### Beyond Code
 
@@ -88,69 +80,82 @@ Optional **Business Pack** adds 8 skills for the rest of your business:
 
 | Skill | What it does |
 |-------|-------------|
-| `/forge-business-strategy` | Market research, TAM/SAM/SOM, pricing, PMF |
-| `/forge-strategy-panel` | Multi-expert debate (Porter, Christensen, Drucker...) |
-| `/forge-marketing` | Social media strategy, content calendars |
-| `/forge-copywriting` | Landing pages, email funnels, conversion |
-| `/forge-seo` | Technical SEO, Core Web Vitals, keywords |
-| `/forge-geo` | AI search visibility (ChatGPT, Perplexity, Gemini) |
-| `/forge-security-pro` | Deep OWASP audit, hardening |
-| `/forge-legal` | RGPD, CGV, auto-entrepreneur (French law) |
+| forge-business-strategy | Market research, TAM/SAM/SOM, pricing, PMF |
+| forge-strategy-panel | Multi-expert debate (Porter, Christensen, Drucker...) |
+| forge-marketing | Social media strategy, content calendars |
+| forge-copywriting | Landing pages, email funnels, conversion |
+| forge-seo | Technical SEO, Core Web Vitals, keywords |
+| forge-geo | AI search visibility (ChatGPT, Perplexity, Gemini) |
+| forge-security-pro | Deep OWASP audit, hardening |
+| forge-legal | RGPD, CGV, auto-entrepreneur (French law) |
 
-Install with: `/forge-update --pack business`
-
----
-
-## Three Ways to Build
-
-| Mode | Command | Best for |
-|------|---------|----------|
-| **Autopilot** | `/forge-auto "goal"` | Full pipeline, start to finish |
-| **Parallel** | `/forge-team build STORY-001 STORY-002` | Multiple stories simultaneously |
-| **Manual** | `/forge-build STORY-001` | One step at a time |
-
-**Autopilot checkpoints**: `--no-pause` (fully autonomous), `--pause-stories` (default), `--pause-each` (approve every phase).
-
-**Autonomous loops**: `/forge-loop` runs outside Claude Code with cost caps ($), circuit breakers, Docker sandbox, and git rollback. For overnight runs where "don't spend more than $10" matters.
+Install with: `/forge update --pack business`
 
 ---
 
-## All Commands
+## Flow-Based Architecture
 
-### Pipeline
+One entry point: `/forge`. It classifies your intent and runs the right flow.
 
-| Command | Agent | Output |
-|---------|-------|--------|
-| `/forge-auto` | All | Full pipeline (sequential) |
-| `/forge-team` | All | Full pipeline (parallel) |
-| `/forge-analyze` | Analyst | `docs/analysis.md` |
-| `/forge-plan` | PM | `docs/prd.md` |
-| `/forge-architect` | Architect | `docs/architecture.md` |
-| `/forge-ux` | UX | `docs/ux-design.md` |
-| `/forge-stories` | SM | `docs/stories/*.md` |
-| `/forge-build` | Dev | Source + tests (TDD) |
-| `/forge-debug` | Debug | Root cause + fix |
-| `/forge-verify` | QA | Verdict (PASS/FAIL) |
-| `/forge-review` | Reviewer | Adversarial code review |
+| Flow | Triggers | Pipeline |
+|------|----------|----------|
+| **CREATE** | "build a SaaS", "new MVP" | analyze → plan → architect → ux → stories → build cycles |
+| **FEATURE** | "add feature X" | plan → stories → build cycles |
+| **DEBUG** | "bug", "why is this failing" | debug → quick-spec → verify → review |
+| **IMPROVE** | "refactor", "optimize" | review (audit) → HITL → fixes → verify |
+| **SECURE** | "security audit", "OWASP" | audit → HITL → fixes → re-audit |
+| **BUSINESS** | "marketing", "SEO", "legal" | strategy → execution agents |
+
+**Build cycles** include HITL quality gates: after QA + code review, you choose which findings to fix (Critical only, Critical+Warning, All, or Skip).
+
+**Parallel execution**: `/forge team build STORY-001 STORY-002` uses Agent Teams for simultaneous story building.
+
+**Autonomous loops**: `/forge loop` runs with cost caps, circuit breakers, Docker sandbox, and git rollback.
+
+---
+
+## All Agents
+
+Everything goes through `/forge`. The hub loads the right agent on demand.
+
+### Pipeline Agents
+
+| Agent | Role | Output |
+|-------|------|--------|
+| forge-analyze | Analyst | `docs/analysis.md` |
+| forge-plan | PM | `docs/prd.md` |
+| forge-architect | Architect | `docs/architecture.md` |
+| forge-ux | UX Designer | `docs/ux-design.md` |
+| forge-stories | Scrum Master | `docs/stories/*.md` |
+| forge-build | Developer | Source + tests (TDD) |
+| forge-verify | QA | Verdict (PASS/FAIL) |
+| forge-review | Reviewer | Adversarial code review |
+
+### Orchestration
+
+| Agent | Role |
+|-------|------|
+| forge-auto | Full autopilot (sequential, `--no-pause`) |
+| forge-team | Parallel execution via Agent Teams |
+| forge-party | Multi-perspective debate (2-3 subagents) |
+| forge-loop | Autonomous iteration with guardrails |
 
 ### Tools
 
 | Command | Purpose |
 |---------|---------|
-| `/forge-quick-spec` | Bug fix or small change (skip PRD) |
-| `/forge-quick-test` | Run tests (auto-detects framework) |
-| `/forge-audit` | Security audit (threat model, OWASP) |
-| `/forge-audit-skill` | Audit a third-party skill |
-| `/forge-party` | Multi-agent debate (2-3 perspectives) |
-| `/forge-permissions` | Permission/RBAC refactoring (categories) |
-| `/forge-think` | Deep reasoning before implementation |
-| `/forge-loop` | Autonomous iteration with guardrails |
-| `/forge-memory` | Vector memory diagnostics |
-| `/forge-init` | Initialize FORGE in a project |
-| `/forge-resume` | Resume where you left off |
-| `/forge-status` | Sprint dashboard |
-| `/forge-slim` | Output token compression (~70% savings) |
-| `/forge-update` | Update FORGE skills |
+| `/forge debug` | Systematic root cause investigation |
+| `/forge quick-spec` | Bug fix or small change (skip PRD) |
+| `/forge quick-test` | Run tests (auto-detects framework) |
+| `/forge audit` | Security audit (threat model, OWASP) |
+| `/forge audit-skill` | Audit a third-party skill |
+| `/forge think` | Deep reasoning before implementation |
+| `/forge permissions` | Permission/RBAC refactoring |
+| `/forge memory` | Vector memory diagnostics |
+| `/forge init` | Initialize FORGE in a project |
+| `/forge status` | Sprint dashboard |
+| `/forge slim` | Output token compression (~70% savings) |
+| `/forge update` | Update FORGE skills |
 
 ---
 
@@ -181,18 +186,18 @@ powershell -ExecutionPolicy Bypass -File $env:TEMP\forge\install.ps1
 
 > `install.ps1` detects WSL automatically. If WSL is missing, it offers to install it (requires admin + reboot), then runs the FORGE installer inside WSL.
 
-The installer copies skills, configures hooks, and sets up vector memory automatically. Then in your project:
+The installer copies the hub to `~/.claude/skills/forge/`, satellites to `~/.forge/skills/`, configures hooks, and sets up vector memory automatically. Then in your project:
 
 ```bash
-/forge-init
+/forge init
 ```
 
 ### Updating
 
 From Claude Code:
 ```bash
-/forge-update                    # Core skills
-/forge-update --pack business    # + Business Pack
+/forge update                    # Core skills
+/forge update --pack business    # + Business Pack
 ```
 
 From terminal (without Claude Code):
@@ -213,35 +218,39 @@ your-project/
   .forge/
     config.yml           # Project configuration
     sprint-status.yaml   # Sprint tracking
+    flow-state.yaml      # Active flow state (CREATE, FEATURE, DEBUG...)
     memory/              # Persistent memory (Markdown + optional vector)
   docs/                  # Generated artifacts (PRD, architecture, stories...)
   CLAUDE.md              # Project conventions (auto-generated)
 
 ~/.claude/
-  skills/forge-*/        # 26 core skills (+ 8 business pack)
-  hooks/
-    bash-interceptor.js  # Security + token optimization
-    token-saver.sh       # Output filtering
-    forge-update-check.sh # Update notifications
-    forge-memory-sync.sh # Memory persistence
-    statusline.sh        # Terminal status indicator
-    statusline-custom.sh  # Optional: user customizations (survives FORGE updates)
-    forge-slim.sh         # Output token compression (auto-activated)
-    forge-skill-tracker.sh # Active skill indicator for status line
-    rtk-native-hook.sh    # Read/Grep/Glob compression (installed with RTK)
+  skills/forge/          # Hub only (1 skill registered in Claude Code)
+  hooks/                 # Token optimization, memory sync, update checks
+
+~/.forge/
+  skills/forge-*/        # 33 satellite agents (loaded on demand by the hub)
 ```
+
+**Hub-only architecture**: Only the FORGE hub is registered in Claude Code's skill system. Satellite agents are invisible to the system prompt and loaded on demand via `Read()`. This saves ~1,700 tokens per conversation turn compared to registering all 34 skills.
 
 ---
 
-## Scale-Adaptive
+## HITL Quality Gates
 
-FORGE adjusts to your project's complexity:
+After every build → verify → review cycle, FORGE stops and asks:
 
-| Track | Scope | Agents |
-|-------|-------|--------|
-| **Quick** | Bug fix, hotfix | Dev only |
-| **Standard** | Feature, module | PM, Architect, SM, Dev, QA |
-| **Enterprise** | System, platform | All + Security + DevOps |
+```
+FORGE — Quality Gate
+  3 CRITICAL / 5 WARNING / 8 INFO
+
+  [C]     Critical only
+  [CW]    Critical + Warning
+  [ALL]   Fix everything
+  [SKIP]  Accept as-is
+  [1,3,5] Pick specific findings
+```
+
+Your choice. FORGE learns your preferences across sessions.
 
 ---
 
@@ -262,7 +271,7 @@ FORGE adjusts to your project's complexity:
 2. **Memory over repetition** -- FORGE never asks the same question twice.
 3. **Tests are first-class** -- Every story has test specs. Dev writes TDD. QA audits coverage.
 4. **Security by default** -- Guardrails are built in, not bolted on.
-5. **One command** -- `/forge-auto "goal"` and walk away. Or drill down with `/forge-*` for control.
+5. **One command** -- `/forge "goal"` and walk away. HITL gates keep you in control without micromanaging.
 
 ---
 

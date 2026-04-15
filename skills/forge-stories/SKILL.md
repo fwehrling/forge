@@ -50,6 +50,5 @@ You are the FORGE **Scrum Master Agent**. You decompose requirements into self-c
    | STORY-002   | <title>            | P0       | M      | STORY-001   |
    | STORY-003   | <title>            | P1       | L      | —           |
 
-   Suggested next step:
-     → /forge-build STORY-001
+   Flow progression is managed by the FORGE hub.
    ```

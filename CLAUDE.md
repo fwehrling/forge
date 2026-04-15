@@ -2,21 +2,21 @@
 
 ## About This Repository
 
-This is the FORGE framework source repository. Skills are in `skills/` and get installed to `~/.claude/skills/` by users.
+This is the FORGE framework source repository. The hub skill (`skills/forge/`) is installed to `~/.claude/skills/forge/`. All satellite skills are installed to `~/.forge/skills/` (loaded on demand by the hub, invisible to Claude Code's system prompt).
 
 ## Structure
 
 ```
 skills/
-  forge/              # Core framework — Intelligent Router (SKILL.md + scripts + docs)
-  forge-auto/         # Autopilot mode
-  forge-build/        # Dev agent
-  forge-debug/        # Systematic root cause investigation
-  forge-team/         # Agent Teams integration (parallel execution)
-  forge-verify/       # QA agent
-  forge-*/            # Other core skills
+  forge/              # Hub — flow orchestrator (ONLY skill in ~/.claude/skills/)
+  forge-auto/         # Autopilot mode (satellite → ~/.forge/skills/)
+  forge-build/        # Dev agent (satellite)
+  forge-debug/        # Systematic root cause investigation (satellite)
+  forge-team/         # Agent Teams integration (satellite)
+  forge-verify/       # QA agent (satellite)
+  forge-*/            # Other satellite skills
 packs/
-  business/           # Optional Business Pack (installed via /forge-update --pack business)
+  business/           # Optional Business Pack (installed via /forge update --pack business)
     forge-marketing/  # Social media & content strategy
     forge-copywriting/# Copywriting & conversion
     forge-seo/        # SEO & analytics
@@ -28,10 +28,17 @@ packs/
 packs.yaml            # Pack manifest (core vs business skill lists)
 ```
 
+### Installation layout
+
+```
+~/.claude/skills/forge/    # Hub only (registered in Claude Code)
+~/.forge/skills/forge-*/   # All satellites (loaded on demand via Read())
+```
+
 ## Conventions
 
 - **SKILL.md files** use YAML frontmatter (`name`, `description`) followed by Markdown instructions
-- **Descriptions** must be ultra-concise (~120 chars max): key capability + artifact produced. No "Use when:" lists — keep trigger keywords natural in the text. Every char costs tokens on every conversation turn
+- **Descriptions**: Only the hub description appears in the system prompt (satellites are invisible). Hub description must stay under 250 chars. Satellite descriptions are informational only (for documentation)
 - **Context Cache**: Skills must check if files (docs/prd.md, docs/architecture.md, MEMORY.md) were already loaded in the conversation before re-reading. Add "skip if already loaded" directives in workflow steps
 - **French Language Rule** lives only in the hub skill (`forge/SKILL.md`), not in satellite skills — language is a user-level preference configured in `~/.claude/CLAUDE.md`
 - **Output templates**: Every agent skill should include a concrete ASCII report template showing the expected output format
@@ -40,6 +47,8 @@ packs.yaml            # Pack manifest (core vs business skill lists)
 - **Agent personas** are referenced via `references/agents/*.md` (created by `/forge-init` in user projects, not stored here)
 - **Artifacts** follow the pipeline: `docs/prd.md` -> `docs/architecture.md` -> `docs/stories/*.md` -> `src/` + `tests/`
 - **Sprint tracking** via `.forge/sprint-status.yaml` in user projects
+- **No auto-chaining**: Satellites NEVER invoke other skills. Flow progression is managed exclusively by the hub. Each satellite ends with "Flow progression is managed by the FORGE hub."
+- **Flow state**: Active flows are tracked in `.forge/flow-state.yaml` (flow type, current step, stories status, HITL preferences)
 
 ## FORGE + Agent Teams Integration
 
@@ -47,12 +56,12 @@ packs.yaml            # Pack manifest (core vs business skill lists)
 
 | Situation | Command | Mechanism |
 |---|---|---|
-| Full pipeline with parallel stories | `/forge-team pipeline "objective"` | Agent Teams (real processes) |
-| Multi-perspective analysis with debate | `/forge-team party "topic"` | Agent Teams (real processes) |
-| Parallel build of existing stories | `/forge-team build STORY-001 STORY-002` | Agent Teams (real processes) |
-| Sequential pipeline (1 story at a time) | `/forge-auto` | Single process |
-| Quick 2-3 agent analysis | `/forge-party "topic"` | Subagents (Task tool) |
-| Single story implementation | `/forge-build STORY-XXX` | Single process |
+| Full pipeline with parallel stories | `/forge team pipeline "objective"` | Agent Teams (real processes) |
+| Multi-perspective analysis with debate | `/forge team party "topic"` | Agent Teams (real processes) |
+| Parallel build of existing stories | `/forge team build STORY-001 STORY-002` | Agent Teams (real processes) |
+| Sequential pipeline (1 story at a time) | `/forge "objective"` (CREATE flow) | Hub orchestration |
+| Quick 2-3 agent analysis | `/forge "compare approaches for X"` | Hub loads forge-party |
+| Single story implementation | `/forge "build STORY-XXX"` | Hub loads forge-build |
 
 ### Coordination Rules for Teammates
 

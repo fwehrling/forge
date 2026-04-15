@@ -21,6 +21,7 @@ warn()  { printf '%b\n' "${YELLOW}!${NC} $1"; }
 error() { printf '%b\n' "${RED}x${NC} $1" >&2; }
 
 CLAUDE_DIR="${HOME}/.claude"
+FORGE_DIR="${HOME}/.forge"
 TMPDIR="/tmp/forge-update-$(date +%Y%m%d-%H%M%S)"
 INSTALL_PACK=""
 PACK_ONLY=false
@@ -71,6 +72,9 @@ if [ ! -f "${CLAUDE_DIR}/skills/forge/SKILL.md" ]; then
     error "  git clone https://github.com/fwehrling/forge.git /tmp/forge && bash /tmp/forge/install.sh"
     exit 1
 fi
+
+# Ensure ~/.forge/skills/ exists (may be missing on v1 installations)
+mkdir -p "${FORGE_DIR}/skills"
 
 OLD_VERSION="unknown"
 if [ -f "${CLAUDE_DIR}/skills/forge/.forge-version" ]; then
@@ -145,7 +149,13 @@ skill_has_changes() {
 compare_skill() {
     local skill_name="$1"
     local source_dir="$2"
-    local target_dir="${CLAUDE_DIR}/skills/${skill_name}"
+    # Hub goes to ~/.claude/skills/, satellites to ~/.forge/skills/
+    local target_dir
+    if [ "$skill_name" = "forge" ]; then
+        target_dir="${CLAUDE_DIR}/skills/${skill_name}"
+    else
+        target_dir="${FORGE_DIR}/skills/${skill_name}"
+    fi
 
     if [ ! -d "$target_dir" ]; then
         NEW_SKILLS=$((NEW_SKILLS + 1))
@@ -174,7 +184,7 @@ if [ -n "$INSTALL_PACK" ] && [ -d "${TMPDIR}/packs/${INSTALL_PACK}" ]; then
     for dir in "${TMPDIR}/packs/${INSTALL_PACK}/"forge-*/; do
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
-        local_dir="${CLAUDE_DIR}/skills/${skill_name}"
+        local_dir="${FORGE_DIR}/skills/${skill_name}"
         if [ ! -d "$local_dir" ]; then
             PACK_MODIFIED=$((PACK_MODIFIED + 1))
             PACK_LIST="${PACK_LIST}\n  ${GREEN}+ new${NC}  ${skill_name}"
@@ -188,8 +198,8 @@ elif [ -d "${TMPDIR}/packs/business" ]; then
     for dir in "${TMPDIR}/packs/business/"forge-*/; do
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
-        if [ -d "${CLAUDE_DIR}/skills/${skill_name}" ]; then
-            if skill_has_changes "$dir" "${CLAUDE_DIR}/skills/${skill_name}"; then
+        if [ -d "${FORGE_DIR}/skills/${skill_name}" ]; then
+            if skill_has_changes "$dir" "${FORGE_DIR}/skills/${skill_name}"; then
                 PACK_MODIFIED=$((PACK_MODIFIED + 1))
                 PACK_LIST="${PACK_LIST}\n  ${YELLOW}~ mod${NC}  ${skill_name} (business)"
             fi
@@ -223,24 +233,38 @@ fi
 if [ "$PACK_ONLY" = false ]; then
     info "Updating core skills..."
 
+    # Migrate: clean up old forge-* satellites from ~/.claude/skills/ (v1 layout)
+    for old_sat in "${CLAUDE_DIR}/skills/"forge-*/; do
+        [ -d "$old_sat" ] || continue
+        rm -rf "$old_sat"
+    done
+
     for dir in "${TMPDIR}/skills/"*/; do
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
-        # Remove target first to avoid nested directories from cp -r behavior on Linux
-        rm -rf "${CLAUDE_DIR}/skills/${skill_name}"
-        \cp -rf "$dir" "${CLAUDE_DIR}/skills/${skill_name}"
-    done
-
-    # Remove deprecated skills
-    REMOVED_SKILLS="forge-deploy"
-    for skill in $REMOVED_SKILLS; do
-        if [ -d "${CLAUDE_DIR}/skills/${skill}" ]; then
-            rm -rf "${CLAUDE_DIR}/skills/${skill}"
-            warn "Removed deprecated skill: ${skill}"
+        if [ "$skill_name" = "forge" ]; then
+            # Hub goes to ~/.claude/skills/
+            rm -rf "${CLAUDE_DIR}/skills/forge"
+            \cp -rf "$dir" "${CLAUDE_DIR}/skills/forge"
+        else
+            # Satellites go to ~/.forge/skills/
+            rm -rf "${FORGE_DIR}/skills/${skill_name}"
+            \cp -rf "$dir" "${FORGE_DIR}/skills/${skill_name}"
         fi
     done
 
-    ok "Core skills updated"
+    # Remove deprecated skills from both locations
+    REMOVED_SKILLS="forge-deploy"
+    for skill in $REMOVED_SKILLS; do
+        for loc in "${CLAUDE_DIR}/skills/${skill}" "${FORGE_DIR}/skills/${skill}"; do
+            if [ -d "$loc" ]; then
+                rm -rf "$loc"
+                warn "Removed deprecated skill: ${skill}"
+            fi
+        done
+    done
+
+    ok "Core skills updated (hub: ~/.claude/skills/forge/, satellites: ~/.forge/skills/)"
 fi
 
 # ---- Copy pack skills --------------------------------------------------------
@@ -250,19 +274,19 @@ if [ -n "$INSTALL_PACK" ] && [ -d "${TMPDIR}/packs/${INSTALL_PACK}" ]; then
     for dir in "${TMPDIR}/packs/${INSTALL_PACK}/"forge-*/; do
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
-        rm -rf "${CLAUDE_DIR}/skills/${skill_name}"
-        \cp -rf "$dir" "${CLAUDE_DIR}/skills/${skill_name}"
+        rm -rf "${FORGE_DIR}/skills/${skill_name}"
+        \cp -rf "$dir" "${FORGE_DIR}/skills/${skill_name}"
     done
-    ok "Business pack installed"
+    ok "Business pack installed to ~/.forge/skills/"
 elif [ -d "${TMPDIR}/packs/business" ]; then
     # Auto-update previously installed business pack skills
     local_updated=0
     for dir in "${TMPDIR}/packs/business/"forge-*/; do
         [ -d "$dir" ] || continue
         skill_name="$(basename "$dir")"
-        if [ -d "${CLAUDE_DIR}/skills/${skill_name}" ]; then
-            rm -rf "${CLAUDE_DIR}/skills/${skill_name}"
-            \cp -rf "$dir" "${CLAUDE_DIR}/skills/${skill_name}"
+        if [ -d "${FORGE_DIR}/skills/${skill_name}" ]; then
+            rm -rf "${FORGE_DIR}/skills/${skill_name}"
+            \cp -rf "$dir" "${FORGE_DIR}/skills/${skill_name}"
             local_updated=$((local_updated + 1))
         fi
     done
@@ -312,7 +336,7 @@ rm -rf "$TMPDIR"
 
 # ---- Summary -----------------------------------------------------------------
 
-SKILL_COUNT=$(find "${CLAUDE_DIR}/skills" -maxdepth 2 -name "SKILL.md" | wc -l | tr -d ' ')
+SKILL_COUNT=$(( $(find "${FORGE_DIR}/skills" -maxdepth 2 -name "SKILL.md" 2>/dev/null | wc -l | tr -d ' ') + 1 ))
 
 echo ""
 printf '%b\n' "${GREEN}---------------------------------------------${NC}"
@@ -334,7 +358,7 @@ fi
 # Suggest business pack if not installed
 HAS_BUSINESS=false
 for bp_skill in forge-marketing forge-copywriting forge-seo forge-geo forge-legal forge-security-pro forge-business-strategy forge-strategy-panel; do
-    if [ -d "${CLAUDE_DIR}/skills/${bp_skill}" ]; then
+    if [ -d "${FORGE_DIR}/skills/${bp_skill}" ]; then
         HAS_BUSINESS=true
         break
     fi

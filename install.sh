@@ -85,6 +85,8 @@ detect_os() {
 
 # ─── [2/6] Install skills ───────────────────────────────────────────────────
 
+FORGE_DIR="${HOME}/.forge"
+
 verify_source() {
     if [ ! -d "${SCRIPT_DIR}/skills" ]; then
         error "Cannot find skills/ directory in ${SCRIPT_DIR}"
@@ -97,48 +99,73 @@ install_skills() {
     step 2 "Installing skills..."
 
     mkdir -p "${CLAUDE_DIR}/skills"
+    mkdir -p "${FORGE_DIR}/skills"
 
-    # Remove existing forge skills (may be symlinks from a previous install method)
+    # ── Hub-only architecture ──
+    # Only the forge hub goes into ~/.claude/skills/ (visible to Claude Code).
+    # All satellite skills go into ~/.forge/skills/ (loaded on demand by the hub).
+
+    # Clean up old forge-* satellites from ~/.claude/skills/ (v1 layout migration)
+    for skill_dir in "${CLAUDE_DIR}/skills/"forge-*/; do
+        [ -d "$skill_dir" ] || continue
+        local skill_name
+        skill_name="$(basename "$skill_dir")"
+        rm -rf "$skill_dir"
+        info "Migrated from ~/.claude/skills/: ${skill_name}"
+    done
+
+    # Also remove old forge hub if present (will be re-copied)
+    rm -rf "${CLAUDE_DIR}/skills/forge"
+
+    # Remove deprecated skills from both locations
+    REMOVED_SKILLS="forge-deploy"
+    for skill in $REMOVED_SKILLS; do
+        for loc in "${CLAUDE_DIR}/skills/${skill}" "${FORGE_DIR}/skills/${skill}"; do
+            if [ -d "$loc" ]; then
+                rm -rf "$loc"
+                warn "Removed deprecated skill: ${skill}"
+            fi
+        done
+    done
+
+    # Install the hub (forge/) into ~/.claude/skills/
+    cp -r "${SCRIPT_DIR}/skills/forge" "${CLAUDE_DIR}/skills/forge"
+    ok "Hub installed: ~/.claude/skills/forge/"
+
+    # Install all satellite skills into ~/.forge/skills/
+    SATELLITE_COUNT=0
     for skill_dir in "${SCRIPT_DIR}/skills/"*/; do
         local skill_name
         skill_name="$(basename "$skill_dir")"
-        local target="${CLAUDE_DIR}/skills/${skill_name}"
-        if [ -L "$target" ] || [ -d "$target" ]; then
-            rm -rf "$target"
-        fi
+        # Skip the hub — it's already installed above
+        [ "$skill_name" = "forge" ] && continue
+        rm -rf "${FORGE_DIR}/skills/${skill_name}"
+        cp -r "$skill_dir" "${FORGE_DIR}/skills/${skill_name}"
+        SATELLITE_COUNT=$((SATELLITE_COUNT + 1))
     done
+    ok "Satellites installed: ${SATELLITE_COUNT} skills to ~/.forge/skills/"
 
-    cp -r "${SCRIPT_DIR}/skills/"* "${CLAUDE_DIR}/skills/"
-
-    # Update previously installed Business Pack skills (if any)
+    # Install Business Pack satellites (if previously installed or first install)
     if [ -d "${SCRIPT_DIR}/packs/business" ]; then
         for dir in "${SCRIPT_DIR}/packs/business/"forge-*/; do
+            [ -d "$dir" ] || continue
             local bp_skill
             bp_skill="$(basename "$dir")"
-            if [ -d "${CLAUDE_DIR}/skills/${bp_skill}" ]; then
-                rm -rf "${CLAUDE_DIR}/skills/${bp_skill}"
-                cp -r "$dir" "${CLAUDE_DIR}/skills/${bp_skill}"
+            if [ -d "${FORGE_DIR}/skills/${bp_skill}" ]; then
+                rm -rf "${FORGE_DIR}/skills/${bp_skill}"
+                cp -r "$dir" "${FORGE_DIR}/skills/${bp_skill}"
             fi
         done
     fi
 
-    # Remove deprecated skills that no longer exist in the repo
-    REMOVED_SKILLS="forge-deploy"
-    for skill in $REMOVED_SKILLS; do
-        if [ -d "${CLAUDE_DIR}/skills/${skill}" ]; then
-            rm -rf "${CLAUDE_DIR}/skills/${skill}"
-            warn "Removed deprecated skill: ${skill}"
-        fi
-    done
-
-    # Verify core skill exists
+    # Verify core hub exists
     if [ ! -f "${CLAUDE_DIR}/skills/forge/SKILL.md" ]; then
-        error "Core skill forge/SKILL.md not found after copy. Installation failed."
+        error "Hub forge/SKILL.md not found after copy. Installation failed."
         exit 1
     fi
 
-    SKILL_COUNT=$(find "${CLAUDE_DIR}/skills" -maxdepth 2 -name "SKILL.md" | wc -l | tr -d ' ')
-    ok "Installed ${SKILL_COUNT} skills to ${CLAUDE_DIR}/skills/"
+    SKILL_COUNT=$((SATELLITE_COUNT + 1))
+    ok "Total: ${SKILL_COUNT} skills (1 hub + ${SATELLITE_COUNT} satellites)"
 
     # Write version file
     if [ -f "${SCRIPT_DIR}/VERSION" ]; then
@@ -383,9 +410,9 @@ verify_installation() {
         errors=$((errors + 1))
     fi
 
-    # Check key skills
+    # Check satellite skills in ~/.forge/skills/
     for skill in forge-auto forge-build forge-verify forge-plan forge-init forge-ux forge-loop forge-analyze forge-audit forge-quick-test forge-audit-skill forge-stories forge-architect forge-party forge-team forge-memory forge-quick-spec forge-review forge-resume forge-status forge-update; do
-        if [ -f "${CLAUDE_DIR}/skills/${skill}/SKILL.md" ]; then
+        if [ -f "${FORGE_DIR}/skills/${skill}/SKILL.md" ]; then
             ok "Skill: ${skill}"
         else
             warn "Missing: ${skill}/SKILL.md"
@@ -440,7 +467,8 @@ print_summary() {
     printf '%b\n' "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo "  Installed:"
-    printf '%b\n' "    ${GREEN}✓${NC} ${SKILL_COUNT} skills → ${CLAUDE_DIR}/skills/"
+    printf '%b\n' "    ${GREEN}✓${NC} Hub: ~/.claude/skills/forge/"
+    printf '%b\n' "    ${GREEN}✓${NC} ${SATELLITE_COUNT} satellites: ~/.forge/skills/"
     if [ "$VECTOR_MEMORY_INSTALLED" = true ]; then
         printf '%b\n' "    ${GREEN}✓${NC} Vector memory (forge-memory CLI)"
     else
@@ -466,7 +494,7 @@ print_summary() {
     # Suggest Business Pack if not installed
     local has_business_pack=false
     for bp_skill in forge-marketing forge-copywriting forge-seo forge-geo forge-legal forge-security-pro forge-business-strategy forge-strategy-panel; do
-        if [ -d "${CLAUDE_DIR}/skills/${bp_skill}" ]; then
+        if [ -d "${FORGE_DIR}/skills/${bp_skill}" ]; then
             has_business_pack=true
             break
         fi

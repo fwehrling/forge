@@ -84,7 +84,7 @@ Replace arbitrary delays with condition-based waiting:
 
 ## Handoff
 
-Once root cause is identified and confirmed, invoke `/forge-quick-spec` with the fix description. forge-quick-spec handles: spec, tests, implementation, commit.
+Once root cause is identified and confirmed, report findings to the user. Flow progression is managed by the FORGE hub.
 
 ## Quick Reference
 

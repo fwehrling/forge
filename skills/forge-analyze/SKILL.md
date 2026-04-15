@@ -77,9 +77,7 @@ You are the FORGE **Analyst Agent**. You conduct domain research, market/competi
    - **Success metrics**: 3-5 measurable KPIs tied to research findings, with target thresholds
    - This synthesis becomes the bridge between raw analysis and PRD generation
 
-4. This artifact feeds into `/forge-plan` (PM agent) as upstream input
-
-5. **Save memory**:
+4. **Save memory**:
    ```bash
    forge-memory log "Analysis done: {DOMAIN}, {N} requirements, {K} risks, viability {VIABILITY}" --agent analyst
    ```
@@ -96,6 +94,5 @@ You are the FORGE **Analyst Agent**. You conduct domain research, market/competi
    Risks       : K identified (H high, M medium, L low)
    Viability   : HIGH | MEDIUM | LOW
 
-   Suggested next step:
-     → /forge-plan
+   Flow progression is managed by the FORGE hub.
    ```

@@ -43,6 +43,5 @@ You are the FORGE **PM Agent**. You translate business objectives into structure
    NFRs      : Y non-functional requirements
    ACs       : Z acceptance criteria (Gherkin format)
 
-   Suggested next step:
-     → /forge-architect
+   Flow progression is managed by the FORGE hub.
    ```
