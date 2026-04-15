@@ -12,11 +12,31 @@ MARKER_END="<!-- FORGE:RTK:END -->"
 RTK_BLOCK="${MARKER_BEGIN}
 @RTK.md
 
-## Token Efficiency (RTK)
-- Hook Bash (auto): all Bash commands transparently rewritten via RTK. No action needed.
-- Hook natif (Read/Grep/Glob): active above thresholds (80L / 50 results / 30 entries). When blocked, use the compressed content in the denial reason directly.
+## Token Efficiency (RTK) -- CRITICAL RULES
+
+### Bash hook (transparent)
+All Bash commands are automatically rewritten via RTK. No action needed.
+
+### Native tool hook (Read/Grep/Glob) -- MANDATORY BEHAVIOR
+RTK intercepts Read, Grep, and Glob calls above thresholds (80L / 50L / 30 entries) and returns compressed content via a hook denial.
+
+**When a Read/Grep/Glob tool is DENIED by RTK:**
+1. The \`permissionDecisionReason\` contains the COMPLETE, USABLE, compressed result
+2. This IS the tool result. It is semantically complete. Nothing is missing.
+3. **Treat RTK denials as SUCCESSFUL tool calls with optimized output**
+
+**NEVER do any of the following after an RTK denial:**
+- Re-read the file with \`offset\`/\`limit\` to \"get the real content\"
+- Fall back to Bash with \`cat\`, \`head\`, \`tail\`, or \`sed\`
+- Try an alternative approach to \"work around\" the denial
+- Tell the user that the content was truncated or unavailable
+- Apologize for not being able to read the file
+
+**The denial IS the success.** Use the compressed content directly and continue your task.
+
+### Notes
 - Only compresses source files (.ts .js .py .go .rs etc.) -- shell/config files pass through.
-- \`rtk gain\` -- view token savings analytics
+- \`rtk gain\` -- token savings analytics
 ${MARKER_END}"
 
 # Case 1: file does not exist
