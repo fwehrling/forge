@@ -5,6 +5,20 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.6] - 2026-04-15
+
+### Fixed
+
+- **Closing statements**: add standardized closing statement to all 33 satellites, remove variant suffixes ("Do not invoke other skills"), add delegated orchestrator mention to forge-auto and forge-team
+- **Frontmatter descriptions**: shorten forge-permissions (658 -> 110 chars) and forge-think (642 -> 90 chars), translate forge-slim description to English
+- **Hub**: add forge-resume to transversal skills table
+- **forge-analyze**: fix step numbering gap (step 4 jumped to step 6)
+- **forge-debug**: move inline closing statement to standalone line
+- **install.sh**: fix step comments (/6 -> /7), add 4 missing satellites to verify list, replace Unicode in error() with ASCII
+- **forge-hooks-setup.sh**: fix hook count in summary message (5/6 -> 6/7)
+- **token-saver-setup.sh**: replace eval with bash -co pipefail for security and consistency
+- **forge-memory/setup.sh**: replace 7 emojis with ASCII equivalents for terminal compatibility
+
 ## [1.11.5] - 2026-04-15
 
 ### Fixed
@@ -678,6 +692,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/fwehrling/forge/releases/tag/v1.0.0
+[1.11.6]: https://github.com/fwehrling/forge/compare/v1.11.5...v1.11.6
 [1.11.5]: https://github.com/fwehrling/forge/compare/v1.11.4...v1.11.5
 [1.11.4]: https://github.com/fwehrling/forge/compare/v1.11.3...v1.11.4
 [1.11.3]: https://github.com/fwehrling/forge/compare/v1.11.2...v1.11.3
