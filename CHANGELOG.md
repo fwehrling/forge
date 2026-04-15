@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.1] - 2026-04-15
+
+### Fixed
+
+- **RTK anti-bypass instructions**: strengthen CLAUDE.md template injected by `inject-rtk-claude-md.sh` -- explicit mandatory rules, forbidden behaviors list, and clear framing that RTK denial IS a successful tool result (prevents Claude from working around compressed output)
+
 ## [1.11.0] - 2026-04-15
 
 ### Changed
@@ -622,6 +628,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.11.0]: https://github.com/fwehrling/forge/releases/tag/v1.11.0
 [1.10.0]: https://github.com/fwehrling/forge/releases/tag/v1.10.0
 [1.9.13]: https://github.com/fwehrling/forge/releases/tag/v1.9.13
+[1.11.1]: https://github.com/fwehrling/forge/compare/v1.11.0...v1.11.1
 [1.8.0]: https://github.com/fwehrling/forge/releases/tag/v1.8.0
 [1.6.2]: https://github.com/fwehrling/forge/releases/tag/v1.6.2
 [1.6.1]: https://github.com/fwehrling/forge/releases/tag/v1.6.1
