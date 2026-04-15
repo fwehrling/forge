@@ -153,6 +153,7 @@ Everything goes through `/forge`. The hub loads the right agent on demand.
 | `/forge permissions` | Permission/RBAC refactoring |
 | `/forge memory` | Vector memory diagnostics |
 | `/forge init` | Initialize FORGE in a project |
+| `/forge resume` | Resume where you left off |
 | `/forge status` | Sprint dashboard |
 | `/forge slim` | Output token compression (~70% savings) |
 | `/forge update` | Update FORGE skills |
@@ -228,10 +229,10 @@ your-project/
   hooks/                 # Token optimization, memory sync, update checks
 
 ~/.forge/
-  skills/forge-*/        # 33 satellite agents (loaded on demand by the hub)
+  skills/forge-*/        # 25 satellite agents (loaded on demand by the hub)
 ```
 
-**Hub-only architecture**: Only the FORGE hub is registered in Claude Code's skill system. Satellite agents are invisible to the system prompt and loaded on demand via `Read()`. This saves ~1,700 tokens per conversation turn compared to registering all 34 skills.
+**Hub-only architecture**: Only the FORGE hub is registered in Claude Code's skill system. Satellite agents are invisible to the system prompt and loaded on demand via `Read()`. This saves ~1,700 tokens per conversation turn compared to registering all 26 skills.
 
 ---
 
