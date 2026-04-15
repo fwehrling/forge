@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.11.3-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.11.4-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-26%20core%20%2B%208%20business-orange)](#commands)
@@ -74,6 +74,18 @@ Shell output wastes tokens. FORGE intercepts verbose commands and compresses the
 Zero config. RTK provides 60-90% compression on 50+ commands. Falls back to a generated `token-saver.sh` hook if RTK is not installed.
 
 Hub-only architecture means zero token cost from satellite agents in the system prompt -- only the hub description is loaded per turn. Satellites are loaded on demand via `Read()`.
+
+### Compressed Output (Slim/Caveman)
+
+Installed automatically via `install.sh` or `update.sh`. A `SessionStart` hook activates compressed French output at every session -- shorter responses, no filler words, no articles, fragments OK. Three levels:
+
+| Level | Style |
+|-------|-------|
+| **lite** | No filler. Full sentences, professional tone |
+| **full** (default) | Articles dropped, fragments OK, short synonyms |
+| **ultra** | Abbreviations (BDD/auth/config/req), arrows for causality (X -> Y) |
+
+Switch level: `/forge slim lite|full|ultra`. Disable: `stop slim` or `mode normal`. Automatically switches to polished French for deliverables (PRD, architecture docs, etc.).
 
 ### Beyond Code
 
@@ -156,7 +168,7 @@ Everything goes through `/forge`. The hub loads the right agent on demand.
 | `/forge init` | Initialize FORGE in a project |
 | `/forge resume` | Resume where you left off |
 | `/forge status` | Sprint dashboard |
-| `/forge slim` | Output token compression (~70% savings) |
+| `/forge slim` | Compressed output mode (auto-activated via hook, 3 levels) |
 | `/forge update` | Update FORGE skills |
 
 ---
@@ -281,7 +293,9 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.11.3**: README factual accuracy audit -- correct agent counts, add /forge prefix to examples, replace unverified metrics with typical ranges, clarify configurable Docker sandbox.
+**Latest -- v1.11.4**: document Slim/Caveman compressed output mode in README -- auto-activated via hook, 3 levels, document mode for deliverables.
+
+**v1.11.3**: README factual accuracy audit -- correct agent counts, add /forge prefix to examples, replace unverified metrics with typical ranges, clarify configurable Docker sandbox.
 
 **v1.11.2**: ASCII encoding fix -- replace decorative Unicode with ASCII across all files, fix forge-init satellite path, correct README skill counts.
 

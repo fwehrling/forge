@@ -5,6 +5,13 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.4] - 2026-04-15
+
+### Fixed
+
+- **README**: document Slim/Caveman compressed output mode -- auto-activated via SessionStart hook on install/update, 3 levels (lite/full/ultra), automatic document mode for deliverables
+- **README**: update forge-slim tool description to reflect auto-activation behavior
+
 ## [1.11.3] - 2026-04-15
 
 ### Fixed
