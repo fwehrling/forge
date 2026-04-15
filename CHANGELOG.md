@@ -5,6 +5,22 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.0] - 2026-04-15
+
+### Changed
+
+- **Hub-only architecture**: only the FORGE hub (`forge/SKILL.md`) is registered in `~/.claude/skills/`. All 33 satellite agents move to `~/.forge/skills/` and are loaded on demand via `Read()`, saving ~1,700 tokens per conversation turn from the system prompt
+- **Flow-based orchestration**: the hub classifies user intent into 6 flows (CREATE, FEATURE, DEBUG, IMPROVE, SECURE, BUSINESS) with defined step sequences instead of 1-to-1 routing
+- **HITL quality gates**: after every build-verify-review cycle, the hub presents findings by severity (CRITICAL/WARNING/INFO) and lets the user choose what to fix (C/CW/ALL/SKIP or manual selection)
+- **Persistent flow state**: new `.forge/flow-state.yaml` tracks active flow, current step, story progress, and HITL preferences for cross-session resume
+- **No more auto-chaining**: satellites no longer invoke other skills -- flow progression is managed exclusively by the hub
+- **install.sh and update.sh**: automatically migrate v1 satellites from `~/.claude/skills/` to `~/.forge/skills/`
+
+### Removed
+
+- Auto-chain instructions from forge-build, forge-verify, forge-review, forge-debug, forge-think
+- "Suggested next step" directives from forge-analyze, forge-plan, forge-architect, forge-ux, forge-stories
+
 ## [1.10.0] - 2026-04-15
 
 ### Added
@@ -603,6 +619,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.9.11]: https://github.com/fwehrling/forge/releases/tag/v1.9.11
 [1.9.10]: https://github.com/fwehrling/forge/releases/tag/v1.9.10
 [1.9.9]: https://github.com/fwehrling/forge/releases/tag/v1.9.9
+[1.11.0]: https://github.com/fwehrling/forge/releases/tag/v1.11.0
 [1.10.0]: https://github.com/fwehrling/forge/releases/tag/v1.10.0
 [1.9.13]: https://github.com/fwehrling/forge/releases/tag/v1.9.13
 [1.8.0]: https://github.com/fwehrling/forge/releases/tag/v1.8.0
