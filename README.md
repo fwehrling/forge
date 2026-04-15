@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.11.4-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.11.5-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-26%20core%20%2B%208%20business-orange)](#commands)
@@ -293,7 +293,9 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.11.4**: document Slim/Caveman compressed output mode in README -- auto-activated via hook, 3 levels, document mode for deliverables.
+**Latest -- v1.11.5**: fix forge-init memory CLI install step and correct forge-slim satellite path for hub-only architecture.
+
+**v1.11.4**: document Slim/Caveman compressed output mode in README -- auto-activated via hook, 3 levels, document mode for deliverables.
 
 **v1.11.3**: README factual accuracy audit -- correct agent counts, add /forge prefix to examples, replace unverified metrics with typical ranges, clarify configurable Docker sandbox.
 
