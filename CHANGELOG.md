@@ -5,6 +5,13 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0] - 2026-04-15
+
+### Added
+
+- **`/forge-slim`**: new core skill for output token compression (~70% savings). Compressed French output mode with three intensity levels (lite/full/ultra) and document mode for deliverables. Auto-activates via SessionStart hook -- no manual invocation needed
+- **`forge-slim.sh` hook**: SessionStart hook that activates compressed output mode automatically when the skill is installed
+
 ## [1.9.13] - 2026-04-12
 
 ### Added
@@ -596,6 +603,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.9.11]: https://github.com/fwehrling/forge/releases/tag/v1.9.11
 [1.9.10]: https://github.com/fwehrling/forge/releases/tag/v1.9.10
 [1.9.9]: https://github.com/fwehrling/forge/releases/tag/v1.9.9
+[1.10.0]: https://github.com/fwehrling/forge/releases/tag/v1.10.0
 [1.9.13]: https://github.com/fwehrling/forge/releases/tag/v1.9.13
 [1.8.0]: https://github.com/fwehrling/forge/releases/tag/v1.8.0
 [1.6.2]: https://github.com/fwehrling/forge/releases/tag/v1.6.2
