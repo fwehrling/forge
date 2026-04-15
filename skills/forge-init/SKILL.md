@@ -74,13 +74,22 @@ Initializes the FORGE framework in a new or existing project.
    - Covered commands: git, npm, pnpm, yarn, bun, pip, pytest, go, cargo, docker, make, mvn, gradle, dotnet, swift, tsc
    - Note: Additional FORGE hooks (update-check, memory-sync, statusline) are installed via `install.sh` or `/forge-update`
 
-9. **Save memory** (ensures initialization context persists for all subsequent agents):
+9. **Install forge-memory CLI** (global, idempotent):
+   - Check if `forge-memory` is in PATH: `which forge-memory`
+   - If NOT found, run the setup script:
+     ```bash
+     bash ~/.claude/skills/forge/scripts/forge-memory/setup.sh
+     ```
+   - If the setup script does not exist, warn the user and skip memory steps
+   - This installs the Python venv, sentence-transformers model, and symlinks `forge-memory` to `~/.local/bin/`
+
+10. **Save memory** (ensures initialization context persists for all subsequent agents):
    ```bash
    forge-memory log "Projet initialisé : {LANGUAGE}/{FRAMEWORK}, type {PROJECT_TYPE}, track {SCALE}" --agent init
    forge-memory sync
    ```
 
-10. **Display the summary**:
+11. **Display the summary**:
    - Detected stack
    - Created files
    - Recommended next steps:

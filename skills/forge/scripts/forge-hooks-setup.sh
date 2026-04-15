@@ -383,7 +383,7 @@ cat > "$HOOKS_DIR/forge-slim.sh" << 'SLIMEOF'
 # Always exits 0 (never blocks session startup).
 
 # Only activate if forge-slim skill is installed
-if [ ! -f "$HOME/.claude/skills/forge-slim/SKILL.md" ]; then
+if [ ! -f "$HOME/.forge/skills/forge-slim/SKILL.md" ]; then
     exit 0
 fi
 
