@@ -5,6 +5,16 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.11.7] - 2026-04-17
+
+### Fixed
+
+- **RTK anti-bypass**: add inline notice in `deny_with_content()` so Claude sees the "do not re-read" instruction directly in compressed output, even if it ignores CLAUDE.md
+- **RTK headers**: rename `[RTK:Read]` / `[RTK:Grep]` / `[RTK:Glob]` to `[RTK:Read:OK]` / `[RTK:Grep:OK]` / `[RTK:Glob:OK]` to combat deny misinterpretation
+- **RTK CLAUDE.md injection**: explain that "deny" is a protocol artifact (not access refusal), reference new `:OK` markers, add user frustration warning
+- **forge-slim**: default level from `full` to `lite` for better readability
+- **forge-hooks-setup.sh**: sync forge-slim hook message with correct French accents and lite mode
+
 ## [1.11.6] - 2026-04-15
 
 ### Fixed
