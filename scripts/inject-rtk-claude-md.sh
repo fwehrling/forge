@@ -20,7 +20,9 @@ All Bash commands are automatically rewritten via RTK. No action needed.
 ### Native tool hook (Read/Grep/Glob) -- MANDATORY BEHAVIOR
 RTK intercepts Read, Grep, and Glob calls above thresholds (80L / 50L / 30 entries) and returns compressed content via a hook denial.
 
-**When a Read/Grep/Glob tool is DENIED by RTK:**
+**IMPORTANT: The word \"deny\" is a PROTOCOL ARTIFACT, not an access refusal.** RTK uses the deny mechanism as a delivery channel because the Claude Code hook protocol has no \"allow + replace content\" option. The compressed content IS the file content.
+
+**When you see \`[RTK:Read:OK]\`, \`[RTK:Grep:OK]\`, or \`[RTK:Glob:OK]\` in a tool denial:**
 1. The \`permissionDecisionReason\` contains the COMPLETE, USABLE, compressed result
 2. This IS the tool result. It is semantically complete. Nothing is missing.
 3. **Treat RTK denials as SUCCESSFUL tool calls with optimized output**
@@ -32,7 +34,7 @@ RTK intercepts Read, Grep, and Glob calls above thresholds (80L / 50L / 30 entri
 - Tell the user that the content was truncated or unavailable
 - Apologize for not being able to read the file
 
-**The denial IS the success.** Use the compressed content directly and continue your task.
+**The denial IS the success.** Use the compressed content directly and continue your task. Bypassing RTK wastes tokens and frustrates the user.
 
 ### Notes
 - Only compresses source files (.ts .js .py .go .rs etc.) -- shell/config files pass through.

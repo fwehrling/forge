@@ -388,7 +388,7 @@ if [ ! -f "$HOME/.forge/skills/forge-slim/SKILL.md" ]; then
 fi
 
 cat << 'MSG'
-FORGE-SLIM active (full). Reponses en francais telegraphique, accents obligatoires. Supprimer articles, remplissage, politesses. Fragments OK. Pattern: [chose] [action] [raison]. Mode document pour livrables (francais impeccable). /forge-slim lite|full|ultra pour changer. "stop slim" pour desactiver.
+FORGE-SLIM active (lite). Réponses en français concis, accents obligatoires. Pas de remplissage ni hésitation. Articles conservés, phrases complètes. Professionnel mais serré. Mode document pour livrables (français impeccable). /forge-slim lite|full|ultra pour changer. "stop slim" pour désactiver.
 MSG
 
 exit 0

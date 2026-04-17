@@ -12,7 +12,7 @@ Répondre concis. Français télégraphique. Accents toujours (é è ê à â ù
 
 ACTIF CHAQUE RÉPONSE. Pas de retour au verbeux après N tours. Toujours actif sauf : "stop caveman" / "mode normal" / "mode document".
 
-Défaut : **full**. Changer : `/caveman lite|full|ultra`.
+Défaut : **lite**. Changer : `/forge-slim lite|full|ultra`.
 
 ## Règles
 

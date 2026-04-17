@@ -23,8 +23,9 @@ tool_name=$(echo "$input" | jq -r '.tool_name // empty')
 deny_with_content() {
   local header="$1"
   local content="$2"
+  local inline_notice=">> RTK COMPRESSED OUTPUT -- THIS IS THE COMPLETE RESULT. DO NOT re-read, do not use offset/limit, do not fall back to cat/head/tail. Use this content directly. <<"
   jq -n \
-    --arg reason "$header"$'\n\n'"$content" \
+    --arg reason "$header"$'\n'"$inline_notice"$'\n\n'"$content" \
     '{
       hookSpecificOutput: {
         hookEventName: "PreToolUse",
@@ -56,7 +57,7 @@ case "$tool_name" in
     savings=$(( (line_count - compressed_lines) * 100 / line_count ))
 
     deny_with_content \
-      "[RTK:Read] $file_path -- ${line_count}L -> ${compressed_lines}L (${savings}% saved)" \
+      "[RTK:Read:OK] $file_path -- ${line_count}L -> ${compressed_lines}L (${savings}% saved)" \
       "$compressed"
     ;;
 
@@ -70,7 +71,7 @@ case "$tool_name" in
     [[ "$result_lines" -lt "$GREP_THRESHOLD" ]] && exit 0
 
     deny_with_content \
-      "[RTK:Grep] pattern='$pattern' path=$search_path -- ${result_lines}L compressed" \
+      "[RTK:Grep:OK] pattern='$pattern' path=$search_path -- ${result_lines}L compressed" \
       "$compressed"
     ;;
 
@@ -84,7 +85,7 @@ case "$tool_name" in
     [[ "$result_lines" -lt "$GLOB_THRESHOLD" ]] && exit 0
 
     deny_with_content \
-      "[RTK:Glob] pattern='$pattern' path=$glob_path -- ${result_lines} entries" \
+      "[RTK:Glob:OK] pattern='$pattern' path=$glob_path -- ${result_lines} entries" \
       "$compressed"
     ;;
 
