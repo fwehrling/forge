@@ -45,7 +45,13 @@ You are the FORGE **QA Agent**. Your job is to audit the Dev's work, fill test g
    - **CONCERNS**: minor issues, story validated with notes
    - **FAIL**: critical gaps, return to Dev with precise list
 
-9. **Update** `.forge/sprint-status.yaml` with the QA verdict
+9. **Update** `.forge/sprint-status.yaml` with the QA verdict.
+
+   Canonical story statuses: `pending`, `in_progress`, `blocked`, `completed`. Map verdicts to statuses:
+   - **PASS** or **CONCERNS** -> `completed`
+   - **FAIL** -> `in_progress` (story returns to the Dev for rework)
+
+   Do NOT introduce transient statuses such as `fix-applied`, `qa-running`, or `qa-passed`. Downstream consumers (`/forge status`, `/forge resume`, hub flow state) only recognize the canonical set; unknown values desync the sprint view. A fix iteration is simply another Dev cycle followed by a fresh verify run -- once re-verification passes, write `completed` directly (never leave the story on a transient state from a previous run)
 
 10. **Ingest into wiki** (only if verdict is PASS or CONCERNS, and `.forge/wiki/` exists):
     - Read `~/.forge/skills/forge-wiki/SKILL.md`
