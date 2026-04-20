@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.12.3-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.12.4-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-27%20core%20%2B%208%20business-orange)](#commands)
@@ -310,7 +310,9 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.12.3**: `forge-init.sh` idempotency fix -- `.forge/config.yml` and `.forge/memory/MEMORY.md` are now preserved on re-run instead of being overwritten, protecting project history (decisions, session logs) when the script executes a second time.
+**Latest -- v1.12.4**: `/forge-update` scope cleanup -- removed the wiki retrofit side effect and the `--full` flag. Framework updates (hub, satellites, hooks) and project initialization (`.forge/`, wiki, memory) are now strictly separated. Legacy projects missing `.forge/wiki/` must run `/forge init` explicitly.
+
+**v1.12.3**: `forge-init.sh` idempotency fix -- `.forge/config.yml` and `.forge/memory/MEMORY.md` are now preserved on re-run instead of being overwritten, protecting project history (decisions, session logs) when the script executes a second time.
 
 **v1.12.2**: `/forge init` now retrofits `.forge/wiki/` on legacy projects already initialized without the vault -- makes init symmetrical with `/forge-update` for the wiki retrofit path.
 
