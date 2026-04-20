@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.6] - 2026-04-20
+
+### Fixed
+
+- **forge-verify transient statuses**: the QA satellite was writing transient values like `fix-applied` into `.forge/sprint-status.yaml` without ever transitioning back to a canonical state, desyncing `/forge status`, `/forge resume`, and the hub flow state. `skills/forge-verify/SKILL.md` step 9 now defines the canonical vocabulary (`pending` | `in_progress` | `blocked` | `completed`) and the verdict mapping (`PASS`/`CONCERNS` -> `completed`, `FAIL` -> `in_progress`), and explicitly forbids transient labels. A fix iteration is just another Dev cycle followed by a fresh verify run -- the final write must be one of the four canonical values.
+
 ## [1.12.5] - 2026-04-20
 
 ### Changed
@@ -769,6 +775,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/fwehrling/forge/releases/tag/v1.0.0
+[1.12.6]: https://github.com/fwehrling/forge/compare/v1.12.5...v1.12.6
 [1.12.5]: https://github.com/fwehrling/forge/compare/v1.12.4...v1.12.5
 [1.12.4]: https://github.com/fwehrling/forge/compare/v1.12.3...v1.12.4
 [1.12.3]: https://github.com/fwehrling/forge/compare/v1.12.2...v1.12.3

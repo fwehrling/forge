@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.12.5-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.12.6-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-27%20core%20%2B%208%20business-orange)](#commands)
@@ -310,7 +310,9 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.12.5**: legacy slash command migration -- every user-facing `/forge-xxx` reference is now `/forge xxx` to match the hub-only architecture. SKILL.md titles, reference docs, install/update scripts, hook messages, `CLAUDE.md` and `CONTRIBUTING.md` templates all aligned. Historical CHANGELOG entries, file paths, and internal skill IDs preserved.
+**Latest -- v1.12.6**: `forge-verify` no longer invents transient story statuses like `fix-applied`. The QA satellite now writes only the canonical values (`pending` | `in_progress` | `blocked` | `completed`), keeping `/forge status`, `/forge resume`, and the hub flow state in sync.
+
+**v1.12.5**: legacy slash command migration -- every user-facing `/forge-xxx` reference is now `/forge xxx` to match the hub-only architecture. SKILL.md titles, reference docs, install/update scripts, hook messages, `CLAUDE.md` and `CONTRIBUTING.md` templates all aligned. Historical CHANGELOG entries, file paths, and internal skill IDs preserved.
 
 **v1.12.4**: `/forge update` scope cleanup -- removed the wiki retrofit side effect and the `--full` flag. Framework updates (hub, satellites, hooks) and project initialization (`.forge/`, wiki, memory) are now strictly separated. Legacy projects missing `.forge/wiki/` must run `/forge init` explicitly.
 
