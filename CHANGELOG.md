@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.5] - 2026-04-20
+
+### Changed
+
+- **Legacy slash command migration**: converted every user-facing `/forge-xxx` reference to the new `/forge xxx` hub-routing syntax. The hub-only architecture (v1.11.0) registers only the `forge` hub in Claude Code; legacy dash-separated commands no longer resolve. Scope covers SKILL.md titles and bodies, reference docs, install/update scripts, hook notification messages, project `CLAUDE.md`, the `CONTRIBUTING.md` skill template and consistency check, and the README Latest section. `CHANGELOG.md` historical entries, file paths (`forge-*.sh`, `~/.forge/skills/forge-*`), and internal skill IDs are preserved unchanged.
+
 ## [1.12.4] - 2026-04-20
 
 ### Changed
@@ -763,6 +769,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/fwehrling/forge/releases/tag/v1.0.0
+[1.12.5]: https://github.com/fwehrling/forge/compare/v1.12.4...v1.12.5
 [1.12.4]: https://github.com/fwehrling/forge/compare/v1.12.3...v1.12.4
 [1.12.3]: https://github.com/fwehrling/forge/compare/v1.12.2...v1.12.3
 [1.12.2]: https://github.com/fwehrling/forge/compare/v1.12.1...v1.12.2
