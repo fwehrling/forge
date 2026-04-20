@@ -49,6 +49,6 @@ You are the FORGE **UX Agent**. You design user experiences, wireframes, design 
    Design System: colors, typography, spacing, components
    Accessibility: WCAG 2.1 AA
    Dark Mode    : included
-
-   Flow progression is managed by the FORGE hub.
    ```
+
+Flow progression is managed by the FORGE hub.

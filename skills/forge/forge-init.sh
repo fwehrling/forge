@@ -50,6 +50,16 @@ mkdir -p "${PROJECT_PATH}/docs/adrs"
 mkdir -p "${PROJECT_PATH}/.forge/memory"
 mkdir -p "${PROJECT_PATH}/.forge/memory/sessions"
 
+# Wiki vault structure (Obsidian-compatible knowledge base)
+mkdir -p "${PROJECT_PATH}/.forge/wiki/raw/stories"
+mkdir -p "${PROJECT_PATH}/.forge/wiki/raw/bugs"
+mkdir -p "${PROJECT_PATH}/.forge/wiki/raw/notes"
+mkdir -p "${PROJECT_PATH}/.forge/wiki/wiki/concepts"
+mkdir -p "${PROJECT_PATH}/.forge/wiki/wiki/stories"
+mkdir -p "${PROJECT_PATH}/.forge/wiki/wiki/bugs"
+mkdir -p "${PROJECT_PATH}/.forge/wiki/wiki/decisions"
+mkdir -p "${PROJECT_PATH}/.forge/wiki/wiki/synthesis"
+
 # Auto-detect project type
 detect_project_type() {
   local path="$1"
@@ -208,6 +218,36 @@ Initialized: $(date -Iseconds)
 
 Project initialized with FORGE.
 EOF
+
+# Wiki vault bootstrap -- copy templates and substitute placeholders
+WIKI_TEMPLATE_DIR="$(cd "$(dirname "$0")" && pwd)/templates/wiki"
+PROJECT_NAME_RESOLVED="$(basename "$(cd "${PROJECT_PATH}" && pwd)")"
+WIKI_DATE="$(date -Iseconds)"
+
+if [ -d "${WIKI_TEMPLATE_DIR}" ]; then
+  # Contract file -- copied as-is (no placeholders)
+  cp "${WIKI_TEMPLATE_DIR}/CLAUDE.md" "${PROJECT_PATH}/.forge/wiki/CLAUDE.md"
+
+  # Index and log -- substitute {{DATE}} and {{PROJECT_NAME}}
+  sed \
+    -e "s|{{DATE}}|${WIKI_DATE}|g" \
+    -e "s|{{PROJECT_NAME}}|${PROJECT_NAME_RESOLVED}|g" \
+    "${WIKI_TEMPLATE_DIR}/index.md" > "${PROJECT_PATH}/.forge/wiki/index.md"
+
+  sed \
+    -e "s|{{DATE}}|${WIKI_DATE}|g" \
+    -e "s|{{PROJECT_NAME}}|${PROJECT_NAME_RESOLVED}|g" \
+    "${WIKI_TEMPLATE_DIR}/log.md" > "${PROJECT_PATH}/.forge/wiki/log.md"
+else
+  echo "  ! Wiki templates not found at ${WIKI_TEMPLATE_DIR} -- skipping wiki bootstrap"
+fi
+
+# Obsidian detection (passive, informational only)
+if [ -d "${HOME}/Library/Application Support/obsidian" ] \
+   || [ -d "${HOME}/.config/obsidian" ] \
+   || command -v obsidian &>/dev/null; then
+  echo "  Obsidian detected -- open .forge/wiki/ as a vault for graph view (optional)"
+fi
 
 # Generate CLAUDE.md if not exists
 if [ ! -f "${PROJECT_PATH}/CLAUDE.md" ]; then

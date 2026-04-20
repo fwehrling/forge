@@ -86,6 +86,15 @@ Replace arbitrary delays with condition-based waiting:
 
 Once root cause is identified and confirmed, report findings to the user.
 
+If a fix was implemented and validated (Phase 4 completed successfully), and `.forge/wiki/` exists:
+
+- Assign a bug ID (next available `BUG-XXX` from `.forge/wiki/wiki/bugs/`, or reuse an existing one if already tracked)
+- Read `~/.forge/skills/forge-wiki/SKILL.md`
+- Execute mode `ingest` with `source=bug:BUG-XXX`
+- This creates/updates `.forge/wiki/wiki/bugs/BUG-XXX.md` with symptom, root cause, fix, and wikilinks to touched concepts
+
+Skip silently if the root cause was only identified without a fix, or if `.forge/wiki/` doesn't exist.
+
 Flow progression is managed by the FORGE hub.
 
 ## Quick Reference

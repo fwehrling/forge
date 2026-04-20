@@ -19,7 +19,10 @@ You are the FORGE **hub**. You orchestrate **flows** -- structured sequences of 
 2. **Load memory** (skip if already in context):
    - Read `.forge/memory/MEMORY.md` (if exists)
    - Read `.forge/sprint-status.yaml` (if exists)
-3. If no active flow -> go to **Classify Intent**
+3. **Load wiki context** (anti-compaction -- skip if already in context):
+   - If `.forge/wiki/log.md` exists -> Read the last 20 lines to catch up on recent ingestions
+   - If `.forge/wiki/wiki/synthesis/` has files -> list the 5 most recent syntheses (filenames only, for awareness)
+4. If no active flow -> go to **Classify Intent**
 
 ## Classify Intent
 
@@ -263,6 +266,20 @@ Available at any point during a flow. Load via Read() when triggered:
 | Compress output tokens | forge-slim |
 | Initialize project | forge-init |
 | Resume previous session | forge-resume |
+| Query or update project wiki | forge-wiki |
+
+### Wiki commands (user-facing)
+
+Expose these as hub-level commands (invoke `forge-wiki` with the right mode):
+
+| Command | Mode | Purpose |
+|---------|------|---------|
+| `/forge wiki ingest <source>` | `ingest` | Manually ingest a story/bug/ADR/note into the wiki |
+| `/forge wiki query "<question>"` | `query` | Ask the wiki, get a synthesis |
+| `/forge wiki lint` | `lint` | Report broken links, orphans, duplicates |
+| `/forge wiki save "<note>"` | `save` | Archive a free-form note/decision |
+
+The wiki is also updated automatically via hooks at: story QA PASS (forge-verify), `/forge ship` (after push to main), forge-debug handoff (if fix confirmed).
 
 ## Language Rule
 

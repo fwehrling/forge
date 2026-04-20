@@ -28,6 +28,20 @@ Initializes the FORGE framework in a new or existing project.
    .forge/
      config.yml              # Main configuration (generated)
      sprint-status.yaml      # Sprint tracking (empty)
+     memory/
+       MEMORY.md             # Project memory (decisions, state)
+       sessions/             # Daily session logs
+     wiki/                   # Knowledge wiki (Obsidian-compatible)
+       CLAUDE.md             # Vault schema contract
+       index.md              # Wiki home
+       log.md                # Ingestion journal
+       raw/                  # Raw sources (stories, bugs, notes)
+       wiki/                 # Compiled pages
+         concepts/           # Components/features
+         stories/            # Story pages with wikilinks
+         bugs/               # Bug pages (root cause + fix)
+         decisions/          # ADR pages
+         synthesis/          # Archived query answers
      templates/              # Artifact templates
        prd.md
        architecture.md
@@ -40,9 +54,12 @@ Initializes the FORGE framework in a new or existing project.
        enterprise.yaml
    docs/
      stories/                # Stories directory
+     adrs/                   # Architecture Decision Records
    references/
      agents/                 # Agent personas (copied from FORGE repo)
    ```
+
+   The wiki vault (`.forge/wiki/`) is created automatically from bundled templates at `~/.claude/skills/forge/templates/wiki/`. It is versioned (committed with the project) and works with or without Obsidian installed. If Obsidian is detected on the machine, a hint is displayed suggesting to open `.forge/wiki/` as a vault for graph view.
 
 4. **Generate `.forge/config.yml`**:
    - Pre-fill `project.name`, `project.type`, `project.language` based on detection

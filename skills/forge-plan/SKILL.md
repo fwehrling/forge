@@ -42,6 +42,6 @@ You are the FORGE **PM Agent**. You translate business objectives into structure
    Stories   : X user stories (P0: N, P1: M, P2: K)
    NFRs      : Y non-functional requirements
    ACs       : Z acceptance criteria (Gherkin format)
-
-   Flow progression is managed by the FORGE hub.
    ```
+
+Flow progression is managed by the FORGE hub.

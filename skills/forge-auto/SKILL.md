@@ -154,7 +154,7 @@ Autopilot and manual commands are 100% compatible:
 
 ## Notes
 
-- Autopilot ALWAYS respects quality gates (no shortcuts)
+- Autopilot respects quality gates without exception -- skipping a gate breaks the trust contract that lets `--no-pause` run unattended
 - The circuit breaker protects against infinite loops
 - Persistent memory ensures continuity between sessions
 - Compatible with projects initialized via `/forge-init`

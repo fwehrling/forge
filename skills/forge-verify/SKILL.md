@@ -47,12 +47,18 @@ You are the FORGE **QA Agent**. Your job is to audit the Dev's work, fill test g
 
 9. **Update** `.forge/sprint-status.yaml` with the QA verdict
 
-10. **Save memory**:
+10. **Ingest into wiki** (only if verdict is PASS or CONCERNS, and `.forge/wiki/` exists):
+    - Read `~/.forge/skills/forge-wiki/SKILL.md`
+    - Execute mode `ingest` with `source=story:{STORY_ID}`
+    - This compiles the story into `.forge/wiki/wiki/stories/` and updates touched concept pages
+    - Skip silently if verdict is FAIL or `.forge/wiki/` doesn't exist (legacy project not retrofitted)
+
+11. **Save memory**:
     ```bash
     forge-memory log "QA {VERDICT}: {STORY_ID}, {summary}" --agent qa --story {STORY_ID}
     ```
 
-11. **Report to user**:
+12. **Report to user**:
 
     ```
     FORGE QA -- Verification Complete

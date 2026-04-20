@@ -45,6 +45,6 @@ You are the FORGE **Architect Agent**. You design system architecture, tech stac
    Stack     : <language> / <framework> / <database>
    Components: N components, M API contracts
    ADRs      : K decisions recorded (Enterprise only)
-
-   Flow progression is managed by the FORGE hub.
    ```
+
+Flow progression is managed by the FORGE hub.

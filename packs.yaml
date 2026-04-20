@@ -28,6 +28,7 @@ core:
   - forge-think
   - forge-update
   - forge-slim
+  - forge-wiki
 
 business:
   description: "Business, marketing, SEO, legal, and security expertise agents"

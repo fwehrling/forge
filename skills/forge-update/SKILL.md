@@ -11,6 +11,7 @@ description: >
 - No arguments: update core FORGE skills only
 - `--pack business`: also install/update the Business Pack (marketing, SEO, legal, security, strategy agents)
 - `--pack business --only`: install/update only the Business Pack without updating core skills
+- `--full`: when retrofitting the wiki vault on a legacy project, also ingest all existing stories/bugs/ADRs found in the project (default behavior is lazy -- only bootstrap the empty vault)
 
 ## Workflow
 
@@ -131,7 +132,41 @@ description: >
    bash ~/.claude/skills/forge/scripts/forge-hooks-setup.sh
    ```
 
-8. **Suggest Business Pack** (if not installed and no `--pack` argument) :
+8. **Retrofit wiki vault** (if CWD is a FORGE project without `.forge/wiki/`) :
+   - If `.forge/config.yml` exists but `.forge/wiki/` is missing, the project predates the wiki feature
+   - Bootstrap the vault structure locally (mimicking `forge-init.sh`) :
+     ```bash
+     PROJECT_PATH="$(pwd)"
+     WIKI_TEMPLATE_DIR="${HOME}/.claude/skills/forge/templates/wiki"
+     PROJECT_NAME_RESOLVED="$(basename "$PROJECT_PATH")"
+     WIKI_DATE="$(date -Iseconds)"
+
+     if [ -f "${PROJECT_PATH}/.forge/config.yml" ] \
+        && [ ! -d "${PROJECT_PATH}/.forge/wiki" ] \
+        && [ -d "${WIKI_TEMPLATE_DIR}" ]; then
+       mkdir -p "${PROJECT_PATH}/.forge/wiki/raw/stories"
+       mkdir -p "${PROJECT_PATH}/.forge/wiki/raw/bugs"
+       mkdir -p "${PROJECT_PATH}/.forge/wiki/raw/notes"
+       mkdir -p "${PROJECT_PATH}/.forge/wiki/wiki/concepts"
+       mkdir -p "${PROJECT_PATH}/.forge/wiki/wiki/stories"
+       mkdir -p "${PROJECT_PATH}/.forge/wiki/wiki/bugs"
+       mkdir -p "${PROJECT_PATH}/.forge/wiki/wiki/decisions"
+       mkdir -p "${PROJECT_PATH}/.forge/wiki/wiki/synthesis"
+       cp "${WIKI_TEMPLATE_DIR}/CLAUDE.md" "${PROJECT_PATH}/.forge/wiki/CLAUDE.md"
+       sed -e "s|{{DATE}}|${WIKI_DATE}|g" \
+           -e "s|{{PROJECT_NAME}}|${PROJECT_NAME_RESOLVED}|g" \
+           "${WIKI_TEMPLATE_DIR}/index.md" > "${PROJECT_PATH}/.forge/wiki/index.md"
+       sed -e "s|{{DATE}}|${WIKI_DATE}|g" \
+           -e "s|{{PROJECT_NAME}}|${PROJECT_NAME_RESOLVED}|g" \
+           "${WIKI_TEMPLATE_DIR}/log.md" > "${PROJECT_PATH}/.forge/wiki/log.md"
+       echo "Wiki vault created at .forge/wiki/"
+     fi
+     ```
+   - **Lazy by default**: the vault is created empty. Stories/bugs will be ingested as they happen (via hooks in forge-verify, /forge ship, forge-debug).
+   - **If `--full` flag is set**: after bootstrap, load `forge-wiki` and invoke mode `ingest` once per existing story in `docs/stories/*.md`, once per ADR in `docs/adrs/*.md`. Warn the user this may consume significant tokens.
+   - Skip silently if not in a FORGE project, or if `.forge/wiki/` already exists.
+
+9. **Suggest Business Pack** (if not installed and no `--pack` argument) :
    - Check if any skill from `$FORGE_TMPDIR/packs/business/` exists in `~/.forge/skills/`
    - If none installed, display a one-time suggestion:
      ```
@@ -139,7 +174,7 @@ description: >
      Install with: /forge-update --pack business
      ```
 
-9. **Update ~/.claude/CLAUDE.md** :
+10. **Update ~/.claude/CLAUDE.md** :
    - Compare `$FORGE_TMPDIR/templates/claude-md-forge-section.md` with the current FORGE block in `~/.claude/CLAUDE.md` (content between `<!-- FORGE:BEGIN -->` and `<!-- FORGE:END -->`)
    - If markers don't exist in `~/.claude/CLAUDE.md` : run `bash "$FORGE_TMPDIR/scripts/inject-claude-md.sh"` (will ask user confirmation)
    - If markers exist and content is identical : display "CLAUDE.md FORGE section is up to date" and skip
@@ -149,25 +184,25 @@ description: >
      - If confirmed : run `bash "$FORGE_TMPDIR/scripts/inject-claude-md.sh"`
      - If refused : skip
 
-10. **Verify installation** :
+11. **Verify installation** :
     - Confirmer que `~/.claude/skills/forge/SKILL.md` existe (hub)
     - Confirmer que `~/.forge/skills/` contient les satellites
     - Vérifier qu'aucun `forge-*` ne reste dans `~/.claude/skills/` (migration complète)
     - Compter le nombre de skills installés (1 hub + satellites + pack si installé)
 
-11. **Clean up** :
+12. **Clean up** :
     ```bash
     rm -rf "$FORGE_TMPDIR"
     ```
 
-12. **Save memory** (if `.forge/` exists -- ensures update history persists for version tracking and rollback reference):
+13. **Save memory** (if `.forge/` exists -- ensures update history persists for version tracking and rollback reference):
     ```bash
     forge-memory log "FORGE updated: v{OLD} -> v{NEW}, {X} skills modified, {Y} new, business pack: {installed/not installed}" --agent update
     forge-memory consolidate --verbose
     forge-memory sync
     ```
 
-13. **Display results** :
+14. **Display results** :
 
     ```
     FORGE Update -- Complete

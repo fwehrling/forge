@@ -49,6 +49,7 @@ packs.yaml            # Pack manifest (core vs business skill lists)
 - **Sprint tracking** via `.forge/sprint-status.yaml` in user projects
 - **No auto-chaining**: Satellites NEVER invoke other skills. Flow progression is managed exclusively by the hub. Each satellite ends with "Flow progression is managed by the FORGE hub."
 - **Flow state**: Active flows are tracked in `.forge/flow-state.yaml` (flow type, current step, stories status, HITL preferences)
+- **Knowledge Wiki**: Every FORGE project gets a `.forge/wiki/` vault (Obsidian-compatible markdown) bootstrapped by `/forge-init` from templates at `skills/forge/templates/wiki/`. The `forge-wiki` satellite maintains it via 4 modes (ingest/query/lint/save) and is triggered automatically at: story QA PASS (forge-verify), `/forge ship` after push to main, forge-debug handoff with confirmed fix. The vault coexists with `forge-memory` (operational preferences) -- they are complementary, not redundant. The vault is versioned (committed to Git), and works with or without Obsidian installed (Obsidian adds graph view; Claude reads/writes the same `.md` files either way).
 
 ## FORGE + Agent Teams Integration
 

@@ -5,7 +5,7 @@
 [![version](https://img.shields.io/badge/version-1.11.8-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
-[![Skills](https://img.shields.io/badge/skills-26%20core%20%2B%208%20business-orange)](#commands)
+[![Skills](https://img.shields.io/badge/skills-27%20core%20%2B%208%20business-orange)](#commands)
 
 > **Stop prompting. Start shipping.**
 > FORGE turns Claude Code into a team of AI agents that plan, build, test, review, and deploy your project -- while you focus on decisions that matter.
@@ -39,7 +39,7 @@ Want to resume where you left off? Just type `/forge` -- memory picks up exactly
 
 ### AI Agents That Actually Collaborate
 
-26 specialized agents -- 8 pipeline (Analyst, PM, Architect, UX, Scrum Master, Dev, QA, Reviewer), 4 orchestration (Autopilot, Teams, Party, Loop), and 14 utility agents (Debug, Audit, Init, Think, Permissions, etc.) -- that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
+27 specialized agents -- 8 pipeline (Analyst, PM, Architect, UX, Scrum Master, Dev, QA, Reviewer), 4 orchestration (Autopilot, Teams, Party, Loop), and 15 utility agents (Debug, Audit, Init, Think, Permissions, Wiki, etc.) -- that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
 
 <p align="center">
   <picture>
@@ -60,6 +60,21 @@ FORGE remembers everything across sessions. Two-layer system: Markdown files for
   sessions/YYYY-MM-DD.md # Daily session logs (tagged by agent)
   index.sqlite           # Vector search index (optional)
 ```
+
+### Knowledge Wiki (Obsidian-compatible)
+
+Every FORGE project gets a `.forge/wiki/` vault bootstrapped by `/forge init` -- a linked Markdown knowledge base inspired by Karpathy's 3-layer wiki (raw sources -> compiled concepts -> schema contract). Stories, bugs, and decisions are ingested automatically at pivotal events:
+
+| Trigger | What gets ingested |
+|---------|-------------------|
+| Story QA PASS (`forge-verify`) | Story compiled into `wiki/stories/`, touched concepts updated |
+| `/forge ship` after push to main | Commit logged, concept pages refreshed |
+| `forge-debug` fix confirmed | `wiki/bugs/BUG-XXX.md` with root cause + fix |
+| Session start | Hub reads last 20 lines of `log.md` + recent syntheses (anti-compaction) |
+
+Manual commands: `/forge wiki ingest <source>`, `/forge wiki query "..."`, `/forge wiki lint`, `/forge wiki save "<note>"`.
+
+The vault is versioned in Git, works without Obsidian installed (Claude reads/writes plain `.md`), and coexists with `forge-memory` -- wiki is the compiled project knowledge, memory is operational preferences.
 
 ### Built-In Token Optimization
 
@@ -169,6 +184,7 @@ Everything goes through `/forge`. The hub loads the right agent on demand.
 | `/forge resume` | Resume where you left off |
 | `/forge status` | Sprint dashboard |
 | `/forge slim` | Compressed output mode (auto-activated via hook, 3 levels) |
+| `/forge wiki <mode>` | Knowledge wiki -- ingest/query/lint/save on `.forge/wiki/` |
 | `/forge update` | Update FORGE skills |
 
 ---
@@ -234,6 +250,7 @@ your-project/
     sprint-status.yaml   # Sprint tracking
     flow-state.yaml      # Active flow state (CREATE, FEATURE, DEBUG...)
     memory/              # Persistent memory (Markdown + optional vector)
+    wiki/                # Obsidian-compatible knowledge vault (concepts, stories, bugs, decisions)
   docs/                  # Generated artifacts (PRD, architecture, stories...)
   CLAUDE.md              # Project conventions (auto-generated)
 
@@ -242,7 +259,7 @@ your-project/
   hooks/                 # Token optimization, memory sync, update checks
 
 ~/.forge/
-  skills/forge-*/        # 25 satellite agents (loaded on demand by the hub)
+  skills/forge-*/        # 26 satellite agents (loaded on demand by the hub)
 ```
 
 **Hub-only architecture**: Only the FORGE hub is registered in Claude Code's skill system. Satellite agents are invisible to the system prompt and loaded on demand via `Read()`.
