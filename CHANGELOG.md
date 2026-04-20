@@ -757,6 +757,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/fwehrling/forge/releases/tag/v1.0.0
+[1.12.3]: https://github.com/fwehrling/forge/compare/v1.12.2...v1.12.3
 [1.12.2]: https://github.com/fwehrling/forge/compare/v1.12.1...v1.12.2
 [1.12.1]: https://github.com/fwehrling/forge/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/fwehrling/forge/compare/v1.11.8...v1.12.0

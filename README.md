@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.12.2-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.12.3-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-27%20core%20%2B%208%20business-orange)](#commands)
@@ -310,7 +310,9 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.12.2**: `/forge init` now retrofits `.forge/wiki/` on legacy projects already initialized without the vault -- makes init symmetrical with `/forge-update` for the wiki retrofit path.
+**Latest -- v1.12.3**: `forge-init.sh` idempotency fix -- `.forge/config.yml` and `.forge/memory/MEMORY.md` are now preserved on re-run instead of being overwritten, protecting project history (decisions, session logs) when the script executes a second time.
+
+**v1.12.2**: `/forge init` now retrofits `.forge/wiki/` on legacy projects already initialized without the vault -- makes init symmetrical with `/forge-update` for the wiki retrofit path.
 
 **v1.12.1**: README fix -- correct the "specialized agents" count (1 hub + 26 satellites, not 27) and mark `lite` as the default forge-slim level (aligning with the v1.11.7 behavior change).
 
