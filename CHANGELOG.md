@@ -5,6 +5,16 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.2] - 2026-04-20
+
+### Added
+
+- **forge-init wiki retrofit**: `/forge init` now bootstraps `.forge/wiki/` when the project already has `.forge/config.yml` but is missing the wiki vault (legacy projects predating the wiki feature). Lazy by default -- no historical ingestion. Makes `/forge init` symmetrical with `/forge-update` for the retrofit path so users no longer need to run system-level update just to wire a project's wiki.
+
+### Changed
+
+- **README**: v1.12.0 changelog entry now mentions `/forge init` alongside `/forge-update` as a retrofit path for legacy projects.
+
 ## [1.12.1] - 2026-04-20
 
 ### Changed
@@ -741,6 +751,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/fwehrling/forge/releases/tag/v1.0.0
+[1.12.2]: https://github.com/fwehrling/forge/compare/v1.12.1...v1.12.2
 [1.12.1]: https://github.com/fwehrling/forge/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/fwehrling/forge/compare/v1.11.8...v1.12.0
 [1.11.8]: https://github.com/fwehrling/forge/compare/v1.11.7...v1.11.8
