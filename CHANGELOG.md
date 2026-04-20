@@ -5,6 +5,25 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2026-04-20
+
+### Added
+
+- **forge-wiki satellite**: new skill maintaining an Obsidian-compatible knowledge vault at `.forge/wiki/`. Four modes (`ingest`, `query`, `lint`, `save`) compile stories, bugs, and decisions into linked concept pages using `[[wikilinks]]`. Inspired by Karpathy's 3-layer wiki architecture (raw sources -> compiled wiki -> schema contract).
+- **Automatic ingestion triggers**: story QA PASS (forge-verify), `/forge ship` after push to main, and forge-debug handoff with confirmed fix now update the wiki transparently.
+- **Session anti-compaction**: hub startup reads the last 20 lines of `.forge/wiki/log.md` and lists recent syntheses to rehydrate project context after compaction.
+- **Wiki vault bootstrap**: `/forge-init` creates `.forge/wiki/` with templates (`CLAUDE.md` schema contract, `index.md`, `log.md`) copied from `skills/forge/templates/wiki/` and substitutes `{{DATE}}` / `{{PROJECT_NAME}}` placeholders.
+- **Passive Obsidian detection**: `forge-init.sh` prints an informational hint if Obsidian is installed, but the wiki works identically without it.
+- **User-facing wiki commands**: `/forge wiki ingest|query|lint|save` exposed through the hub for manual operations.
+- **Legacy retrofit**: `/forge-update` bootstraps the vault on existing FORGE projects (lazy by default; `--full` flag to ingest existing stories and ADRs immediately).
+
+### Changed
+
+- **forge-architect, forge-plan, forge-stories, forge-ux**: moved the "Flow progression is managed by the FORGE hub." closing line outside the report code block so it no longer leaks into user-facing output templates.
+- **forge-auto**: reformulated the quality-gate rule with explicit reasoning instead of an unexplained ALWAYS directive.
+- **forge-wiki documentation**: replaced a `MUST contain` line with a sentence explaining why wikilinks are load-bearing (orphaned pages break queries).
+- **README, CLAUDE.md, packs.yaml**: skill count updated to 27 core, `forge-wiki` registered in `packs.yaml`, structure diagrams include `.forge/wiki/`.
+
 ## [1.11.8] - 2026-04-20
 
 ### Removed
@@ -715,6 +734,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/fwehrling/forge/releases/tag/v1.0.0
+[1.12.0]: https://github.com/fwehrling/forge/compare/v1.11.8...v1.12.0
+[1.11.8]: https://github.com/fwehrling/forge/compare/v1.11.7...v1.11.8
+[1.11.7]: https://github.com/fwehrling/forge/compare/v1.11.6...v1.11.7
 [1.11.6]: https://github.com/fwehrling/forge/compare/v1.11.5...v1.11.6
 [1.11.5]: https://github.com/fwehrling/forge/compare/v1.11.4...v1.11.5
 [1.11.4]: https://github.com/fwehrling/forge/compare/v1.11.3...v1.11.4
