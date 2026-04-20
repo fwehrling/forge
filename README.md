@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.11.6-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.11.8-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-26%20core%20%2B%208%20business-orange)](#commands)
@@ -293,7 +293,11 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.11.6**: full codebase QA audit -- standardize closing statements across 33 satellites, fix script inconsistencies, shorten frontmatter descriptions, add forge-resume to hub.
+**Latest -- v1.11.8**: remove RTK native Read/Grep/Glob hook -- bypass pattern cost more tokens than the compression saved. Bash RTK hook (60-90% dev ops savings) stays active. `update.sh` auto-cleans the legacy hook.
+
+**v1.11.7**: RTK anti-bypass inline notice in deny payload and forge-slim default set to lite.
+
+**v1.11.6**: full codebase QA audit -- standardize closing statements across 33 satellites, fix script inconsistencies, shorten frontmatter descriptions, add forge-resume to hub.
 
 **v1.11.5**: fix forge-init memory CLI install step and correct forge-slim satellite path for hub-only architecture.
 
