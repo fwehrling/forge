@@ -39,7 +39,7 @@ Want to resume where you left off? Just type `/forge` -- memory picks up exactly
 
 ### AI Agents That Actually Collaborate
 
-27 specialized agents -- 8 pipeline (Analyst, PM, Architect, UX, Scrum Master, Dev, QA, Reviewer), 4 orchestration (Autopilot, Teams, Party, Loop), and 15 utility agents (Debug, Audit, Init, Think, Permissions, Wiki, etc.) -- that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
+1 hub orchestrator plus 26 specialized agents -- 8 pipeline (Analyst, PM, Architect, UX, Scrum Master, Dev, QA, Reviewer), 4 orchestration (Autopilot, Teams, Party, Loop), and 14 utility agents (Debug, Audit, Init, Think, Permissions, Wiki, etc.) -- that produce versioned Markdown artifacts. Each agent reads what the previous one wrote -- no context loss between phases.
 
 <p align="center">
   <picture>
@@ -96,8 +96,8 @@ Installed automatically via `install.sh` or `update.sh`. A `SessionStart` hook a
 
 | Level | Style |
 |-------|-------|
-| **lite** | No filler. Full sentences, professional tone |
-| **full** (default) | Articles dropped, fragments OK, short synonyms |
+| **lite** (default) | No filler. Full sentences, professional tone |
+| **full** | Articles dropped, fragments OK, short synonyms |
 | **ultra** | Abbreviations (BDD/auth/config/req), arrows for causality (X -> Y) |
 
 Switch level: `/forge slim lite|full|ultra`. Disable: `stop slim` or `mode normal`. Automatically switches to polished French for deliverables (PRD, architecture docs, etc.).
