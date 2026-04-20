@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.12.0-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.12.1-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-27%20core%20%2B%208%20business-orange)](#commands)
@@ -310,7 +310,9 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.12.0**: Obsidian-compatible knowledge wiki -- new `forge-wiki` satellite maintains `.forge/wiki/` vault with automatic ingestion at story QA PASS, `/forge ship`, and forge-debug handoff. Four modes (ingest/query/lint/save), Karpathy 3-layer architecture, versioned in Git, works with or without Obsidian. Lazy retrofit for legacy projects via `/forge-update`.
+**Latest -- v1.12.1**: README fix -- correct the "specialized agents" count (1 hub + 26 satellites, not 27) and mark `lite` as the default forge-slim level (aligning with the v1.11.7 behavior change).
+
+**v1.12.0**: Obsidian-compatible knowledge wiki -- new `forge-wiki` satellite maintains `.forge/wiki/` vault with automatic ingestion at story QA PASS, `/forge ship`, and forge-debug handoff. Four modes (ingest/query/lint/save), Karpathy 3-layer architecture, versioned in Git, works with or without Obsidian. Lazy retrofit for legacy projects via `/forge-update`.
 
 **v1.11.8**: remove RTK native Read/Grep/Glob hook -- bypass pattern cost more tokens than the compression saved. Bash RTK hook (60-90% dev ops savings) stays active. `update.sh` auto-cleans the legacy hook.
 

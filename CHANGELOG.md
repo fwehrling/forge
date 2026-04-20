@@ -5,6 +5,13 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.1] - 2026-04-20
+
+### Changed
+
+- **README agent counts**: correct the "specialized agents" breakdown to reflect reality -- 1 hub orchestrator plus 26 satellites (8 pipeline, 4 orchestration, 14 utility), instead of the previous off-by-one "27 specialized / 15 utility".
+- **forge-slim default level in README**: mark `lite` as the default in the Compressed Output table, aligning the documentation with the behavior change introduced in v1.11.7.
+
 ## [1.12.0] - 2026-04-20
 
 ### Added
@@ -734,6 +741,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.2]: https://github.com/fwehrling/forge/releases/tag/v1.0.2
 [1.0.1]: https://github.com/fwehrling/forge/releases/tag/v1.0.1
 [1.0.0]: https://github.com/fwehrling/forge/releases/tag/v1.0.0
+[1.12.1]: https://github.com/fwehrling/forge/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/fwehrling/forge/compare/v1.11.8...v1.12.0
 [1.11.8]: https://github.com/fwehrling/forge/compare/v1.11.7...v1.11.8
 [1.11.7]: https://github.com/fwehrling/forge/compare/v1.11.6...v1.11.7
