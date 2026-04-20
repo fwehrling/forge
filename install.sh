@@ -297,32 +297,26 @@ setup_rtk_hooks() {
         ok "RTK telemetry disabled (${rc_file})"
     fi
 
-    # (c) RTK native hook for Read/Grep/Glob (bundled in FORGE hooks/)
-    local hook_src="${SCRIPT_DIR}/hooks/rtk-native-hook.sh"
-    local hook_dst="${CLAUDE_DIR}/hooks/rtk-native-hook.sh"
-    if [ -f "${hook_src}" ]; then
-        mkdir -p "${CLAUDE_DIR}/hooks"
-        cp -f "${hook_src}" "${hook_dst}"
-        chmod +x "${hook_dst}"
-        # Patch settings.json idempotently
-        local settings="${CLAUDE_DIR}/settings.json"
-        if [ -f "${settings}" ] && command -v python3 &>/dev/null; then
-            python3 - "${settings}" "${hook_dst}" <<'PYSCRIPT'
+    # (c) Remove legacy RTK native hook if present (deprecated: Claude bypassed it
+    #     by falling back to Bash/Node, which cost more tokens than it saved).
+    local legacy_hook="${CLAUDE_DIR}/hooks/rtk-native-hook.sh"
+    local settings="${CLAUDE_DIR}/settings.json"
+    if [ -f "${legacy_hook}" ]; then
+        rm -f "${legacy_hook}"
+        ok "Removed legacy RTK native hook"
+    fi
+    if [ -f "${settings}" ] && command -v python3 &>/dev/null; then
+        python3 - "${settings}" <<'PYSCRIPT'
 import json, sys
-sp, hp = sys.argv[1], sys.argv[2]
+sp = sys.argv[1]
 with open(sp) as f: cfg = json.load(f)
-pre = cfg.setdefault('hooks', {}).setdefault('PreToolUse', [])
-if not any('rtk-native-hook' in str(e) for e in pre):
-    pre.append({'matcher': 'Read|Grep|Glob', 'hooks': [{'type': 'command', 'command': hp}]})
+pre = cfg.get('hooks', {}).get('PreToolUse', [])
+before = len(pre)
+pre[:] = [e for e in pre if 'rtk-native-hook' not in str(e)]
+if len(pre) != before:
     with open(sp, 'w') as f: json.dump(cfg, f, indent=2)
-    print('settings.json patched')
+    print('legacy native hook entry removed from settings.json')
 PYSCRIPT
-            ok "RTK native hook registered in settings.json (Read/Grep/Glob)"
-        else
-            warn "settings.json not found or python3 missing -- add hook manually"
-        fi
-    else
-        warn "hooks/rtk-native-hook.sh not found in FORGE directory -- skipping"
     fi
 
     # (d) Inject RTK section into ~/.claude/CLAUDE.md
@@ -443,10 +437,6 @@ verify_installation() {
         if [ -f "${HOME}/.claude/hooks/statusline.sh" ]; then
             ok "Hook: statusline.sh (optional)"
         fi
-        # RTK native hook (optional)
-        if [ -f "${HOME}/.claude/hooks/rtk-native-hook.sh" ]; then
-            ok "Hook: rtk-native-hook.sh (Read/Grep/Glob compression)"
-        fi
         if [ "$hooks_ok" = true ]; then
             ok "All FORGE hooks installed"
         fi
@@ -484,10 +474,7 @@ print_summary() {
         printf '%b\n' "    ${YELLOW}--${NC} FORGE Hooks (not installed)"
     fi
     if [ "$RTK_INSTALLED" = true ]; then
-        printf '%b\n' "    ${GREEN}ok${NC} RTK token optimizer (Bash auto-rewrite + native Read/Grep/Glob hook)"
-        if [ -f "${HOME}/.claude/hooks/rtk-native-hook.sh" ]; then
-            printf '%b\n' "    ${GREEN}ok${NC} RTK native hook: 80-85% compression on .ts/.js/.py source files"
-        fi
+        printf '%b\n' "    ${GREEN}ok${NC} RTK token optimizer (Bash auto-rewrite)"
     else
         printf '%b\n' "    ${YELLOW}--${NC} RTK (not installed -- using built-in token-saver)"
     fi

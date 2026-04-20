@@ -312,12 +312,27 @@ if [ -f "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh" ]; then
     fi
 fi
 
-# ---- Update RTK native hook (if previously installed) ------------------------
+# ---- Remove legacy RTK native hook -------------------------------------------
+# Deprecated: Claude bypassed the Read|Grep|Glob deny channel by falling back to
+# Bash/Node, which cost more tokens than the compression saved.
 
-if [ -f "${CLAUDE_DIR}/hooks/rtk-native-hook.sh" ] && [ -f "${TMPDIR}/hooks/rtk-native-hook.sh" ]; then
-    cp -f "${TMPDIR}/hooks/rtk-native-hook.sh" "${CLAUDE_DIR}/hooks/rtk-native-hook.sh"
-    chmod +x "${CLAUDE_DIR}/hooks/rtk-native-hook.sh"
-    ok "RTK native hook updated"
+if [ -f "${CLAUDE_DIR}/hooks/rtk-native-hook.sh" ]; then
+    rm -f "${CLAUDE_DIR}/hooks/rtk-native-hook.sh"
+    ok "Removed legacy RTK native hook"
+fi
+
+if [ -f "${CLAUDE_DIR}/settings.json" ] && command -v python3 &>/dev/null; then
+    python3 - "${CLAUDE_DIR}/settings.json" <<'PYSCRIPT' 2>/dev/null || true
+import json, sys
+sp = sys.argv[1]
+with open(sp) as f: cfg = json.load(f)
+pre = cfg.get('hooks', {}).get('PreToolUse', [])
+before = len(pre)
+pre[:] = [e for e in pre if 'rtk-native-hook' not in str(e)]
+if len(pre) != before:
+    with open(sp, 'w') as f: json.dump(cfg, f, indent=2)
+    print('legacy native hook entry removed from settings.json')
+PYSCRIPT
 fi
 
 # ---- Update CLAUDE.md --------------------------------------------------------

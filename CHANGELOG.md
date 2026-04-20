@@ -5,6 +5,19 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Removed
+
+- **RTK native hook (Read/Grep/Glob)**: removed the compression hook for native file-reading tools. The Claude Code hook protocol has no "allow + replace content" primitive, so the deny-based delivery channel was frequently misinterpreted as a refusal -- Claude would bypass it via Bash cat/head or offset/limit re-reads, costing more tokens than the compression saved. The Bash RTK hook (60-90% savings on dev operations) remains active.
+- **hooks/rtk-native-hook.sh**: deleted from the repo.
+
+### Changed
+
+- **install.sh**: section (c) now removes any legacy native hook installation instead of adding one. Settings summary no longer mentions the native hook.
+- **update.sh**: auto-uninstalls the legacy native hook and its `settings.json` entry for users who had it from a previous version.
+- **inject-rtk-claude-md.sh**: RTK section in `~/.claude/CLAUDE.md` simplified -- Bash hook only, with a short note explaining why the native hook was removed.
+
 ## [1.11.7] - 2026-04-17
 
 ### Fixed
