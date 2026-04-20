@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.3] - 2026-04-20
+
+### Fixed
+
+- **forge-init idempotency**: `forge-init.sh` no longer overwrites existing `.forge/memory/MEMORY.md` and `.forge/config.yml` when re-run on a project that already has them. Previous behavior destroyed project memory history (decisions, session logs) whenever the script was executed a second time. Now both files are preserved with an informational message.
+
 ## [1.12.2] - 2026-04-20
 
 ### Added

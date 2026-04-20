@@ -139,7 +139,10 @@ LANGUAGE=$(detect_language "${PROJECT_PATH}")
 echo "  Detected type: ${PROJECT_TYPE}"
 echo "  Detected language: ${LANGUAGE}"
 
-# Generate .forge/config.yml
+# Generate .forge/config.yml (never overwrite an existing one)
+if [ -f "${PROJECT_PATH}/.forge/config.yml" ]; then
+  echo "  config.yml already exists -- preserved (use /forge-resume for existing projects)"
+else
 cat > "${PROJECT_PATH}/.forge/config.yml" << EOF
 # FORGE Configuration
 # Generated: $(date -Iseconds)
@@ -203,9 +206,11 @@ deploy:
   production_url: ""
   require_approval: true
 EOF
+fi
 
-# Create initial MEMORY.md
-cat > "${PROJECT_PATH}/.forge/memory/MEMORY.md" << EOF
+# Create initial MEMORY.md (never overwrite an existing one)
+if [ ! -f "${PROJECT_PATH}/.forge/memory/MEMORY.md" ]; then
+  cat > "${PROJECT_PATH}/.forge/memory/MEMORY.md" << EOF
 # Project Memory
 
 Initialized: $(date -Iseconds)
@@ -218,6 +223,9 @@ Initialized: $(date -Iseconds)
 
 Project initialized with FORGE.
 EOF
+else
+  echo "  MEMORY.md already exists -- preserved"
+fi
 
 # Wiki vault bootstrap -- copy templates and substitute placeholders
 WIKI_TEMPLATE_DIR="$(cd "$(dirname "$0")" && pwd)/templates/wiki"
