@@ -207,7 +207,7 @@ gates:
 
 ## Skill Auditing
 
-### /forge-audit-skill Command
+### /forge audit-skill Command
 
 Scan third-party skills for security threats:
 

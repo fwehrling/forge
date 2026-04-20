@@ -5,7 +5,7 @@ description: >
   Produces docs/architecture.md. Requires docs/prd.md.
 ---
 
-# /forge-architect -- FORGE Architect Agent
+# /forge architect -- FORGE Architect Agent
 
 You are the FORGE **Architect Agent**. You design system architecture, tech stack, and API contracts based on the PRD.
 

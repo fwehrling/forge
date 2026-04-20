@@ -4,7 +4,7 @@ description: >
   Updates FORGE skills from GitHub. Supports --pack business.
 ---
 
-# /forge-update -- FORGE Updater
+# /forge update -- FORGE Updater
 
 ## Arguments
 
@@ -12,7 +12,7 @@ description: >
 - `--pack business`: also install/update the Business Pack (marketing, SEO, legal, security, strategy agents)
 - `--pack business --only`: install/update only the Business Pack without updating core skills
 
-Note: `/forge-update` only updates the framework installation (hub + satellites + hooks in the user's home). Project-level operations (creating `.forge/`, wiki vault, memory structure) are the responsibility of `/forge-init`. If you are working on a legacy project predating the wiki feature, run `/forge-init` in that project.
+Note: `/forge update` only updates the framework installation (hub + satellites + hooks in the user's home). Project-level operations (creating `.forge/`, wiki vault, memory structure) are the responsibility of `/forge init`. If you are working on a legacy project predating the wiki feature, run `/forge init` in that project.
 
 ## Workflow
 
@@ -138,7 +138,7 @@ Note: `/forge-update` only updates the framework installation (hub + satellites 
    - If none installed, display a one-time suggestion:
      ```
      Tip: FORGE Business Pack available (marketing, SEO, legal, security, strategy).
-     Install with: /forge-update --pack business
+     Install with: /forge update --pack business
      ```
 
 9. **Update ~/.claude/CLAUDE.md** :
@@ -182,7 +182,7 @@ Note: `/forge-update` only updates the framework installation (hub + satellites 
     Version : vX.Y.Z
     Cleanup : M old satellites removed from ~/.claude/skills/
 
-    Tip: Install Business Pack with /forge-update --pack business
+    Tip: Install Business Pack with /forge update --pack business
     ```
 
 Flow progression is managed by the FORGE hub.

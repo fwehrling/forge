@@ -32,8 +32,8 @@ Analyze requests along 4 dimensions:
 ### Scale
 - `quick`: Bug fix, single question -> one target
 - `standard`: Feature, module -> single skill
-- `full`: Complete pipeline -> `/forge-auto`
-- `parallel`: Multiple independent tasks -> `/forge-team`
+- `full`: Complete pipeline -> `/forge auto`
+- `parallel`: Multiple independent tasks -> `/forge team`
 
 ## Full Routing Table
 
@@ -105,5 +105,5 @@ Analyze requests along 4 dimensions:
 ## Chaining Rules
 
 - Exactly 2 domains -> chain sequentially (first target, then second)
-- 3+ domains -> delegate to `/forge-auto`
-- "do everything" or unclear scope -> `/forge-auto`
+- 3+ domains -> delegate to `/forge auto`
+- "do everything" or unclear scope -> `/forge auto`

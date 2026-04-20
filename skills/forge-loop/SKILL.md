@@ -6,16 +6,16 @@ description: >
 disable-model-invocation: true
 ---
 
-# /forge-loop -- FORGE Autonomous Loop
+# /forge loop -- FORGE Autonomous Loop
 
 This skill wraps `forge-loop.sh` to provide autonomous iteration with security guardrails.
 
 ## Usage
 
 ```bash
-/forge-loop "Implement authentication module"
-/forge-loop "Fix all failing tests" --mode afk --max-iterations 50
-/forge-loop "Refactor database layer" --mode pair
+/forge loop "Implement authentication module"
+/forge loop "Fix all failing tests" --mode afk --max-iterations 50
+/forge loop "Refactor database layer" --mode pair
 ```
 
 ## Options

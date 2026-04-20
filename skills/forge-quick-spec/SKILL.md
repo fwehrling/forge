@@ -4,7 +4,7 @@ description: >
   Quick track for bug fixes and small changes (< 1 day). Skips PRD/architecture.
 ---
 
-# /forge-quick-spec -- FORGE Quick Track
+# /forge quick-spec -- FORGE Quick Track
 
 Fast-track mode for bug fixes and small changes (<1 day).
 Skips the planning and architecture phases.
@@ -76,8 +76,8 @@ Skips the planning and architecture phases.
       fix: <description>
 
     Next steps:
-      /forge-verify  -- QA audit on the changed code
-      /forge-review  -- Adversarial code review
+      /forge verify  -- QA audit on the changed code
+      /forge review  -- Adversarial code review
     ```
 
 Flow progression is managed by the FORGE hub.

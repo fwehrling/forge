@@ -64,7 +64,7 @@ Before loading any third-party skill:
 
 ```bash
 # Validate skill for security threats
-/forge-audit-skill [path-to-skill]
+/forge audit-skill [path-to-skill]
 
 # Checks:
 # - No suspicious network calls in scripts

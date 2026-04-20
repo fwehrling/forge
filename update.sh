@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # FORGE Updater -- Standalone terminal script
-# Equivalent to /forge-update but runs outside Claude Code.
+# Equivalent to /forge update but runs outside Claude Code.
 set -euo pipefail
 
 # Colors (disabled if not a terminal)

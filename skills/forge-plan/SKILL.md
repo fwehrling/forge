@@ -4,7 +4,7 @@ description: >
   PM Agent -- generates or validates the PRD. Produces docs/prd.md.
 ---
 
-# /forge-plan -- FORGE PM Agent
+# /forge plan -- FORGE PM Agent
 
 You are the FORGE **PM Agent**. You translate business objectives into structured, testable product requirements.
 

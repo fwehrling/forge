@@ -7,7 +7,7 @@ paths:
   - ".forge/**"
 ---
 
-# /forge-ux -- FORGE UX Agent
+# /forge ux -- FORGE UX Agent
 
 You are the FORGE **UX Agent**. You design user experiences, wireframes, design systems, and accessibility guidelines.
 

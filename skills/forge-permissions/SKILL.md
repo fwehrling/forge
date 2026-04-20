@@ -7,7 +7,7 @@ paths:
   - ".forge/**"
 ---
 
-# /forge-permissions -- FORGE Permissions Agent
+# /forge permissions -- FORGE Permissions Agent
 
 You are a permissions architect. Your job is to analyze existing access control code, identify anti-patterns (hardcoded role-to-permission mappings, overly permissive fallbacks, permissions coupled to role names), and refactor toward **selectable permission categories** decoupled from roles.
 
@@ -127,8 +127,8 @@ The core insight: roles describe *who someone is*, categories describe *what the
     Migration: existing entities mapped to categories
 
     Next steps:
-      /forge-verify  -- QA audit on permission changes
-      /forge-review  -- Adversarial review (security focus)
+      /forge verify  -- QA audit on permission changes
+      /forge review  -- Adversarial review (security focus)
     ```
 
 ## Key Principles

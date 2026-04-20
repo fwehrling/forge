@@ -17,7 +17,7 @@
 #   - forge-router-reminder.sh (UserPromptSubmit) -- excessive token cost, user invokes /forge explicitly
 #
 # Idempotent: safe to run multiple times.
-# Called by: install.sh, /forge-update
+# Called by: install.sh, /forge update
 #
 # Usage: bash forge-hooks-setup.sh
 
@@ -361,7 +361,7 @@ local_version=$(tr -d '[:space:]' < "$LOCAL_VERSION_FILE")
 # Compare versions
 now=$(date +%s)
 if [ "$local_version" != "$remote_version" ]; then
-    msg="FORGE update available (v${local_version} -> v${remote_version}). Run /forge-update to update."
+    msg="FORGE update available (v${local_version} -> v${remote_version}). Run /forge update to update."
     printf '%s\n%s\n' "$now" "$msg" > "$CACHE_FILE"
     echo "$msg"
 else

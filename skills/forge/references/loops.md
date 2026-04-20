@@ -6,7 +6,7 @@ FORGE provides autonomous iteration with security guardrails:
 
 ```bash
 # FORGE Autonomous Loop
-/forge-loop "Implement authentication module" --max-iterations 20 --sandbox docker
+/forge loop "Implement authentication module" --max-iterations 20 --sandbox docker
 
 # How it works:
 # 1. Claude receives task + PROMPT.md
@@ -63,9 +63,9 @@ loop:
 
 ```bash
 # Examples
-/forge-loop "task" --mode afk --max-iterations 50   # Overnight
-/forge-loop "task" --mode hitl                       # Default
-/forge-loop "task" --mode pair                       # Pair programming
+/forge loop "task" --mode afk --max-iterations 50   # Overnight
+/forge loop "task" --mode hitl                       # Default
+/forge loop "task" --mode pair                       # Pair programming
 ```
 
 ## State Management

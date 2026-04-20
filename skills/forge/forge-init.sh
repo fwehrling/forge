@@ -141,7 +141,7 @@ echo "  Detected language: ${LANGUAGE}"
 
 # Generate .forge/config.yml (never overwrite an existing one)
 if [ -f "${PROJECT_PATH}/.forge/config.yml" ]; then
-  echo "  config.yml already exists -- preserved (use /forge-resume for existing projects)"
+  echo "  config.yml already exists -- preserved (use /forge resume for existing projects)"
 else
 cat > "${PROJECT_PATH}/.forge/config.yml" << EOF
 # FORGE Configuration
@@ -268,14 +268,14 @@ if [ ! -f "${PROJECT_PATH}/CLAUDE.md" ]; then
 - **Language**: ${LANGUAGE}
 
 ## FORGE Commands
-- \`/forge-plan\` -- Generate/update PRD (PM agent)
-- \`/forge-architect\` -- Generate/update architecture (Architect agent)
-- \`/forge-stories\` -- Generate stories from PRD + architecture (SM agent)
-- \`/forge-build\` -- Implement current story (Dev agent)
-- \`/forge-loop "task"\` -- Autonomous iteration loop
-- \`/forge-verify\` -- Run tests and validation (QA agent)
-- \`/forge-status\` -- Project status overview
-- \`/forge-audit\` -- Security audit (Security agent)
+- \`/forge plan\` -- Generate/update PRD (PM agent)
+- \`/forge architect\` -- Generate/update architecture (Architect agent)
+- \`/forge stories\` -- Generate stories from PRD + architecture (SM agent)
+- \`/forge build\` -- Implement current story (Dev agent)
+- \`/forge loop "task"\` -- Autonomous iteration loop
+- \`/forge verify\` -- Run tests and validation (QA agent)
+- \`/forge status\` -- Project status overview
+- \`/forge audit\` -- Security audit (Security agent)
 
 ## Conventions
 - **Commits**: Conventional format -- \`type(scope): description\`
@@ -319,5 +319,5 @@ echo "✅ FORGE initialized successfully!"
 echo ""
 echo "Next steps:"
 echo "  1. Edit .forge/config.yml to customize settings"
-echo "  2. Run /forge-plan to start planning"
-echo "  3. Run /forge-help for available commands"
+echo "  2. Run /forge plan to start planning"
+echo "  3. Run /forge help for available commands"

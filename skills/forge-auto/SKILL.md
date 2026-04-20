@@ -5,7 +5,7 @@ description: >
   Full pipeline, autonomous mode, end-to-end build.
 ---
 
-# /forge-auto -- FORGE Autopilot Mode
+# /forge auto -- FORGE Autopilot Mode
 
 FORGE takes full control of the development pipeline. It analyzes, decides,
 executes, verifies, and iterates automatically until the objective is complete.
@@ -28,19 +28,19 @@ Planning -> Architecture -> Stories -> Code -> Tests -> Verification -> Deployme
 
    Inspect the project artifacts and sprint status, then execute the appropriate phase:
 
-   - **No artifacts exist** -> Start with `/forge-plan` (generates the PRD)
-   - **PRD exists, no architecture** -> Launch `/forge-architect`
-   - **Architecture exists, no UX design** -> Launch `/forge-ux`
-   - **UX exists, no stories** -> Launch `/forge-stories`
+   - **No artifacts exist** -> Start with `/forge plan` (generates the PRD)
+   - **PRD exists, no architecture** -> Launch `/forge architect`
+   - **Architecture exists, no UX design** -> Launch `/forge ux`
+   - **UX exists, no stories** -> Launch `/forge stories`
    - **Stories exist with "pending" status**:
      - Count unblocked pending stories
-     - 2+ unblocked stories AND Agent Teams available -> Delegate to `/forge-team build [STORY-IDs]` (parallel execution), then continue with QA
-     - Otherwise -> Pick the next unblocked story, launch `/forge-build STORY-XXX` (sequential)
-   - **"in_progress" story exists** -> Resume `/forge-build STORY-XXX`
-   - **Story implemented (Dev tests pass)** -> Launch `/forge-verify STORY-XXX`
-   - **QA verdict = FAIL** -> Increment failure counter. Under 3 failures: fix and re-verify. At 3+ failures: escalate to `/forge-loop "Fix STORY-XXX: [summary]" --mode hitl` which iterates with sandbox guardrails until tests pass
-   - **QA verdict = PASS or CONCERNS** -> Launch `/forge-review` on the story's source code (adversarial analysis)
-   - **Review raises CRITICAL issues** -> Fix, re-run `/forge-verify`, re-run `/forge-review`
+     - 2+ unblocked stories AND Agent Teams available -> Delegate to `/forge team build [STORY-IDs]` (parallel execution), then continue with QA
+     - Otherwise -> Pick the next unblocked story, launch `/forge build STORY-XXX` (sequential)
+   - **"in_progress" story exists** -> Resume `/forge build STORY-XXX`
+   - **Story implemented (Dev tests pass)** -> Launch `/forge verify STORY-XXX`
+   - **QA verdict = FAIL** -> Increment failure counter. Under 3 failures: fix and re-verify. At 3+ failures: escalate to `/forge loop "Fix STORY-XXX: [summary]" --mode hitl` which iterates with sandbox guardrails until tests pass
+   - **QA verdict = PASS or CONCERNS** -> Launch `/forge review` on the story's source code (adversarial analysis)
+   - **Review raises CRITICAL issues** -> Fix, re-run `/forge verify`, re-run `/forge review`
    - **Review is clean** -> Move to the next story
    - **All stories completed** -> Propose new stories or wrap up
 
@@ -49,16 +49,16 @@ Planning -> Architecture -> Stories -> Code -> Tests -> Verification -> Deployme
    - The agent produces its artifacts in `docs/` or `src/`
    - **Agent Teams acceleration**: when entering the build phase with 2+ unblocked stories,
      and `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` is set, autopilot delegates to
-     `/forge-team build` for parallel story implementation (up to 4 Dev + 1 QA).
+     `/forge team build` for parallel story implementation (up to 4 Dev + 1 QA).
      If Agent Teams is not available, stories are built sequentially as before.
 
 4. **Automatic quality gates**:
    - After each story: lint + typecheck + tests > 80% coverage
-   - After each /forge-verify: mandatory QA verdict
-   - After QA PASS/CONCERNS: mandatory /forge-review (adversarial review)
-   - If /forge-review raises critical issues: fix -> re-verify -> re-review
+   - After each /forge verify: mandatory QA verdict
+   - After QA PASS/CONCERNS: mandatory /forge review (adversarial review)
+   - If /forge review raises critical issues: fix -> re-verify -> re-review
    - **Loop escalation**: if 3 consecutive failures on the same story, autopilot
-     delegates to `/forge-loop` in HITL mode with the QA failure summary as task.
+     delegates to `/forge loop` in HITL mode with the QA failure summary as task.
      forge-loop iterates with sandbox guardrails (cost cap, circuit breaker, rollback)
      until tests pass, then returns control to autopilot for re-verification.
    - Ultimate circuit breaker: if forge-loop also fails (hits its own circuit breaker)
@@ -80,22 +80,22 @@ Planning -> Architecture -> Stories -> Code -> Tests -> Verification -> Deployme
 
 ```bash
 # Full autopilot -- FORGE decides everything
-/forge-auto
+/forge auto
 
 # Autopilot with a specific objective
-/forge-auto "Implement the authentication system"
+/forge auto "Implement the authentication system"
 
 # Autopilot without pauses (warning: fully autonomous)
-/forge-auto --no-pause
+/forge auto --no-pause
 
 # Autopilot with pause after stories
-/forge-auto --pause-stories
+/forge auto --pause-stories
 
 # Autopilot with pause after each story
-/forge-auto --pause-each
+/forge auto --pause-each
 
 # Resume autopilot after a pause
-/forge-auto --resume
+/forge auto --resume
 ```
 
 ## Progress Report
@@ -119,21 +119,21 @@ Memory    : .forge/memory/MEMORY.md (up to date)
 Session   : .forge/memory/sessions/YYYY-MM-DD.md
 ```
 
-## How /forge-auto Uses Other FORGE Tools
+## How /forge auto Uses Other FORGE Tools
 
 | Situation | Autopilot delegates to | Condition |
 | --- | --- | --- |
-| 2+ unblocked stories ready | `/forge-team build` (parallel) | Agent Teams enabled |
-| 1 story ready | `/forge-build STORY-XXX` (sequential) | Always |
-| Story implemented (Dev tests pass) | `/forge-verify STORY-XXX` (QA audit) | Always |
-| QA verdict PASS/CONCERNS | `/forge-review src/{MODULE}/` (adversarial review) | Always |
-| Review raises critical issues | Fix -> `/forge-verify` -> `/forge-review` | Always |
-| 3 consecutive failures on a story | `/forge-loop` (iterative fix) | Always |
+| 2+ unblocked stories ready | `/forge team build` (parallel) | Agent Teams enabled |
+| 1 story ready | `/forge build STORY-XXX` (sequential) | Always |
+| Story implemented (Dev tests pass) | `/forge verify STORY-XXX` (QA audit) | Always |
+| QA verdict PASS/CONCERNS | `/forge review src/{MODULE}/` (adversarial review) | Always |
+| Review raises critical issues | Fix -> `/forge verify` -> `/forge review` | Always |
+| 3 consecutive failures on a story | `/forge loop` (iterative fix) | Always |
 | forge-loop also fails | Pause + report to user | Ultimate circuit breaker |
 
-## Difference with /forge-loop
+## Difference with /forge loop
 
-| Aspect         | /forge-loop                     | /forge-auto                             |
+| Aspect         | /forge loop                     | /forge auto                             |
 | -------------- | ------------------------------- | --------------------------------------- |
 | **Scope**      | A specific task                 | The entire project                      |
 | **Decision**   | The user chooses the task       | FORGE decides the next action           |
@@ -141,23 +141,23 @@ Session   : .forge/memory/sessions/YYYY-MM-DD.md
 | **Memory**     | Local fix_plan.md              | Persistent project memory               |
 | **Progression**| Linear (iterations)            | Full pipeline (plan -> deploy)           |
 | **Use case**   | "Implement this feature"       | "Build this project from A to Z"        |
-| **Relation**   | Standalone or called by auto   | Calls /forge-loop on difficult stories  |
+| **Relation**   | Standalone or called by auto   | Calls /forge loop on difficult stories  |
 
 ## Coexistence with Manual Mode
 
 Autopilot and manual commands are 100% compatible:
 
-- You can start with `/forge-auto`, pause, then continue manually
-- You can work manually then launch `/forge-auto --resume` to continue
+- You can start with `/forge auto`, pause, then continue manually
+- You can work manually then launch `/forge auto --resume` to continue
 - Memory is shared: both modes read/write the same files
-- `/forge-status` works in both modes
+- `/forge status` works in both modes
 
 ## Notes
 
 - Autopilot respects quality gates without exception -- skipping a gate breaks the trust contract that lets `--no-pause` run unattended
 - The circuit breaker protects against infinite loops
 - Persistent memory ensures continuity between sessions
-- Compatible with projects initialized via `/forge-init`
+- Compatible with projects initialized via `/forge init`
 - Also works for resuming existing projects (analyzes the state)
 
 Flow progression is managed by the FORGE hub. This skill acts as a delegated orchestrator -- it is invoked by the hub and may load other satellites as part of its orchestration role.

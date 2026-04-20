@@ -310,11 +310,11 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.12.4**: `/forge-update` scope cleanup -- removed the wiki retrofit side effect and the `--full` flag. Framework updates (hub, satellites, hooks) and project initialization (`.forge/`, wiki, memory) are now strictly separated. Legacy projects missing `.forge/wiki/` must run `/forge init` explicitly.
+**Latest -- v1.12.4**: `/forge update` scope cleanup -- removed the wiki retrofit side effect and the `--full` flag. Framework updates (hub, satellites, hooks) and project initialization (`.forge/`, wiki, memory) are now strictly separated. Legacy projects missing `.forge/wiki/` must run `/forge init` explicitly.
 
 **v1.12.3**: `forge-init.sh` idempotency fix -- `.forge/config.yml` and `.forge/memory/MEMORY.md` are now preserved on re-run instead of being overwritten, protecting project history (decisions, session logs) when the script executes a second time.
 
-**v1.12.2**: `/forge init` now retrofits `.forge/wiki/` on legacy projects already initialized without the vault -- makes init symmetrical with `/forge-update` for the wiki retrofit path.
+**v1.12.2**: `/forge init` now retrofits `.forge/wiki/` on legacy projects already initialized without the vault -- makes init symmetrical with `/forge update` for the wiki retrofit path.
 
 **v1.12.1**: README fix -- correct the "specialized agents" count (1 hub + 26 satellites, not 27) and mark `lite` as the default forge-slim level (aligning with the v1.11.7 behavior change).
 

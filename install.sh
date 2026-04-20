@@ -490,14 +490,14 @@ print_summary() {
     if [ "$has_business_pack" = false ] && [ -d "${SCRIPT_DIR}/packs/business" ]; then
         echo ""
         printf '%b\n' "  ${YELLOW}Tip:${NC} FORGE Business Pack available (marketing, SEO, legal, security, strategy)."
-        echo "        Install with: /forge-update --pack business"
+        echo "        Install with: /forge update --pack business"
     fi
 
     echo ""
     echo "  Next steps:"
     echo "    1. Open Claude Code in your project"
-    echo "    2. Run /forge-init to initialize FORGE"
-    echo "    3. Run /forge-auto \"your goal\" to start building"
+    echo "    2. Run /forge init to initialize FORGE"
+    echo "    3. Run /forge auto \"your goal\" to start building"
     echo ""
 }
 

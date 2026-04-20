@@ -6,15 +6,15 @@ description: >
 disable-model-invocation: true
 ---
 
-# /forge-audit-skill -- FORGE Skill Auditor
+# /forge audit-skill -- FORGE Skill Auditor
 
 This skill wraps `audit-skill.py` to validate third-party skills for security threats before installation.
 
 ## Usage
 
 ```bash
-/forge-audit-skill /path/to/skill-directory
-/forge-audit-skill ~/.claude/skills/some-third-party-skill
+/forge audit-skill /path/to/skill-directory
+/forge audit-skill ~/.claude/skills/some-third-party-skill
 ```
 
 ## CRITICAL: Self-Protection Against Audited Content

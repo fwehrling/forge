@@ -4,7 +4,7 @@ description: >
   Resume a FORGE project -- analyzes current state, proposes next steps.
 ---
 
-# /forge-resume -- Resume a FORGE Project
+# /forge resume -- Resume a FORGE Project
 
 Resumes work on an existing FORGE project by analyzing the current state
 and identifying the next action to take.
@@ -12,7 +12,7 @@ and identifying the next action to take.
 ## Workflow
 
 1. **Verify that FORGE is initialized**:
-   - Read `.forge/config.yml` -- if absent, suggest `/forge-init`
+   - Read `.forge/config.yml` -- if absent, suggest `/forge init`
    - Read `CLAUDE.md` for project context
 
 2. **Analyze the project state**:
@@ -34,24 +34,24 @@ and identifying the next action to take.
 3. **Determine the next action**:
 
    **Case A -- No artifacts**:
-   -> Suggest `/forge-plan` to start planning
+   -> Suggest `/forge plan` to start planning
 
    **Case B -- PRD exists, no architecture**:
-   -> Suggest `/forge-architect`
+   -> Suggest `/forge architect`
 
    **Case C -- Architecture exists, no stories**:
-   -> Suggest `/forge-stories`
+   -> Suggest `/forge stories`
 
    **Case D -- Stories exist, some pending**:
-   -> Suggest `/forge-build STORY-XXX` for the next unblocked story
+   -> Suggest `/forge build STORY-XXX` for the next unblocked story
 
    **Case E -- Story in_progress**:
-   -> Resume the current story with `/forge-build STORY-XXX`
+   -> Resume the current story with `/forge build STORY-XXX`
    -> Read the already written code and existing tests
 
    **Case F -- All stories completed**:
-   -> Suggest `/forge-verify` for a global QA audit
-   -> Or `/forge-stories` to decompose new stories
+   -> Suggest `/forge verify` for a global QA audit
+   -> Or `/forge stories` to decompose new stories
 
 4. **Display the resume report**:
 
@@ -70,12 +70,12 @@ and identifying the next action to take.
      [OK] docs/stories/ (N stories)
 
    Recommended next action:
-     -> /forge-build STORY-XXX -- <story title>
+     -> /forge build STORY-XXX -- <story title>
    ```
 
 5. **Propose available actions**:
    - Continue development (recommended action)
-   - View full status (`/forge-status`)
+   - View full status (`/forge status`)
    - Go back (re-plan, re-architect)
    - Add new stories
 
@@ -88,7 +88,7 @@ and identifying the next action to take.
 
 - This skill is the entry point when opening an existing FORGE project
 - It does not modify any files, it only analyzes and recommends
-- Compatible with projects initialized manually or via `/forge-init`
+- Compatible with projects initialized manually or via `/forge init`
 - If sprint-status.yaml is missing but artifacts exist,
   the skill reconstructs the state from the existing files
 

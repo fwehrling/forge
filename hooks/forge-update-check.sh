@@ -44,7 +44,7 @@ local_version=$(tr -d '[:space:]' < "$LOCAL_VERSION_FILE")
 # Compare versions
 now=$(date +%s)
 if [ "$local_version" != "$remote_version" ]; then
-    msg="FORGE update available (v${local_version} -> v${remote_version}). Run /forge-update to update."
+    msg="FORGE update available (v${local_version} -> v${remote_version}). Run /forge update to update."
     # Write cache with notification
     printf '%s\n%s\n' "$now" "$msg" > "$CACHE_FILE"
     echo "$msg"

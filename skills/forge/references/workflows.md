@@ -23,19 +23,19 @@ Tests are integrated at EVERY stage of the pipeline, not just the verification p
 ### Responsibilities per Agent
 
 ```
-SM (/forge-stories)  -> Specifies tests in each story:
+SM (/forge stories)  -> Specifies tests in each story:
                         - Unit test cases (TU-x) per function/component
                         - Mapping AC-x -> functional test
                         - Test data / fixtures
                         - Test files to create
 
-Dev (/forge-build)   -> Writes AND runs tests alongside code:
+Dev (/forge build)   -> Writes AND runs tests alongside code:
                         - Unit tests BEFORE code (TDD)
                         - Functional tests for each AC-x
                         - Coverage >80% on new code
                         - Story NOT done if tests fail
 
-QA (/forge-verify)   -> Audits, completes, and certifies:
+QA (/forge verify)   -> Audits, completes, and certifies:
                         - Audit: did the Dev write all required tests?
                         - Completes: integration, E2E, performance, security tests
                         - Certifies: GO/NO-GO verdict
@@ -115,16 +115,16 @@ Each artifact supports 3 operating modes:
 ```
 # Automatic mode detection:
 # - If docs/prd.md does not exist -> Create mode
-# - If /forge-plan --validate -> Validate mode
-# - If /forge-plan "add feature X" -> Edit mode (PRD already exists)
+# - If /forge plan --validate -> Validate mode
+# - If /forge plan "add feature X" -> Edit mode (PRD already exists)
 ```
 
-## Sprint Status (/forge-status)
+## Sprint Status (/forge status)
 
 FORGE maintains a `.forge/sprint-status.yaml` file for tracking:
 
 ```yaml
-# Read via /forge-status
+# Read via /forge status
 sprint:
   id: 1
   started_at: 'YYYY-MM-DD'

@@ -71,7 +71,7 @@ npm install -g @johnlindquist/n8n-nodes-claudecode
       "type": "@johnlindquist/n8n-nodes-claudecode",
       "name": "Run FORGE Tests",
       "parameters": {
-        "prompt": "/forge-verify --ci",
+        "prompt": "/forge verify --ci",
         "projectPath": "/srv/my-project"
       }
     },
@@ -88,7 +88,7 @@ npm install -g @johnlindquist/n8n-nodes-claudecode
       "type": "@johnlindquist/n8n-nodes-claudecode",
       "name": "Build Production",
       "parameters": {
-        "prompt": "/forge-build --production",
+        "prompt": "/forge build --production",
         "projectPath": "/srv/my-project"
       }
     },
@@ -129,7 +129,7 @@ npm install -g @johnlindquist/n8n-nodes-claudecode
       "type": "@johnlindquist/n8n-nodes-claudecode",
       "name": "Generate Story",
       "parameters": {
-        "prompt": "/forge-stories --from-issue '{{$json.issue.body}}'",
+        "prompt": "/forge stories --from-issue '{{$json.issue.body}}'",
         "projectPath": "/srv/my-project"
       }
     },
@@ -137,7 +137,7 @@ npm install -g @johnlindquist/n8n-nodes-claudecode
       "type": "@johnlindquist/n8n-nodes-claudecode",
       "name": "Autonomous Loop Implementation",
       "parameters": {
-        "prompt": "/forge-loop 'Implement {{$json.storyId}}' --max-iterations 20 --sandbox docker",
+        "prompt": "/forge loop 'Implement {{$json.storyId}}' --max-iterations 20 --sandbox docker",
         "projectPath": "/srv/my-project",
         "timeout": 3600000
       }
@@ -207,9 +207,9 @@ npm install -g @johnlindquist/n8n-nodes-claudecode
 Generate n8n workflows from FORGE config:
 
 ```bash
-/forge-generate-workflow --type ci-cd --output n8n-deploy.json
-/forge-generate-workflow --type monitoring --output n8n-monitor.json
-/forge-generate-workflow --type auto-implement --output n8n-auto.json
+/forge generate-workflow --type ci-cd --output n8n-deploy.json
+/forge generate-workflow --type monitoring --output n8n-monitor.json
+/forge generate-workflow --type auto-implement --output n8n-auto.json
 ```
 
 The generator reads `.forge/config.yml` for:

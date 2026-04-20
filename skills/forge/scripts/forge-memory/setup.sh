@@ -143,7 +143,7 @@ if [ -n "${PROJECT_ROOT}" ]; then
     # Check if MEMORY.md needs enrichment (still has placeholders)
     if grep -q "à compléter" "${MEMORY_FILE}" 2>/dev/null; then
         echo "[note] MEMORY.md contains placeholders -- it needs enrichment."
-        echo "   Run your FORGE agents (/forge-architect, /forge-plan) to populate it,"
+        echo "   Run your FORGE agents (/forge architect, /forge plan) to populate it,"
         echo "   or manually fill in project context, decisions, and patterns."
         echo ""
     fi

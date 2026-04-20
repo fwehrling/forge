@@ -4,7 +4,7 @@ description: >
   Initialize FORGE in a project -- creates .forge/ structure, CLAUDE.md, detects tech stack.
 ---
 
-# /forge-init -- FORGE Initialization
+# /forge init -- FORGE Initialization
 
 Initializes the FORGE framework in a new or existing project.
 
@@ -17,7 +17,7 @@ Initializes the FORGE framework in a new or existing project.
    - If already initialized:
      - Run the **wiki retrofit** (step 2) if `.forge/wiki/` is missing (legacy project predating the wiki feature)
      - Still run Token Saver setup (step 9)
-     - Suggest `/forge-resume` for project work
+     - Suggest `/forge resume` for project work
 
 2. **Retrofit wiki vault** (legacy project with `.forge/config.yml` but no `.forge/wiki/`):
 
@@ -107,7 +107,7 @@ Initializes the FORGE framework in a new or existing project.
      - Detected project name and type
      - List of available FORGE commands
      - Conventions (commits, tests, branches)
-     - Architecture section (placeholder -> to be filled by `/forge-architect`)
+     - Architecture section (placeholder -> to be filled by `/forge architect`)
    - If the file already exists, offer to add the FORGE Commands section
 
 7. **Configure `.gitignore`**:
@@ -116,7 +116,7 @@ Initializes the FORGE framework in a new or existing project.
 8. **Verify FORGE installation**:
    - Confirm hub exists at `~/.claude/skills/forge/SKILL.md`
    - Confirm satellites exist at `~/.forge/skills/` (installed globally by `install.sh`)
-   - If missing, suggest running `install.sh` or `/forge-update`
+   - If missing, suggest running `install.sh` or `/forge update`
    - Do NOT copy skills into the project directory -- FORGE skills are global
 
 9. **Install Token Saver** (global, idempotent):
@@ -125,7 +125,7 @@ Initializes the FORGE framework in a new or existing project.
    - Removes legacy hooks (`command-validator.js`, `output-filter.js`) if present
    - Patches `~/.claude/settings.json` to add the hook and permission
    - Covered commands: git, npm, pnpm, yarn, bun, pip, pytest, go, cargo, docker, make, mvn, gradle, dotnet, swift, tsc
-   - Note: Additional FORGE hooks (update-check, memory-sync, statusline) are installed via `install.sh` or `/forge-update`
+   - Note: Additional FORGE hooks (update-check, memory-sync, statusline) are installed via `install.sh` or `/forge update`
 
 10. **Install forge-memory CLI** (global, idempotent):
    - Check if `forge-memory` is in PATH: `which forge-memory`
@@ -146,14 +146,14 @@ Initializes the FORGE framework in a new or existing project.
    - Detected stack
    - Created files
    - Recommended next steps:
-     - `/forge-plan` to start planning
-     - `/forge-status` to view the project state
+     - `/forge plan` to start planning
+     - `/forge status` to view the project state
 
 ## Notes
 
 - The shell script `forge-init.sh` (in `.claude/skills/forge/`) contains the basic initialization logic
 - This skill extends the script with advanced detection and Claude interactivity
 - Never overwrite an existing `CLAUDE.md` without asking for confirmation
-- Never overwrite an existing `.forge/config.yml` -> suggest `/forge-resume` instead
+- Never overwrite an existing `.forge/config.yml` -> suggest `/forge resume` instead
 
 Flow progression is managed by the FORGE hub.

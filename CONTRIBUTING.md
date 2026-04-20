@@ -56,10 +56,10 @@ Each skill is a directory under `skills/` containing at minimum a `SKILL.md` fil
 name: forge-my-skill
 description: >
   Short description of what the skill does.
-  Usage: /forge-my-skill
+  Usage: /forge my-skill
 ---
 
-# /forge-my-skill -- Title
+# /forge my-skill -- Title
 
 ## French Language Rule
 
@@ -142,8 +142,9 @@ rm -rf /tmp/forge-init-test
 
 ```bash
 # Verify every command in Quick Start has a matching skill
-grep '/forge-' skills/forge/SKILL.md | grep -oP '/forge-[\w-]+' | sort -u | while read cmd; do
-  skill="${cmd#/}"
+grep -oE '/forge [a-z-]+' skills/forge/SKILL.md | sort -u | while read cmd; do
+  sub="${cmd#/forge }"
+  skill="forge-${sub}"
   [ -f "skills/${skill}/SKILL.md" ] || echo "MISSING: ${skill}"
 done
 

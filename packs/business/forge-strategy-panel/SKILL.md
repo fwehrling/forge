@@ -78,7 +78,7 @@ Progressive questioning from framework-specific to integrative, developing strat
 ## Limites
 
 - Pas d'exécution opérationnelle (analyse stratégique uniquement)
-- Pas de conseil juridique ou fiscal (utiliser /forge-legal)
+- Pas de conseil juridique ou fiscal (utiliser /forge legal)
 - Les experts sont des modèles mentaux, pas des oracles -- le jugement final revient à l'utilisateur
 
 Flow progression is managed by the FORGE hub.

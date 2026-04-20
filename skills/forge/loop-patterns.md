@@ -9,7 +9,7 @@ guardrails and structured task management.
 ## Pattern 1: Single Task Loop
 
 ```bash
-/forge-loop "Implement user registration endpoint" \
+/forge loop "Implement user registration endpoint" \
   --max-iterations 20 \
   --story docs/stories/story-001.md
 ```
@@ -27,17 +27,17 @@ How it works:
 
 ```bash
 # Phase 1: Data models
-/forge-loop "Phase 1: Create data models and migrations" \
+/forge loop "Phase 1: Create data models and migrations" \
   --max-iterations 15 \
   --completion-promise "PHASE1_DONE"
 
 # Phase 2: API layer (depends on Phase 1)
-/forge-loop "Phase 2: Build REST API endpoints" \
+/forge loop "Phase 2: Build REST API endpoints" \
   --max-iterations 25 \
   --completion-promise "PHASE2_DONE"
 
 # Phase 3: Frontend
-/forge-loop "Phase 3: Build UI components" \
+/forge loop "Phase 3: Build UI components" \
   --max-iterations 30 \
   --completion-promise "PHASE3_DONE"
 ```
@@ -51,11 +51,11 @@ git worktree add ../project-api -b feature/api
 
 # Terminal 1: Auth feature
 cd ../project-auth
-/forge-loop "Implement authentication" --max-iterations 20
+/forge loop "Implement authentication" --max-iterations 20
 
 # Terminal 2: API feature (simultaneously)
 cd ../project-api
-/forge-loop "Build REST API" --max-iterations 25
+/forge loop "Build REST API" --max-iterations 25
 ```
 
 ## Pattern 4: Overnight Batch
@@ -152,7 +152,7 @@ are still failing.
 
 ```bash
 # Loop with explicit task tracking via fix_plan.md
-/forge-loop "Fix all failing tests in auth module" \
+/forge loop "Fix all failing tests in auth module" \
   --fix-plan docs/fix-plan-auth.md \
   --mode hitl
 ```
@@ -203,7 +203,7 @@ Benefits:
 
 ```bash
 # Loop with live monitoring (tail -f log)
-/forge-loop "Implement search feature" \
+/forge loop "Implement search feature" \
   --monitor \
   --mode hitl
 ```
@@ -216,7 +216,7 @@ observe progress and intervene every 5 iterations.
 
 ```bash
 # Overnight with strict rate limiting and AFK mode
-/forge-loop "Add comprehensive tests" \
+/forge loop "Add comprehensive tests" \
   --mode afk \
   --max-iterations 100 \
   --cost-cap 25.00 \
@@ -244,4 +244,4 @@ Recommendations:
 - Use Haiku for simple, repetitive tasks (docs, types)
 - Use Opus only for complex architecture decisions
 - Set cost caps in `.forge/config.yml`
-- Monitor with `/forge-status --costs`
+- Monitor with `/forge status --costs`

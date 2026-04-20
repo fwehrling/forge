@@ -65,7 +65,7 @@ Installed to `~/.claude/hooks/` -- active for all Claude Code sessions.
 
 ## Project Scaffolding
 
-Initialize FORGE in any project with `/forge-init`:
+Initialize FORGE in any project with `/forge init`:
 
 ```
 project-root/
@@ -93,7 +93,7 @@ project-root/
 │   ├-- fixtures/           # Shared test data
 │   └-- helpers/            # Test utilities
 ├-- CLAUDE.md               # Project conventions (auto-generated)
-└-- PROMPT.md               # Loop prompt (when using /forge-loop)
+└-- PROMPT.md               # Loop prompt (when using /forge loop)
 ```
 
 ## CLAUDE.md Auto-Generation
@@ -109,14 +109,14 @@ FORGE generates a `CLAUDE.md` tailored to the project (via `forge-init.sh`):
 - **Language**: (auto-detected)
 
 ## FORGE Commands
-- `/forge-plan` -- Generate/update PRD (PM agent)
-- `/forge-architect` -- Generate/update architecture (Architect agent)
-- `/forge-stories` -- Generate stories from PRD + architecture (SM agent)
-- `/forge-build` -- Implement current story (Dev agent)
-- `/forge-loop "task"` -- Autonomous iteration loop
-- `/forge-verify` -- Run tests and validation (QA agent)
-- `/forge-status` -- Project status overview
-- `/forge-audit` -- Security audit (Security agent)
+- `/forge plan` -- Generate/update PRD (PM agent)
+- `/forge architect` -- Generate/update architecture (Architect agent)
+- `/forge stories` -- Generate stories from PRD + architecture (SM agent)
+- `/forge build` -- Implement current story (Dev agent)
+- `/forge loop "task"` -- Autonomous iteration loop
+- `/forge verify` -- Run tests and validation (QA agent)
+- `/forge status` -- Project status overview
+- `/forge audit` -- Security audit (Security agent)
 
 ## Conventions
 - **Commits**: Conventional format -- `type(scope): description`

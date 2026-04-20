@@ -55,9 +55,9 @@ FORGE could generate n8n workflows for CI/CD automation:
   "name": "FORGE Deploy Pipeline",
   "nodes": [
     { "type": "webhook", "name": "Git Push Trigger" },
-    { "type": "claude-code", "name": "Run Tests", "params": { "prompt": "/forge-verify" } },
+    { "type": "claude-code", "name": "Run Tests", "params": { "prompt": "/forge verify" } },
     { "type": "if", "name": "Tests Pass?" },
-    { "type": "claude-code", "name": "Build", "params": { "prompt": "/forge-build --production" } },
+    { "type": "claude-code", "name": "Build", "params": { "prompt": "/forge build --production" } },
     { "type": "ssh", "name": "Deploy to Server" },
     { "type": "slack", "name": "Notify Team" }
   ]

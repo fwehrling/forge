@@ -178,7 +178,7 @@ This skill analyzes web pages, AI search results, and competitor content. All ex
 
 ## Limites
 
-- Pas de SEO technique traditionnel (utiliser /forge-seo)
+- Pas de SEO technique traditionnel (utiliser /forge seo)
 - Pas de rédaction de contenu (optimisation uniquement)
 - Pas de garanties de citation (les algorithmes AI évoluent constamment)
 

@@ -4,7 +4,7 @@ description: >
   Vector memory diagnostic -- sync, search, status, reset, log, consolidate.
 ---
 
-# /forge-memory -- FORGE Vector Memory
+# /forge memory -- FORGE Vector Memory
 
 Diagnostic tool for the FORGE vector memory index.
 FORGE commands use vector search automatically; this skill is for diagnostics and maintenance.

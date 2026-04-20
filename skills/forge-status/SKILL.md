@@ -4,7 +4,7 @@ description: >
   Sprint dashboard -- stories, metrics, progress. Reads .forge/sprint-status.yaml.
 ---
 
-# /forge-status -- FORGE Sprint Status
+# /forge status -- FORGE Sprint Status
 
 Displays the current sprint status by reading `.forge/sprint-status.yaml`.
 
@@ -45,7 +45,7 @@ Displays the current sprint status by reading `.forge/sprint-status.yaml`.
 
 4. **Identify next story**: First unblocked `pending` story
 
-5. **Suggest next action**: `/forge-build STORY-XXX`
+5. **Suggest next action**: `/forge build STORY-XXX`
 
 6. **Backlog section**: List all story files in `docs/stories/` and compare with stories in the sprint. Display stories NOT in the current sprint as "Backlog" with their ID and title (read from the story file's front matter or first heading). This gives visibility on upcoming work outside the sprint.
 

@@ -34,7 +34,7 @@ Session entries are tagged with `[agent_name]` and `(STORY-ID)` for filtering an
 
 ## Memory Protocol
 
-Every FORGE **agent command** follows this protocol (utility commands like `/forge-status`, `/forge-resume`, and `/forge-init` read memory but do not write back via `forge-memory log`).
+Every FORGE **agent command** follows this protocol (utility commands like `/forge status`, `/forge resume`, and `/forge init` read memory but do not write back via `forge-memory log`).
 
 ### With vector search installed (recommended)
 
@@ -93,7 +93,7 @@ flowchart TD
 
 ## Memory + Autopilot Integration
 
-The memory system is what makes `/forge-auto` intelligent:
+The memory system is what makes `/forge auto` intelligent:
 
 - FORGE reads MEMORY.md to know exactly where the project is
 - It reads session logs to understand recent activity and avoid repeating work

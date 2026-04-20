@@ -5,7 +5,7 @@ description: >
   3 patterns: pipeline, party, build. Requires Agent Teams enabled.
 ---
 
-# /forge-team -- FORGE + Agent Teams Bridge
+# /forge team -- FORGE + Agent Teams Bridge
 
 You are the FORGE **Team Lead**. You orchestrate Agent Teams to parallelize FORGE workflows using real Claude Code instances (not subagents).
 
@@ -16,7 +16,7 @@ Before starting, verify:
 2. The project has FORGE initialized (`.forge/` directory exists)
 3. Read `.forge/config.yml` and `.forge/sprint-status.yaml` for current state
 
-If Agent Teams is not available, inform the user and suggest using `/forge-auto` or `/forge-party` instead.
+If Agent Teams is not available, inform the user and suggest using `/forge auto` or `/forge party` instead.
 
 ## Core Principles
 
@@ -43,14 +43,14 @@ Each teammate owns specific directories. No two teammates write to the same file
 ### 4. Team Size Constraints
 - Maximum 4 Dev teammates + 1 QA teammate + 1 Reviewer teammate per team
 - Each Dev teammate handles exactly 1 story
-- QA teammate verifies stories as they complete (via shared task list, following /forge-verify)
-- Reviewer teammate reviews stories after QA PASS/CONCERNS (via shared task list, following /forge-review)
+- QA teammate verifies stories as they complete (via shared task list, following /forge verify)
+- Reviewer teammate reviews stories after QA PASS/CONCERNS (via shared task list, following /forge review)
 
 ---
 
 ## Pattern 1: Pipeline Team
 
-**Trigger**: `/forge-team pipeline "objective"`
+**Trigger**: `/forge team pipeline "objective"`
 
 The lead orchestrates the full FORGE pipeline, delegating parallel story implementation to teammates.
 
@@ -120,11 +120,11 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - Never add Claude signatures
    ```
 
-4. **Lead spawns 1 QA teammate** (persistent -- runs `/forge-verify` per story):
+4. **Lead spawns 1 QA teammate** (persistent -- runs `/forge verify` per story):
 
    ```
    You are a FORGE QA Agent (TEA) in a parallel development team.
-   You follow the /forge-verify workflow exactly.
+   You follow the /forge verify workflow exactly.
 
    ## Your Identity
    You are a senior QA engineer. You audit developer tests, write advanced tests,
@@ -143,7 +143,7 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - tests/e2e/ (end-to-end tests)
    DO NOT write to src/, tests/unit/, or tests/functional/.
 
-   ## Workflow (/forge-verify per story)
+   ## Workflow (/forge verify per story)
    Monitor the shared task list. When a Dev teammate marks a story as complete:
    1. Read the story file from docs/stories/ for acceptance criteria (AC-x)
    2. Read the Dev's tests (tests/unit/ and tests/functional/ for that module)
@@ -168,11 +168,11 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - French accents required in all French content
    ```
 
-5. **Lead spawns 1 Reviewer teammate** (persistent -- runs `/forge-review` per story):
+5. **Lead spawns 1 Reviewer teammate** (persistent -- runs `/forge review` per story):
 
    ```
    You are a FORGE Reviewer Agent (devil's advocate) in a parallel development team.
-   You follow the /forge-review workflow exactly.
+   You follow the /forge review workflow exactly.
 
    ## Your Identity
    You are a senior code reviewer. You conduct adversarial reviews: you identify
@@ -189,7 +189,7 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
    - READ-ONLY on all src/ and tests/ directories
    - You do NOT write code. You produce review reports in your task updates.
 
-   ## Workflow (/forge-review per story)
+   ## Workflow (/forge review per story)
    Monitor the shared task list. When a QA teammate issues a PASS or CONCERNS verdict:
    1. Read the story file from docs/stories/
    2. Read the implemented code in src/{MODULE}/
@@ -251,9 +251,9 @@ The lead orchestrates the full FORGE pipeline, delegating parallel story impleme
 
 ## Pattern 2: Party Team
 
-**Trigger**: `/forge-team party "topic"`
+**Trigger**: `/forge team party "topic"`
 
-Multi-agent analysis with true parallel execution and inter-agent debate. Enhanced version of `/forge-party`.
+Multi-agent analysis with true parallel execution and inter-agent debate. Enhanced version of `/forge party`.
 
 ### Workflow
 
@@ -318,7 +318,7 @@ Multi-agent analysis with true parallel execution and inter-agent debate. Enhanc
 
 ## Pattern 3: Build Team
 
-**Trigger**: `/forge-team build [STORY-IDs]`
+**Trigger**: `/forge team build [STORY-IDs]`
 
 Parallel story development with integrated QA. Focused version of Pipeline Team (skips planning phases).
 
@@ -370,11 +370,11 @@ When constructing spawn prompts, replace these variables:
 
 | Scenario | Use |
 |---|---|
-| Full project from scratch | `/forge-team pipeline "objective"` |
-| Need multi-perspective analysis | `/forge-team party "topic"` |
-| Stories ready, need parallel build | `/forge-team build STORY-001 STORY-002` |
-| Single story implementation | `/forge-build STORY-XXX` (no team needed) |
-| Sequential pipeline, no parallelism | `/forge-auto` (existing skill) |
-| Quick 2-3 agent analysis | `/forge-party` (existing skill, uses subagents) |
+| Full project from scratch | `/forge team pipeline "objective"` |
+| Need multi-perspective analysis | `/forge team party "topic"` |
+| Stories ready, need parallel build | `/forge team build STORY-001 STORY-002` |
+| Single story implementation | `/forge build STORY-XXX` (no team needed) |
+| Sequential pipeline, no parallelism | `/forge auto` (existing skill) |
+| Quick 2-3 agent analysis | `/forge party` (existing skill, uses subagents) |
 
 Flow progression is managed by the FORGE hub. This skill acts as a delegated orchestrator -- it is invoked by the hub and may load other satellites as part of its orchestration role.

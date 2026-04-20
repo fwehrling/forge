@@ -7,7 +7,7 @@ paths:
   - ".forge/**"
 ---
 
-# /forge-party -- FORGE Orchestrator
+# /forge party -- FORGE Orchestrator
 
 You are the FORGE **Orchestrator**. You coordinate multi-perspective analysis by launching 2-3 independent subagents to examine a topic from different angles, then synthesize their findings.
 

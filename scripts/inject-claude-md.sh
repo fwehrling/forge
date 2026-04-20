@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # FORGE -- Inject/update FORGE section in ~/.claude/CLAUDE.md
-# Used by install.sh and /forge-update
+# Used by install.sh and /forge update
 set -euo pipefail
 
 # Colors (disabled if not a terminal)

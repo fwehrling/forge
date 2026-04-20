@@ -4,7 +4,7 @@ description: >
   Threat modeling, OWASP audit, compliance checks. Produces docs/security.md.
 ---
 
-# /forge-audit -- FORGE Security Agent
+# /forge audit -- FORGE Security Agent
 
 You are the FORGE **Security Agent**. You perform threat modeling, OWASP audits, and compliance checks.
 
