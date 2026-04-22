@@ -5,6 +5,17 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.13.0] - 2026-04-22
+
+### Added
+
+- **Wiki auto-ingest on every session**: the `forge-memory-sync` Stop hook now also scans the project for commits since the last capture and uncommitted files, writes a raw note under `.forge/wiki/raw/notes/auto-<timestamp>.md`, appends a line to `.forge/wiki/log.md`, and queues a `.forge/wiki/pending-ingest.yaml` entry. The hub drains this queue at the start of the next session via `forge-wiki` in `ingest` mode with the new `pending:` source type, then deletes the file. This closes the gap where only `/forge ship`, QA PASS, and debug handoffs were feeding the wiki: now every Claude response on a FORGE project contributes to the Obsidian-compatible knowledge base, whether the user invoked `/forge` or not.
+- **New wiki ingest source type**: `pending:.forge/wiki/pending-ingest.yaml` documented in `skills/forge-wiki/SKILL.md` describing how the hub consumes Stop-hook captures as a single batch (stories-style update of touched concept pages + one rollup log entry).
+
+### Changed
+
+- **Hub startup protocol**: `skills/forge/SKILL.md` now has a dedicated step 4 (Drain pending wiki ingest) before intent classification, so the first action on any session that had Stop-hook captures is to compile them into the wiki.
+
 ## [1.12.6] - 2026-04-20
 
 ### Fixed
