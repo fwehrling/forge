@@ -555,8 +555,8 @@ echo "    Created forge-memory-sync.sh"
 cat > "$HOOKS_DIR/forge-skill-tracker.sh" << 'SKILLTRACKEREOF'
 #!/bin/bash
 # FORGE Skill Tracker -- writes/clears active forge skill to temp file
-# Called by PreToolUse[Skill] and Stop hooks
-# Usage: forge-skill-tracker.sh pre|post|clear
+# Called by PreToolUse[Skill], PreToolUse[Read] and Stop hooks
+# Usage: forge-skill-tracker.sh pre|post|read|clear
 #
 # The indicator persists after Skill tool returns because the actual work
 # happens AFTER the tool completes. It gets overwritten by the next forge
@@ -582,6 +582,15 @@ case "$ACTION" in
     # The file gets overwritten by the next forge skill invocation,
     # or cleared on session Stop.
     :
+    ;;
+  read)
+    # Hub loads satellites via Read() on ~/.forge/skills/forge-*/SKILL.md.
+    # Extract the satellite name from the file path so the statusline
+    # can display it just like Skill() invocations do.
+    FILE_PATH=$(echo "$input" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+    if [[ "$FILE_PATH" =~ /\.forge/skills/(forge-[a-zA-Z0-9_-]+)/SKILL\.md$ ]]; then
+      echo "${BASH_REMATCH[1]}" > "$SKILL_FILE"
+    fi
     ;;
   clear)
     # Explicit cleanup (called by Stop hook)
@@ -962,6 +971,11 @@ addCommandHook('Stop', '', 'bash ~/.claude/hooks/forge-memory-sync.sh');
 
 // PreToolUse[Skill] -- forge-skill-tracker.sh (active skill indicator)
 addCommandHook('PreToolUse', 'Skill', 'bash ~/.claude/hooks/forge-skill-tracker.sh pre');
+
+// PreToolUse[Read] -- forge-skill-tracker.sh (detect satellites loaded via Read)
+// Hub now loads satellites via Read() on ~/.forge/skills/forge-*/SKILL.md,
+// so we need this hook to keep the statusline indicator in sync.
+addCommandHook('PreToolUse', 'Read', 'bash ~/.claude/hooks/forge-skill-tracker.sh read');
 
 // PostToolUse[Skill] -- forge-skill-tracker.sh (no-op, kept for future use)
 addCommandHook('PostToolUse', 'Skill', 'bash ~/.claude/hooks/forge-skill-tracker.sh post');
