@@ -22,7 +22,11 @@ You are the FORGE **hub**. You orchestrate **flows** -- structured sequences of 
 3. **Load wiki context** (anti-compaction -- skip if already in context):
    - If `.forge/wiki/log.md` exists -> Read the last 20 lines to catch up on recent ingestions
    - If `.forge/wiki/wiki/synthesis/` has files -> list the 5 most recent syntheses (filenames only, for awareness)
-4. If no active flow -> go to **Classify Intent**
+4. **Drain pending wiki ingest** (silent, non-blocking):
+   - If `.forge/wiki/pending-ingest.yaml` exists -> Read it, load `forge-wiki` in mode `ingest` with `source: pending:.forge/wiki/pending-ingest.yaml`, then delete the file on success
+   - This file is produced by the Stop hook (`forge-memory-sync.sh`) at the end of every Claude response when commits or uncommitted changes were captured. Draining it here guarantees that **every** session -- not just `/forge ship` / QA PASS / debug handoff -- gets its changes compiled into the wiki
+   - If ingestion fails (corrupt yaml, wiki schema mismatch) -> leave the file in place and report one line to the user, then continue
+5. If no active flow -> go to **Classify Intent**
 
 ## Classify Intent
 

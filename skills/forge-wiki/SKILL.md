@@ -30,6 +30,7 @@ Ingest a new source into the wiki. Source types:
 - `bug:BUG-XXX` -- a debug session resolved a bug
 - `adr:ADR-XXX` -- an architecture decision was recorded
 - `note:<path>` -- a free-form note added to `.forge/wiki/raw/notes/`
+- `pending:.forge/wiki/pending-ingest.yaml` -- drain the Stop-hook queue (batch of auto-captures from past Claude sessions)
 
 Workflow for `ingest`:
 
@@ -40,6 +41,7 @@ Workflow for `ingest`:
    - `bug:*` -> debug session summary (read `.forge/memory/sessions/<today>.md`)
    - `adr:*` -> `Read("docs/adrs/<adr-file>.md")`
    - `note:*` -> `Read(".forge/wiki/raw/notes/<file>")`
+   - `pending:*` -> `Read(".forge/wiki/pending-ingest.yaml")`. For each entry under `sources:` (type `stop-capture`): read the referenced `note:` file + each listed commit via `git show --stat <sha>`, then treat the batch like a `ship:*` ingestion (update touched concept pages, link back from a single rollup entry, log under a `## Auto-capture <date>` section in `log.md`). After successful ingestion, delete `.forge/wiki/pending-ingest.yaml` so the next Stop hook starts fresh. Uncommitted files noted in the capture are recorded as "work in progress" on the concept pages they touch without creating a dedicated story page.
 3. **Identify touched concepts**: infer which components/features are involved (auth, api, billing, etc.). If a concept page doesn't exist in `.forge/wiki/wiki/concepts/`, create it.
 4. **Create or update the source page**:
    - Stories -> `.forge/wiki/wiki/stories/STORY-XXX.md`
@@ -104,6 +106,7 @@ This satellite is invoked automatically by:
 - `forge-verify` after a story gets QA PASS (`mode=ingest source=story:STORY-XXX`)
 - `.claude/commands/forge/ship.md` after a successful `/forge ship` (`mode=ingest source=ship:<sha>`)
 - `forge-debug` at handoff if fix confirmed (`mode=ingest source=bug:BUG-XXX`)
+- The hub at session start, if `.forge/wiki/pending-ingest.yaml` exists (`mode=ingest source=pending:...`) -- drains captures produced by the `forge-memory-sync` Stop hook between sessions, so every operation on the project gets compiled into the wiki regardless of whether a `/forge` flow was active
 - The hub at session start, if `.forge/wiki/log.md` exists -- reads the last 5 log entries + recent syntheses (anti-compaction, no ingest)
 
 Hooks skip silently if `.forge/wiki/` doesn't exist (legacy projects not yet retrofitted).
