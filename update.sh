@@ -302,6 +302,17 @@ info "Updating version and hooks..."
 \cp -f "${TMPDIR}/VERSION" "${CLAUDE_DIR}/skills/forge/.forge-version"
 rm -f "${CLAUDE_DIR}/skills/forge/.forge-update-cache"
 
+# ---- Update slash-commands ---------------------------------------------------
+
+if [ -d "${TMPDIR}/commands" ]; then
+    mkdir -p "${CLAUDE_DIR}/commands"
+    for cmd_file in "${TMPDIR}/commands/"*.md; do
+        [ -f "$cmd_file" ] || continue
+        \cp -f "$cmd_file" "${CLAUDE_DIR}/commands/$(basename "$cmd_file")"
+    done
+    ok "Slash-commands updated (~/.claude/commands/)"
+fi
+
 # ---- Update hooks ------------------------------------------------------------
 
 if [ -f "${CLAUDE_DIR}/skills/forge/scripts/forge-hooks-setup.sh" ]; then

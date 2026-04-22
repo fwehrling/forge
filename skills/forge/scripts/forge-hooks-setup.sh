@@ -9,12 +9,18 @@
 #   4. forge-memory-sync.sh   -- Stop                   -- Auto-syncs vector memory on session end
 #   5. statusline.sh          -- Status line            -- Persistent FORGE indicator in terminal
 #   6. forge-skill-tracker.sh -- PreToolUse[Skill]+Stop -- Tracks active FORGE skill for status line
+#   7. forge-router-guard.sh  -- UserPromptSubmit       -- Nudges Claude to invoke forge skill when user
+#                                                         writes "forge X" without the slash
 #
 # Removed in v1.6.0:
 #   - command-validator.js + output-filter.js (merged into bash-interceptor.js)
 #   - PreToolUse[Skill] notification -- unnecessary token cost (replaced by skill-tracker in v1.7.25)
 # Removed in v1.9.3:
-#   - forge-router-reminder.sh (UserPromptSubmit) -- excessive token cost, user invokes /forge explicitly
+#   - forge-router-reminder.sh (UserPromptSubmit) -- excessive token cost
+#   - Root cause: v1.9.0 fired on EVERY non-/forge prompt, injecting ~200 tok per prompt
+# Added in v1.14.0:
+#   - forge-router-guard.sh (UserPromptSubmit) -- opposite design: fires ONLY when the
+#     prompt looks like a FORGE request without the slash. Zero tokens on neutral prompts.
 #
 # Idempotent: safe to run multiple times.
 # Called by: install.sh, /forge update
@@ -588,8 +594,53 @@ SKILLTRACKEREOF
 chmod +x "$HOOKS_DIR/forge-skill-tracker.sh"
 echo "    Created forge-skill-tracker.sh"
 
-# Clean up old forge-router-reminder.sh if present
+# Clean up deprecated v1.9.0 hook (different design, would double-fire with guard)
 rm -f "$HOOKS_DIR/forge-router-reminder.sh"
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# 5c. forge-router-guard.sh -- UserPromptSubmit -- FORGE routing guard (v1.14+)
+# ═══════════════════════════════════════════════════════════════════════════════
+cat > "$HOOKS_DIR/forge-router-guard.sh" << 'GUARDEOF'
+#!/usr/bin/env bash
+# FORGE Router Guard -- UserPromptSubmit hook (v1.14.0+)
+#
+# Opposite design to the removed v1.9.0 forge-router-reminder.sh:
+# - v1.9.0 triggered on EVERY non-/forge prompt in a FORGE project (expensive: ~200 tok x N prompts)
+# - v1.14 triggers ONLY when the prompt looks like a FORGE request without the slash
+#   (regex: ^\s*forge(-[a-z-]+)?\b). Zero tokens on neutral prompts.
+#
+# Match examples (injects a soft reminder):
+#   "forge auto build the landing page"   -> reminder
+#   "forge-debug this crash"               -> reminder
+#   "forge improve the auth module"        -> reminder
+#
+# No-match examples (silent, 0 token):
+#   "/forge build X"                        -> handled by /forge slash-command
+#   "explain this function"                 -> neutral, no reminder
+#   "il faut forger un plan"                -> 'forge' not at start of line
+#   "the blacksmith forges steel"           -> not start of line
+#
+# Always exits 0 (never blocks prompt submission).
+
+input=$(cat)
+
+PROMPT=$(printf '%s' "$input" | jq -r '.prompt // ""' 2>/dev/null)
+[ -z "$PROMPT" ] && exit 0
+
+# Skip if already a slash-command (handled by slash-command resolver or other hooks)
+if printf '%s' "$PROMPT" | grep -qE '^\s*/'; then
+    exit 0
+fi
+
+# Match only if first non-whitespace word is 'forge' or 'forge-<something>'
+if printf '%s' "$PROMPT" | grep -qiE '^\s*forge(-[a-z-]+)?\b'; then
+    echo "If this is a FORGE request, invoke the \`forge\` skill via the Skill tool to route through the hub (intent classification + HITL gates). If the request is unrelated, ignore this hint."
+fi
+
+exit 0
+GUARDEOF
+chmod +x "$HOOKS_DIR/forge-router-guard.sh"
+echo "    Created forge-router-guard.sh"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # 6. statusline.sh -- FORGE status line indicator
@@ -858,9 +909,22 @@ if (s.hooks.PreToolUse) {
   }
 }
 
-// Remove all UserPromptSubmit hooks (forge-router-reminder removed in v1.9.3)
+// Targeted cleanup of the deprecated v1.9.0 router-reminder hook.
+// Leave any other UserPromptSubmit hooks (user-defined or third-party) untouched.
 if (s.hooks.UserPromptSubmit) {
-  delete s.hooks.UserPromptSubmit;
+  for (const entry of s.hooks.UserPromptSubmit) {
+    if (entry.hooks) {
+      entry.hooks = entry.hooks.filter(h =>
+        !h.command?.includes('forge-router-reminder.sh')
+      );
+    }
+  }
+  s.hooks.UserPromptSubmit = s.hooks.UserPromptSubmit.filter(e =>
+    e.hooks && e.hooks.length > 0
+  );
+  if (s.hooks.UserPromptSubmit.length === 0) {
+    delete s.hooks.UserPromptSubmit;
+  }
 }
 
 // Remove old PreToolUse[Skill] notification hooks (but keep skill-tracker)
@@ -902,6 +966,10 @@ addCommandHook('PreToolUse', 'Skill', 'bash ~/.claude/hooks/forge-skill-tracker.
 // PostToolUse[Skill] -- forge-skill-tracker.sh (no-op, kept for future use)
 addCommandHook('PostToolUse', 'Skill', 'bash ~/.claude/hooks/forge-skill-tracker.sh post');
 
+// UserPromptSubmit -- forge-router-guard.sh (rescue prompts that look like FORGE
+// requests but were written without the slash). See v1.14.0 design note above.
+addCommandHook('UserPromptSubmit', '', 'bash ~/.claude/hooks/forge-router-guard.sh');
+
 // Stop -- forge-skill-tracker.sh clear (cleanup active skill indicator)
 addCommandHook('Stop', '', 'bash ~/.claude/hooks/forge-skill-tracker.sh clear');
 
@@ -921,10 +989,10 @@ fs.writeFileSync(settingsPath, JSON.stringify(s, null, 2) + '\n');
 echo ""
 echo "  FORGE Hooks -- Installation complete!"
 if [ "$INSTALL_STATUSLINE" = true ]; then
-  echo "     7 hook scripts in ~/.claude/hooks/"
-  echo "     5 hook events + status line in ~/.claude/settings.json"
+  echo "     8 hook scripts in ~/.claude/hooks/"
+  echo "     6 hook events + status line in ~/.claude/settings.json"
 else
-  echo "     6 hook scripts in ~/.claude/hooks/"
-  echo "     5 hook events in ~/.claude/settings.json"
+  echo "     7 hook scripts in ~/.claude/hooks/"
+  echo "     6 hook events in ~/.claude/settings.json"
 fi
-echo "     (PreToolUse[Bash|Skill], PostToolUse[Skill], SessionStart, Stop)"
+echo "     (PreToolUse[Bash|Skill], PostToolUse[Skill], UserPromptSubmit, SessionStart, Stop)"

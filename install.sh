@@ -173,6 +173,16 @@ install_skills() {
         ok "Version $(cat "${CLAUDE_DIR}/skills/forge/.forge-version" | tr -d '[:space:]') recorded"
     fi
 
+    # Install user-wide slash-commands (commands/*.md -> ~/.claude/commands/)
+    if [ -d "${SCRIPT_DIR}/commands" ]; then
+        mkdir -p "${CLAUDE_DIR}/commands"
+        for cmd_file in "${SCRIPT_DIR}/commands/"*.md; do
+            [ -f "$cmd_file" ] || continue
+            cp -f "$cmd_file" "${CLAUDE_DIR}/commands/$(basename "$cmd_file")"
+        done
+        ok "Slash-commands installed: ~/.claude/commands/"
+    fi
+
     # Note: All hooks (update-check, auto-router, memory-sync, etc.)
     # are installed in step 5 via forge-hooks-setup.sh
 }

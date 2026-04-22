@@ -5,6 +5,19 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.0] - 2026-04-22
+
+### Added
+
+- **`/forge` slash-command**: new `commands/forge.md` shipped with install/update. Typing `/forge <request>` now forces the hub skill to be invoked via the Skill tool instead of relying on the model to recognize the instruction on its own. Solves the failure mode where `/forge` was treated as plain text and the pipeline was bypassed.
+- **`forge-router-guard.sh` hook**: new `UserPromptSubmit` hook registered by default. Fires ONLY when the prompt starts with `forge` or `forge-<something>` *without* a slash (e.g. `forge auto build X`) and injects a single-line nudge asking Claude to invoke the `forge` skill if applicable. Silent and free on neutral prompts.
+- **Opposite design to v1.9.0's removed `forge-router-reminder.sh`**: v1.9.0 fired on every non-`/forge` prompt in a FORGE project (~200 tok x N prompts), which was why v1.9.3 killed it. v1.14 fires only on positive signals, so the average session cost is near zero.
+
+### Changed
+
+- **`forge-hooks-setup.sh` UserPromptSubmit cleanup is now surgical**: instead of wiping the whole `UserPromptSubmit` entry on every run (which would have erased any user-added hook), the setup script now only removes entries referencing the deprecated v1.9.0 `forge-router-reminder.sh` path.
+- **`install.sh` / `update.sh`**: both scripts now copy `commands/*.md` into `~/.claude/commands/` as part of the install/update flow. Idempotent on repeat runs.
+
 ## [1.13.0] - 2026-04-22
 
 ### Added
