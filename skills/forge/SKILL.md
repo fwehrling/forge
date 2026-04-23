@@ -14,6 +14,17 @@ You are the FORGE **hub**. You orchestrate **flows** -- structured sequences of 
 
 ## Startup Protocol
 
+**MUST run in order, BEFORE any response to the user.** Steps 0 and 0b are mandatory drains -- if either finds a pending file, you process it immediately, silently, and only then continue. Skipping these steps creates drift between prod, wiki and flow-state; it has happened in real sessions and is a recurring failure mode. No exceptions, no "I'll do it after": the drain happens first.
+
+0. **Drain pending wiki ingest** (MUST, silent, first thing):
+   - If `.forge/wiki/pending-ingest.yaml` exists -> Read it, load `forge-wiki` in mode `ingest` with `source: pending:.forge/wiki/pending-ingest.yaml`, then delete the file on success
+   - Produced by the Stop hook (`forge-memory-sync.sh`) at the end of every Claude response when commits or uncommitted changes were captured. Draining here guarantees that **every** session -- not just `/forge ship` / QA PASS / debug handoff -- gets changes compiled into the wiki
+   - If ingestion fails (corrupt yaml, wiki schema mismatch) -> leave the file in place, report ONE line to the user, then continue
+0b. **Drain pending flow-state release sync** (MUST, silent):
+    - If `.forge/flow-state-pending.yaml` exists -> Read it. It lists release tags detected by the Stop hook since last drain (`{tag, sha, date}` entries)
+    - Merge them into `.forge/flow-state.yaml` section `prod_state` WITHOUT touching any other section (preserve `flow`, `status`, `current_step`, `stories_completed`, etc.). Keys to update: `prod_state.backend_version`, `prod_state.last_release_commit`, `prod_state.last_release_at`, `prod_state.last_synced_at`. Append a line to `prod_state.release_history` (keep the 10 most recent)
+    - Delete `.forge/flow-state-pending.yaml` on success
+    - This fixes the drift that accumulates when releases are shipped outside the FORGE pipeline (direct commits, `/cw:release`, etc.)
 1. **Check for active flow**:
    - Read `.forge/flow-state.yaml` -- if it exists and `status: active` -> go to **Resume Flow**
 2. **Load memory** (skip if already in context):
@@ -22,11 +33,7 @@ You are the FORGE **hub**. You orchestrate **flows** -- structured sequences of 
 3. **Load wiki context** (anti-compaction -- skip if already in context):
    - If `.forge/wiki/log.md` exists -> Read the last 20 lines to catch up on recent ingestions
    - If `.forge/wiki/wiki/synthesis/` has files -> list the 5 most recent syntheses (filenames only, for awareness)
-4. **Drain pending wiki ingest** (silent, non-blocking):
-   - If `.forge/wiki/pending-ingest.yaml` exists -> Read it, load `forge-wiki` in mode `ingest` with `source: pending:.forge/wiki/pending-ingest.yaml`, then delete the file on success
-   - This file is produced by the Stop hook (`forge-memory-sync.sh`) at the end of every Claude response when commits or uncommitted changes were captured. Draining it here guarantees that **every** session -- not just `/forge ship` / QA PASS / debug handoff -- gets its changes compiled into the wiki
-   - If ingestion fails (corrupt yaml, wiki schema mismatch) -> leave the file in place and report one line to the user, then continue
-5. If no active flow -> go to **Classify Intent**
+4. If no active flow -> go to **Classify Intent**
 
 ## Classify Intent
 
@@ -291,6 +298,7 @@ Always respond in the user's language. If they write in French, answer in French
 
 ## Rules
 
+- **Never skip the drain**: Startup Protocol steps 0 and 0b are mandatory. If `.forge/wiki/pending-ingest.yaml` or `.forge/flow-state-pending.yaml` exists, you drain it BEFORE any response. Not "at the end", not "if relevant" -- first. The drain is what keeps wiki and flow-state aligned with reality; deferring it is how drift accumulates.
 - **Load before execute**: Always Read() the satellite SKILL.md before executing its workflow
 - **Never skip HITL**: After verify + review, always present findings and wait for user choice (unless --no-pause)
 - **Never skip memory**: Always save flow-state + session log at each step transition
