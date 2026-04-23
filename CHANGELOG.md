@@ -5,6 +5,18 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.2] - 2026-04-23
+
+### Added
+
+- **Prod release auto-sync to flow-state**: `forge-memory-sync.sh` Stop hook now has a Stage 3 that detects release bumps (`chore(release): vX.Y.Z` commit subject OR a `v*` tag pointing at HEAD) and queues a `.forge/flow-state-pending.yaml` entry with `{tag, sha, date, detected_at}`. The hub drains this queue at Startup Protocol step 0b and merges the entries into `.forge/flow-state.yaml` `prod_state` (updates `backend_version`, `last_release_commit`, `last_release_at`, `last_synced_at`, appends to `release_history` capped at 10). No other section of `flow-state.yaml` is touched. Fixes the drift that accumulated when releases were shipped outside the FORGE pipeline (direct commits, `/cw:release`, etc.) and the hub's flow-state kept pointing at an old version.
+- **Stage 3 runs independently of Stage 2**: projects without `.forge/wiki/` still get their release state persisted, so the release-sync feature does not depend on the wiki being enabled.
+
+### Changed
+
+- **Startup Protocol drains are now mandatory first-step**: `skills/forge/SKILL.md` promotes steps 0 (drain `.forge/wiki/pending-ingest.yaml`) and 0b (drain `.forge/flow-state-pending.yaml`) to MUST-run BEFORE any response to the user. The previous wording allowed the drain to happen "silently and non-blocking" at step 4, which in practice let the model defer it until the end of the turn -- after which the pending files accumulated and drift took hold. Both drains must now happen first, silently, before anything else. Explicit Rule added in the Rules section: "Never skip the drain."
+- **`forge-memory-sync.sh` refactor**: the git-inside-worktree and `HEAD_SHA` checks moved above the wiki stage so they are shared between Stage 2 (wiki) and Stage 3 (release). Stage 2 is now gated by `[ -d ".forge/wiki" ]` inside the block instead of an early exit, which unblocks Stage 3 for non-wiki projects.
+
 ## [1.14.1] - 2026-04-23
 
 ### Fixed
@@ -820,3 +832,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.11.3]: https://github.com/fwehrling/forge/compare/v1.11.2...v1.11.3
 [1.11.2]: https://github.com/fwehrling/forge/releases/tag/v1.11.2
 [1.14.1]: https://github.com/fwehrling/forge/compare/v1.14.0...v1.14.1
+[1.14.2]: https://github.com/fwehrling/forge/compare/v1.14.1...v1.14.2

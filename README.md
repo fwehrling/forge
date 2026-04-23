@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.14.1-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.14.2-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-27%20core%20%2B%208%20business-orange)](#commands)
@@ -310,7 +310,9 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.14.1**: statusline now tracks satellites loaded via `Read()`. Since v1.11.0 the hub loads forge-* satellites by reading their `SKILL.md` directly instead of calling `Skill()`, which silently broke the active-satellite indicator in the status line. A new `PreToolUse[Read]` hook + `read` action in `forge-skill-tracker.sh` restore the indicator for both loading paths. Propagates via `install.sh` and `/forge update`.
+**Latest -- v1.14.2**: prod release state auto-syncs to `flow-state.yaml`. A new Stage 3 in the `forge-memory-sync` Stop hook detects release bumps (`chore(release): vX.Y.Z` commits or `v*` tags at HEAD) and queues `.forge/flow-state-pending.yaml`; the hub drains it at startup and merges into `prod_state` (backend_version, last_release_commit, release_history) without touching any other section. Fixes drift when releases ship outside the FORGE pipeline. Startup Protocol drains (wiki + release) are now mandatory first-step, BEFORE any response -- the recurring failure mode of deferring them is closed.
+
+**v1.14.1**: statusline now tracks satellites loaded via `Read()`. Since v1.11.0 the hub loads forge-* satellites by reading their `SKILL.md` directly instead of calling `Skill()`, which silently broke the active-satellite indicator in the status line. A new `PreToolUse[Read]` hook + `read` action in `forge-skill-tracker.sh` restore the indicator for both loading paths. Propagates via `install.sh` and `/forge update`.
 
 **v1.13.0**: wiki auto-ingest on every session. The `forge-memory-sync` Stop hook now captures commits and uncommitted files after every Claude response and queues them in `.forge/wiki/pending-ingest.yaml`; the hub drains the queue at the next session start via `forge-wiki` (new `pending:` source type). Every operation on a FORGE project contributes to the Obsidian-compatible knowledge base, whether `/forge` was invoked or not.
 
