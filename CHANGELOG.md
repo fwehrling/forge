@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.1] - 2026-04-23
+
+### Fixed
+
+- **Statusline lost the active-satellite indicator**: since v1.11.0 the hub loads forge-* satellites via `Read()` on `~/.forge/skills/forge-*/SKILL.md` instead of `Skill()`. The existing `PreToolUse[Skill]` hook never fired for satellites anymore, so `/tmp/forge-active-skill-*` stayed empty and the statusline showed no satellite name. `forge-skill-tracker.sh` now exposes a `read` action that extracts the satellite name from the Read file path, and `forge-hooks-setup.sh` registers a matching `PreToolUse[Read]` hook in `settings.json`. Both `Skill()` and `Read()` loading paths now keep the statusline in sync. Propagates via `install.sh` and `/forge update` (idempotent).
+
 ## [1.14.0] - 2026-04-22
 
 ### Added
@@ -813,3 +819,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.11.4]: https://github.com/fwehrling/forge/compare/v1.11.3...v1.11.4
 [1.11.3]: https://github.com/fwehrling/forge/compare/v1.11.2...v1.11.3
 [1.11.2]: https://github.com/fwehrling/forge/releases/tag/v1.11.2
+[1.14.1]: https://github.com/fwehrling/forge/compare/v1.14.0...v1.14.1

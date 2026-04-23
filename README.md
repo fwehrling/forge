@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.14.0-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.14.1-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-27%20core%20%2B%208%20business-orange)](#commands)
@@ -310,7 +310,7 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.14.0**: real `/forge` slash-command + router-guard hook. Typing `/forge <request>` now forces the hub skill to be invoked (previous versions left it to the model to recognize the instruction, which failed silently on simple requests). A companion `UserPromptSubmit` hook rescues prompts starting with `forge` or `forge-<something>` *without* the slash by nudging Claude to route through the hub. Zero-cost on neutral prompts, opposite design to the v1.9.0 reminder that was killed in v1.9.3 for excessive token usage.
+**Latest -- v1.14.1**: statusline now tracks satellites loaded via `Read()`. Since v1.11.0 the hub loads forge-* satellites by reading their `SKILL.md` directly instead of calling `Skill()`, which silently broke the active-satellite indicator in the status line. A new `PreToolUse[Read]` hook + `read` action in `forge-skill-tracker.sh` restore the indicator for both loading paths. Propagates via `install.sh` and `/forge update`.
 
 **v1.13.0**: wiki auto-ingest on every session. The `forge-memory-sync` Stop hook now captures commits and uncommitted files after every Claude response and queues them in `.forge/wiki/pending-ingest.yaml`; the hub drains the queue at the next session start via `forge-wiki` (new `pending:` source type). Every operation on a FORGE project contributes to the Obsidian-compatible knowledge base, whether `/forge` was invoked or not.
 
