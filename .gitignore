@@ -1,6 +1,9 @@
 # Skill optimization workspace artifacts
 *-workspace/
 
+# Skill-creator audit runs (local-only, large eval artifacts)
+.skill-creator-runs/
+
 # Claude Code local config (commands, scripts, settings)
 .claude/
 
