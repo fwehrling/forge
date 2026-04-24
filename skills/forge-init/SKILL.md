@@ -1,7 +1,7 @@
 ---
 name: forge-init
 description: >
-  Initialize FORGE in a project -- creates .forge/ structure, CLAUDE.md, detects tech stack.
+  FORGE project bootstrapper -- initializes FORGE in a repo: detects stack, creates .forge/ structure (config.yml, memory/, wiki/, sprint-status), generates CLAUDE.md, retrofits the wiki on legacy projects. Use whenever the user asks to initialize / bootstrap / setup / install FORGE on a fresh or existing repo, or to retrofit the wiki vault. Triggers: 'bootstrap forge', 'setup forge', 'initialise FORGE', 'install FORGE here', 'retrofit wiki', '/forge init'. Not update, not resume.
 ---
 
 # /forge init -- FORGE Initialization

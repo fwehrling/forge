@@ -1,7 +1,7 @@
 ---
 name: forge-update
 description: >
-  Updates FORGE skills from GitHub. Supports --pack business.
+  FORGE framework updater -- refreshes hub + satellites + hooks from upstream GitHub, and optionally installs/updates the Business Pack (marketing, copy, SEO, GEO, legal, security-pro, strategy). Use whenever the user wants to update / upgrade / sync FORGE itself, install or refresh the Business Pack, or migrate to a newer FORGE version. Triggers: 'update forge', 'mettre a jour FORGE', 'install business pack', '--pack business', 'nouvelle version FORGE'. Not init, not CLI/npm.
 ---
 
 # /forge update -- FORGE Updater

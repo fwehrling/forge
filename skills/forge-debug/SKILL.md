@@ -1,8 +1,7 @@
 ---
 name: forge-debug
 description: >
-  Debug Agent -- systematic root cause investigation (4 phases: investigate, analyze,
-  hypothesize, fix). Bugs, test failures, flaky tests, unexpected behavior.
+  FORGE Debug Agent -- systematic 4-phase root cause investigation (investigate, analyze, hypothesize, fix) for bugs with UNKNOWN cause. Use whenever the user reports non-reproducible bugs, flaky tests, intermittent failures, mysterious 500s, OOM kills, race conditions, and asks explicitly for 'root cause', 'investigation', 'enquete', 'pas un fix bidon', 'understand WHY', 'hypothese unique testee'. Not for quick fixes / hotfixes / one-liners / typos where the cause is already identified -- those go to forge-quick-spec.
 ---
 
 # FORGE Debug Agent -- Systematic Root Cause Investigation

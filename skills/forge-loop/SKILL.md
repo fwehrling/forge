@@ -1,8 +1,7 @@
 ---
 name: forge-loop
 description: >
-  Autonomous iteration runner with cost caps, circuit breakers, sandbox.
-  AFK mode, unattended iteration.
+  FORGE autonomous iteration runner -- wraps forge-loop.sh to run a prompt/story in a sandboxed loop with cost caps, rate limits, circuit breakers, and three modes: afk (overnight), hitl (confirm every 5 iters), pair (collaborative). Explicit-invocation only (disable-model-invocation: true): invoke via `/forge loop "<task>" [--mode afk|hitl|pair] [--max-iterations N]`. Use for unattended multi-iteration work, overnight builds, fix-test cycles until green. Not /loop (scheduler), not /forge build.
 disable-model-invocation: true
 ---
 

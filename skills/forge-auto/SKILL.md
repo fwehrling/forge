@@ -1,8 +1,7 @@
 ---
 name: forge-auto
 description: >
-  Autopilot -- orchestrates all agents sequentially with checkpoints.
-  Full pipeline, autonomous mode, end-to-end build.
+  FORGE Autopilot -- SEQUENTIAL end-to-end pipeline (analyze -> plan -> architect -> stories -> build -> verify -> review, one agent at a time) in autonomous mode with optional HITL checkpoints. Triggers: 'autopilot', 'pilote automatique', 'mode autonome', 'enchaine toutes les phases', 'AFK full pipeline', '/forge auto'. For PARALLEL story execution across real Claude Code processes, use forge-team instead (requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1).
 ---
 
 # /forge auto -- FORGE Autopilot Mode

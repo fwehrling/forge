@@ -55,6 +55,10 @@ Match the user's request to a flow:
 - "security audit" on third-party -> SECURE (uses forge-security-pro)
 - "compare approaches" / "how should I" / "best way" -> invoke forge-think first, then resume flow
 - 3+ domains or "do everything" -> CREATE flow
+- "what do we know about X", "qu'est-ce qu'on sait sur X", "resume knowledge base" -> load forge-wiki (project knowledge vault)
+- "search memory for X", "reindex memory", "memory sync/reset/status", "log manuel memory" -> load forge-memory (vector index CLI)
+- "multi-perspective / debate / panel" WITHOUT "parallel" or "real processes" -> load forge-party (subagents via Task tool, lightweight)
+- "multi-perspective / debate / panel" WITH "parallel" or "real processes" or "Agent Teams" -> load forge-team (real Claude Code processes, requires CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1)
 
 If `.forge/` doesn't exist and flow requires it -> load and execute `forge-init` first.
 If intent is truly ambiguous -> read `references/routing.md`.

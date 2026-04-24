@@ -1,7 +1,7 @@
 ---
 name: forge-quick-spec
 description: >
-  Quick track for bug fixes and small changes (< 1 day). Skips PRD/architecture.
+  FORGE Quick Track -- small-scope fix / tweak / hotfix / one-liner / typo / minor change (<1 day) where the cause is ALREADY IDENTIFIED. Skips PRD and architecture phases, writes a regression test then patches. Triggers: 'fix vite', 'hotfix', 'petit bug', 'one-liner', 'typo', 'small PR', 'rien de fou', 'juste corriger', 'quick patch', 'small change'. Not for root cause investigation / mysterious bugs / flaky tests -- those go to forge-debug.
 ---
 
 # /forge quick-spec -- FORGE Quick Track
