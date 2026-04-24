@@ -7,63 +7,39 @@ paths:
   - ".forge/**"
 ---
 
-# /forge party -- FORGE Orchestrator
+# /forge party -- Multi-perspective analysis
 
-You are the FORGE **Orchestrator**. You coordinate multi-perspective analysis by launching 2-3 independent subagents to examine a topic from different angles, then synthesize their findings.
+Coordinate 2-3 perspectives on a topic via Task tool subagents, then synthesize. This skill exists for cases where real independence between viewpoints helps (adversarial thinking, blind spots) -- for quick back-of-envelope analysis, you don't need it.
 
-## Available Perspectives
+## Perspectives available
 
-Select 2-3 from the following based on the topic:
+Pick the 2-3 that actually matter for the topic. Don't invoke unused ones:
 
-| Perspective | Best for | Persona ref |
-|---|---|---|
-| Architect | System design, scalability, tech stack | `agents/architect.md` |
-| PM | User value, requirements, prioritization | `agents/pm.md` |
-| Security | Threats, compliance, vulnerabilities | `agents/security.md` |
-| Dev | Implementation feasibility, effort, patterns | `agents/dev.md` |
-| QA | Testability, quality risks, coverage | `agents/qa.md` |
-| Reviewer | Devil's advocate, risks, alternatives | `agents/reviewer.md` |
+- **Architect** -- system design, scalability, tech stack (`agents/architect.md`)
+- **PM** -- user value, priorities, scope (`agents/pm.md`)
+- **Security** -- threats, compliance, attack surface (`agents/security.md`)
+- **Dev** -- feasibility, effort, patterns (`agents/dev.md`)
+- **QA** -- testability, quality risk (`agents/qa.md`)
+- **Reviewer** -- adversarial, risks, alternatives (`agents/reviewer.md`)
 
 ## Workflow
 
-1. **Load context** (if FORGE project -- skip files already loaded in this conversation):
-   - Read `.forge/memory/MEMORY.md` for project context (skip if already loaded)
-   - `forge-memory search "<topic>" --limit 3` (skip if similar search done)
+1. **Load context** (skip if already in context):
+   - `.forge/memory/MEMORY.md`
+   - `forge-memory search "<topic>" --limit 3` if relevant
 
-2. **Analyze the topic** and select the 2-3 most relevant perspectives from the table above
+2. **Pick perspectives**: choose the 2-3 angles most relevant to the question. You may go to 4 if the topic genuinely cuts across that many domains -- or to 2 if one additional angle would be noise.
 
-3. **Craft a brief for each agent**:
-   Each subagent receives a Task tool prompt containing:
-   - The topic to analyze
-   - Their specific perspective and what to focus on
-   - Available context files to read
-   - Expected output structure: key observations (3-5), risks, recommendations
+3. **Launch subagents in parallel** via Task tool. Each brief should include: the topic, the specific angle to take, any relevant files to read, and a request for concrete observations + risks + recommendation (not a fixed template -- let the agent structure its answer).
 
-4. **Launch agents in parallel** via the Task tool (one per perspective)
+4. **Synthesize**. The output format should match the question:
+   - If convergence matters: show consensus vs divergence clearly.
+   - If a decision is needed: recommend one approach with reasoning.
+   - If the goal is brainstorming: present distinct takes without forcing a synthesis.
 
-5. **Collect and synthesize** the independent analyses into a unified report:
-
-   ```
-   FORGE Party -- <topic>
-   -------------------------
-   Perspectives: Architect, Security, Dev
-
-   ## Points of Consensus
-   - <point> (supported by: Architect, Dev)
-   - <point> (supported by: all)
-
-   ## Points of Divergence
-   - <topic>:
-     - Architect: <position> -- because <reasoning>
-     - Security: <position> -- because <reasoning>
-
-   ## Final Recommendation
-   <synthesized recommendation based on all perspectives>
-   ```
-
-6. **Save memory**:
+5. **Save memory** when the analysis produced a decision worth remembering:
    ```bash
-   forge-memory log "Party done: {TOPIC}, {N} agents, recommendation: {SUMMARY}" --agent orchestrator
+   forge-memory log "Party: {TOPIC} -> {RECOMMENDATION}" --agent orchestrator
    ```
 
 Flow progression is managed by the FORGE hub.
