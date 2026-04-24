@@ -5,6 +5,12 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.3] - 2026-04-24
+
+### Changed
+
+- **Skill descriptions clarified and hub disambiguation rules added**: applied validated best-descriptions to `forge-init`, `forge-loop`, `forge-update`. Tightened exclusive signals for `forge-debug` (UNKNOWN cause only, excludes hotfix/one-liner phrasing) and `forge-quick-spec` (already-identified cause only, excludes root-cause/investigation phrasing). Made `forge-auto` sequential-only explicit and point to `forge-team` for parallel execution. Added 4 disambiguation rules in the hub for the memory/wiki and party/team clusters. No functional change to any skill; only frontmatter descriptions and hub routing hints.
+
 ## [1.14.2] - 2026-04-23
 
 ### Added
@@ -833,3 +839,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.11.2]: https://github.com/fwehrling/forge/releases/tag/v1.11.2
 [1.14.1]: https://github.com/fwehrling/forge/compare/v1.14.0...v1.14.1
 [1.14.2]: https://github.com/fwehrling/forge/compare/v1.14.1...v1.14.2
+[1.14.3]: https://github.com/fwehrling/forge/compare/v1.14.2...v1.14.3
