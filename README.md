@@ -2,7 +2,7 @@
 
 **Framework for Orchestrated Resilient Generative Engineering**
 
-[![version](https://img.shields.io/badge/version-1.14.3-green)](https://github.com/fwehrling/forge/releases)
+[![version](https://img.shields.io/badge/version-1.14.4-green)](https://github.com/fwehrling/forge/releases)
 [![license](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![platform](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL-lightgrey)](#prerequisites)
 [![Skills](https://img.shields.io/badge/skills-27%20core%20%2B%208%20business-orange)](#commands)
@@ -310,7 +310,7 @@ Your choice. FORGE learns your preferences across sessions.
 
 See [CHANGELOG.md](CHANGELOG.md) for the full history.
 
-**Latest -- v1.14.3**: skill descriptions clarified and hub disambiguation rules added. Applied validated best-descriptions to `forge-init`, `forge-loop`, `forge-update`. Tightened exclusive signals for `forge-debug` (UNKNOWN cause only) and `forge-quick-spec` (already-identified cause only). Made `forge-auto` sequential-only explicit and point to `forge-team` for parallel execution. Added 4 disambiguation rules in the hub for memory/wiki and party/team clusters. No functional change; only frontmatter descriptions and hub routing hints.
+**Latest -- v1.14.4**: reasoning-heavy skills rewritten as scaffolds, not scripts. `forge-debug`, `forge-think`, `forge-party`, `forge-security-pro`, `forge-analyze` were over-prescriptive for Opus 4.7's native reasoning strength, caging the model into mechanical execution. Each now keeps the discipline while preserving judgement: trivial bugs skip straight to the fix, rigid output templates drop in favour of shapes that match the question, the "Victor" persona is gone, analysis sections become a menu scoped to idea maturity. Net -161 lines across the 5 skills, no change to pipeline artifacts.
 
 **v1.14.1**: statusline now tracks satellites loaded via `Read()`. Since v1.11.0 the hub loads forge-* satellites by reading their `SKILL.md` directly instead of calling `Skill()`, which silently broke the active-satellite indicator in the status line. A new `PreToolUse[Read]` hook + `read` action in `forge-skill-tracker.sh` restore the indicator for both loading paths. Propagates via `install.sh` and `/forge update`.
 

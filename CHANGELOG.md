@@ -5,6 +5,17 @@ All notable changes to FORGE are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.14.4] - 2026-04-24
+
+### Changed
+
+- **Reasoning-heavy skills rewritten as scaffolds, not scripts**: 5 skills (`forge-debug`, `forge-think`, `forge-party`, `forge-security-pro`, `forge-analyze`) were over-prescriptive for Opus 4.7's native reasoning strength, caging the model into mechanical execution. Rewrote each to keep the discipline while preserving judgement:
+  - `forge-debug`: 4 phases stay as an adaptive scaffold -- trivial bugs skip to the fix, complex bugs work through the phases, each step can be skipped with justification.
+  - `forge-think`: removed the fixed output template and the "at least 3 approaches" rule; kept the band-aid/coupling/surprise/scope/rewrite filters as an anti-trap checklist.
+  - `forge-party`: dropped the rigid 3-perspective format; output shape now matches the question (consensus vs brainstorm vs decision).
+  - `forge-security-pro`: dropped the "Victor" persona, replaced the exhaustive OWASP checklist with a risk-first posture ("adapt to the stack, prioritize real risk over checkbox coverage").
+  - `forge-analyze`: sections became a menu scoped to idea maturity (barely-formed / clear / regulated), not a mandatory checklist. Net -161 lines (-44% on these 5 skills). No change to pipeline artifacts (`docs/analysis.md`, `docs/security.md`) -- only the internal guidance the model follows.
+
 ## [1.14.3] - 2026-04-24
 
 ### Changed
@@ -840,3 +851,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.14.1]: https://github.com/fwehrling/forge/compare/v1.14.0...v1.14.1
 [1.14.2]: https://github.com/fwehrling/forge/compare/v1.14.1...v1.14.2
 [1.14.3]: https://github.com/fwehrling/forge/compare/v1.14.2...v1.14.3
+[1.14.4]: https://github.com/fwehrling/forge/compare/v1.14.3...v1.14.4
